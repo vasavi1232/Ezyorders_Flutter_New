@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://ezyorders.co.in/</domain>
+
+
+        <pin-set>
+
+            <pin digest="SHA-256">x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=</pin>
+
+        </pin-set>
+    </domain-config>
+
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="@raw/my_cer" />
+            <certificates src="@raw/dandenong" />
+            <certificates src="@raw/digiglobalrootca" />
+            <certificates src="user" />
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>
+
+
+    <!--
+        <?xml version="1.0" encoding="utf-8"?>
+    <network-security-config>
+    <base-config  cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+    <domain-config>
+        <domain includeSubdomains="true">https://sog-cw14.the-distributors.com.au/</domain>
+        <domain includeSubdomains="true">https://sog-cw99.the-distributors.com.au/</domain>
+        <domain includeSubdomains="true">https://sog.the-distributors.com.au/</domain>
+        <domain includeSubdomains="true">https://sog.the-distributors.com.au/api/appstore.php?</domain>
+        <pin-set expiration="2018-01-01">
+            <pin digest="SHA-256">7HIpactkIAq2Y49orFOOQKurWxmmSFZhBCoQYcRhJ3Y=</pin>
+            &lt;!&ndash; backup pin &ndash;&gt;
+            <pin digest="SHA-256">fwza0LRMXouZHRC8Ei+4PyuldPDcf3UKgO/04cDM1oE=</pin>
+        </pin-set>
+    </domain-config>
+    </network-security-config>-->

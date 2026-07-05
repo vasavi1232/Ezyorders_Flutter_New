@@ -1,0 +1,13 @@
+﻿Analyzing ezy_orders_flutter...                                 
+
+warning - Unused import: 'package:ezy_orders_flutter/data/models/wishlist_models.dart' - lib\presentation\features\dashboard\my_wishlist_screen.dart:4:8 - unused_import
+warning - The operand can't be 'null', so the condition is always 'false' - lib\presentation\features\dashboard\widgets\promotions_section.dart:76:29 - unnecessary_null_comparison
+  error - The getter 'companyMobile' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:62:34 - undefined_getter
+  error - The getter 'companyEmail' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:63:33 - undefined_getter
+  error - The getter 'companyStreet' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:64:38 - undefined_getter
+  error - The getter 'companySuburb' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:64:64 - undefined_getter
+  error - The getter 'companyState' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:64:90 - undefined_getter
+  error - The getter 'companyPostcode' isn't defined for the type 'ProfileResult' - lib\presentation\features\drawer\help_support_screen.dart:64:115 - undefined_getter
+warning - Unused import: '../../../../data/models/drawer_models.dart' - lib\presentation\features\drawer\promotions_screen.dart:7:8 - unused_import
+warning - Unused import: '../../../../data/models/home_models.dart' - lib\presentation\features\drawer\send_feedback_screen.dart:7:8 - unused_import
+

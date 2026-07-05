@@ -1,0 +1,65 @@
+﻿Analyzing ezy_flutter...                                        
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\account\add_address_screen.dart:123:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\account\change_password_screen.dart:96:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\account\my_addresses_screen.dart:58:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\account\my_addresses_screen.dart:144:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\cart\cart_screen.dart:37:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\dashboard\dashboard_screen.dart:170:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\dashboard\my_wishlist_screen.dart:33:35 - deprecated_member_use
+warning - The value of the field '_currentPrice' isn't used - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:22:15 - unused_field
+warning - The value of the local variable 'hasPromotion' isn't used - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:85:16 - unused_local_variable
+  error - Expected to find ']' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:154:24 - expected_token
+  error - Expected to find ')' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:155:29 - expected_token
+  error - Expected to find ')' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:157:26 - expected_token
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:206:17 - expected_token
+warning - Dead code - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:15 - dead_code
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:15 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:15 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:15 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:16 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:16 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:207:16 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:208:13 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:208:13 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:208:13 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:208:14 - missing_identifier
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:208:14 - unexpected_token
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:210:34 - expected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:210:35 - missing_identifier
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:210:35 - unexpected_token
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:248:13 - expected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:248:14 - missing_identifier
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:248:14 - unexpected_token
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:250:33 - expected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:250:34 - missing_identifier
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:250:34 - unexpected_token
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:290:12 - expected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:9 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:9 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:9 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:10 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:10 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:291:10 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:7 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:7 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:7 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:8 - missing_identifier
+  error - Expected to find ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:8 - expected_token
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:292:8 - unexpected_token
+  error - Expected an identifier - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:293:5 - missing_identifier
+  error - Unexpected text ';' - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:293:5 - unexpected_token
+warning - The declaration '_calculateDiscount' isn't referenced - lib\presentation\features\dashboard\widgets\product_details_bottom_sheet.dart:296:10 - unused_element
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\drawer\about_us_screen.dart:93:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\drawer\faq_screen.dart:38:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\drawer\help_support_screen.dart:45:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\drawer\notifications_screen.dart:156:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\drawer\send_feedback_screen.dart:112:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\orders\my_orders_screen.dart:101:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\products\product_details_screen.dart:465:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\features\products\products_list_screen.dart:109:35 - deprecated_member_use
+warning - The declaration '_incrementQty' isn't referenced - lib\presentation\features\products\widgets\product_grid_item.dart:44:8 - unused_element
+warning - The declaration '_decrementQty' isn't referenced - lib\presentation\features\products\widgets\product_grid_item.dart:51:8 - unused_element
+warning - The declaration '_incrementQty' isn't referenced - lib\presentation\features\products\widgets\product_list_item.dart:45:8 - unused_element
+warning - The declaration '_decrementQty' isn't referenced - lib\presentation\features\products\widgets\product_list_item.dart:52:8 - unused_element
+

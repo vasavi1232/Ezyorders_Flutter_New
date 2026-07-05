@@ -1,0 +1,12 @@
+<svg width="88" height="88" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+  <path d="M43.999,0L43.999,8.082" stroke="#ababab" stroke-width="4" fill="none"/>
+  <path d="M43.999,79.917L43.999,87.999" stroke="#d4d4d3" stroke-width="4" fill="none"/>
+  <path d="M12.887,12.887L18.602,18.602" stroke="#d4d4d3" stroke-width="4" fill="none"/>
+  <path d="M69.396,69.397L75.111,75.112" stroke="#ababab" stroke-width="4" fill="none"/>
+  <path d="M0,43.999L8.082,43.999" stroke="#d4d4d3" stroke-width="4" fill="none"/>
+  <path d="M79.917,43.999L87.999,43.999" stroke="#ababab" stroke-width="4" fill="none"/>
+  <path d="M12.887,75.112L18.602,69.397" stroke="#d4d4d3" stroke-width="4" fill="none"/>
+  <path d="M69.396,18.602L75.111,12.887" stroke="#ababab" stroke-width="4" fill="none"/>
+  <path d="M43.998,43.998m-26.266,0a26.266,26.266 0,1 1,52.532 0a26.266,26.266 0,1 1,-52.532 0" stroke="#d4d4d3" stroke-width="4" fill="none"/>
+  <path d="M43.998,43.999m-26.266,0a26.266,26.266 0,1 1,52.532 0a26.266,26.266 0,1 1,-52.532 0" stroke="#0038FF" stroke-width="4" stroke-dasharray="82.5 82.5" fill="none"/>
+</svg>
