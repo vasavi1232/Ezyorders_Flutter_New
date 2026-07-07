@@ -40,8 +40,8 @@ class WishlistItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Logic Parity with Android Fav_ProductslistAdapter.kt
-
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -49,11 +49,6 @@ class WishlistItemWidget extends StatelessWidget {
     final bool hasPromotion = item.hasPromotion == "Yes" &&
         item.promotionPrice != null &&
         double.tryParse(item.promotionPrice ?? "0")! > 0;
-
-    // Determine category name to display (Parity: Show if 'All' categories selected)
-    // For now, allow it to be passed in or just show it if available.
-    // Provider logic handles filtering, but Widget might need to know "current context".
-    // Android shows it if `favCategoty == ""`
 
     return Container(
       width: width,
@@ -86,7 +81,6 @@ class WishlistItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 1. Checkbox
-                    // Using a custom container to match look or standard Checkbox
                     SizedBox(
                       width: 24.w,
                       height: 24.w,
@@ -113,7 +107,7 @@ class WishlistItemWidget extends StatelessWidget {
                     Stack(
                       children: [
                         Container(
-                          height: 80.h,
+                          height: isLandscape ? 60.h : 80.h,
                           width: 80.w,
                           alignment: Alignment.center,
                           child: _buildImage(item.image),
@@ -250,7 +244,7 @@ class WishlistItemWidget extends StatelessWidget {
                               children: [
                                 // Quantity Controls
                                 Container(
-                                  height: 35.h,
+                                  height: isLandscape ? 45.h : 35.h,
                                   width: 110.w,
                                   decoration: BoxDecoration(
                                     border: Border.all(color: AppTheme.borderColor),
@@ -351,7 +345,7 @@ class WishlistItemWidget extends StatelessWidget {
                                 InkWell(
                                   onTap: canAddToCart ? onAddToCart : null,
                                   child: Container(
-                                    height: 32.h,
+                                    height: isLandscape ? 45.h : 32.h,
                                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(

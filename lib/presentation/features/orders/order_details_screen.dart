@@ -741,16 +741,19 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
     if (buttons.isEmpty) return const SizedBox.shrink();
 
+    final orientation = MediaQuery.of(context).orientation;
+    final int crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+
     return Padding(
       padding: EdgeInsets.only(top: 16.h),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: crossAxisCount,
           crossAxisSpacing: 12.w,
           mainAxisSpacing: 12.h,
-          childAspectRatio: 3.8, // Adjusted for button text
+          childAspectRatio: orientation == Orientation.landscape ? 5.0 : 3.8, // Adjusted for button text
         ),
         itemCount: buttons.length,
         itemBuilder: (context, index) => buttons[index],
@@ -842,5 +845,3 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 }
-
-

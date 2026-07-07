@@ -360,6 +360,9 @@ class _ProductListItemState extends State<ProductListItem> {
   }
 
   Widget _buildAddToCartButton(bool isOutOfStock, bool canAddToCart) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final double buttonHeight = isLandscape ? 45.h : 35.h;
+
     return InkWell(
       onTap: isOutOfStock
           ? null
@@ -379,7 +382,7 @@ class _ProductListItemState extends State<ProductListItem> {
                   );
                 }),
       child: Container(
-        height: 35.h,
+        height: buttonHeight,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         alignment: Alignment.center,
         decoration: BoxDecoration(

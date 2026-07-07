@@ -33,13 +33,7 @@ class ProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Logic from FutureProductsAdapter.kt
-
-    // Sold As Logic
-    // TODO: Need access to DashboardProvider or passing 'show_sold_as' flag.
-    // For now assuming show_sold_as is false or handled elsewhere, or I can check item fields if they exist.
-    // Android checks DashboardViewModel.getUpResponse?.value?.results?.get(0)?.show_sold_as == "Yes"
-
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -47,10 +41,6 @@ class ProductItemWidget extends StatelessWidget {
     final bool hasPromotion = item.hasPromotion == "Yes" &&
         item.promotionPrice != null &&
         double.tryParse(item.promotionPrice ?? "0")! > 0;
-
-    // Vendor Visibility:
-    // Android: if category is Promotions/Pop Cat -> GONE.
-    // But this widget is mostly for standard products. Passing visibility might be cleaner, but let's default to visible.
 
     return Container(
       width: width,
@@ -60,7 +50,7 @@ class ProductItemWidget extends StatelessWidget {
         color: Colors.white,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0.r), // 👈 decrease radius here
+          borderRadius: BorderRadius.circular(0.r),
         ),
         child: InkWell(
           onTap: onTap ??
@@ -94,8 +84,7 @@ class ProductItemWidget extends StatelessWidget {
                         width: double.infinity,
                         height: 24.h,
                         decoration: BoxDecoration(
-                          color: AppTheme
-                              .tealColor, // Synchronized with tealcolor (Orange)
+                          color: AppTheme.tealColor,
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -132,10 +121,10 @@ class ProductItemWidget extends StatelessWidget {
                 Stack(
                   children: [
                     Container(
-                      height: 100.h,
+                      height: isLandscape ? 140.h : 100.h, // Increased image height in landscape
                       width: double.infinity,
                       alignment: Alignment.center,
-                      child: _buildImage(item.image),
+                      child: _buildImage(item.image, isLandscape),
                     ),
                     // Status Badge (Top Left)
                     if (badgeLabel != null && badgeLabel!.isNotEmpty)
@@ -286,8 +275,6 @@ class ProductItemWidget extends StatelessWidget {
 
                 SizedBox(height: 10.h),
 
-                // Add To Cart & Fav
-                //SizedBox(height: 8.h),
                 Spacer(),
                 Row(
                   children: [
@@ -311,18 +298,17 @@ class ProductItemWidget extends StatelessWidget {
                                     );
                                   }),
                         child: Container(
-                          height: 35
-                              .h, // Adjusted from 40.h to match Android @dimen/dimen_35
+                          height: isLandscape ? 50.h : 35.h, // Increased button height in landscape
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: canAddToCart
                                 ? AppTheme.primaryButtonColor
                                 : AppTheme.redColor,
                             borderRadius: BorderRadius.circular(AppTheme
-                                .productButtonRadius.r), // Standardized radius
+                                .productButtonRadius.r),
                           ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w), // Increased internal padding for responsiveness
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
@@ -364,9 +350,6 @@ class ProductItemWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 5.h),
-
-                // Shop Now (Hidden by default in FutureProducts except Pop Categories?)
-                // Assuming this generic widget is for products.
               ],
             ),
           ),
@@ -379,7 +362,7 @@ class ProductItemWidget extends StatelessWidget {
     return CommonMethods.setPriceFormatString(price);
   }
 
-  Widget _buildImage(String? path) {
+  Widget _buildImage(String? path, bool isLandscape) {
     if (path == null || path.isEmpty) {
       return Container(color: Colors.grey[200]);
     }
@@ -390,8 +373,8 @@ class ProductItemWidget extends StatelessWidget {
 
     return CachedNetworkImage(
       imageUrl: finalUrl,
-      height: 120.h,
-      fit: BoxFit.contain, // scaleType="fitCenter"
+      height: isLandscape ? 140.h : 120.h, // Increased height in landscape
+      fit: BoxFit.contain, 
       cacheManager: ImageCacheManager(),
       placeholder: (context, url) => Container(color: Colors.grey[200]),
       errorWidget: (context, url, error) =>

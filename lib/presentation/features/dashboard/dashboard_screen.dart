@@ -368,7 +368,18 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildDrawer() {
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final isTablet = mediaQuery.size.shortestSide >= 600;
+    
+    // Increase drawer width in landscape mode for tablets
+    double drawerWidth = 304.0; // Default Flutter drawer width
+    if (isLandscape && isTablet) {
+      drawerWidth = mediaQuery.size.width * 0.4; // 40% of screen width
+    }
+
     return Drawer(
+      width: drawerWidth,
       backgroundColor: Colors.white,
       child: Column(
         children: [

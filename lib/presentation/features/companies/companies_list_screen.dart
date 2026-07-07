@@ -47,8 +47,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                           children: [
                             // Top Card with Logo
                             Card(
-                              margin: EdgeInsets.only(
-                              ),
+                              margin: EdgeInsets.zero,
                               elevation: 1,
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -71,8 +70,6 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                 children: [
                                   Consumer<CompaniesProvider>(
                                     builder: (context, provider, child) {
-                                      // Moved isLoading check to Overlay
-
                                       if (provider.errorMsg != null) {
                                         return ErrorView(
                                           errorMessage: provider.errorMsg,
@@ -80,10 +77,17 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                         );
                                       }
 
-                                      double screenWidth = MediaQuery.of(context).size.width;
-                                      // Always 2 columns, matching Android native
-                                      bool isTablet = screenWidth >= 600;
+                                      final mediaQuery = MediaQuery.of(context);
+                                      final isLandscape = mediaQuery.orientation == Orientation.landscape;
+                                      final isTablet = mediaQuery.size.shortestSide >= 600;
+                                      
+                                      // 3 columns in landscape mode, 2 in portrait
+                                      int crossAxisCount = isLandscape ? 3 : 2;
                                       double aspectRatio = isTablet ? 0.85 : 0.58;
+                                      
+                                      if (isLandscape && isTablet) {
+                                        aspectRatio = 1.0; // Adjusting aspect ratio for landscape tablet
+                                      }
 
                                       // Calculate a global fallback color from any company that has a primaryButtonColor
                                       Color? apiFallbackColor;
@@ -100,7 +104,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                             horizontal: 10, vertical: 15),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
+                                          crossAxisCount: crossAxisCount,
                                           childAspectRatio: aspectRatio,
                                           mainAxisSpacing: 10.h,
                                           crossAxisSpacing: 8.w,
@@ -144,23 +148,26 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   // Company Image
-                                                  CachedNetworkImage(
-                                                    imageUrl: imageUrl,
-                                                    height: isTablet ? 160.h : 110.h,
-                                                    width: double.infinity,
-                                                    fit: BoxFit.contain,
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            const SizedBox(),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        Icon(Icons.error, size: isTablet ? 40 : 24),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: imageUrl,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.contain,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              const SizedBox(),
+                                                      errorWidget: (context, url,
+                                                              error) =>
+                                                          Icon(Icons.error, size: isTablet ? 40 : 24),
+                                                    ),
                                                   ),
 
                                                   SizedBox(height: isTablet ? 12 : 6),
 
                                                   // Company Name & Description (Centered)
                                                   Expanded(
+                                                    flex: 2,
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -177,7 +184,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                                TextStyle(
                                                             color: AppTheme
                                                                 .lightBlue,
-                                                            fontSize: isTablet ? 20.sp : 15.sp,
+                                                            fontSize: isTablet ? 18.sp : 15.sp,
                                                             fontWeight:
                                                                 FontWeight.w800,
                                                           ),
@@ -189,13 +196,13 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                               "",
                                                           textAlign:
                                                               TextAlign.center,
-                                                          maxLines: 2,
+                                                          maxLines: 1,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           style:
                                                                TextStyle(
                                                             color: Colors.black,
-                                                            fontSize: isTablet ? 16.sp : 12.sp,
+                                                            fontSize: isTablet ? 14.sp : 12.sp,
                                                                   fontWeight:
                                                                   FontWeight.bold
                                                           ),
@@ -210,7 +217,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                             bottom: 8),
                                                     child: SizedBox(
                                                       width: double.infinity,
-                                                      height: isTablet ? 48.h : 35.h,
+                                                      height: isTablet ? 44.h : 35.h,
                                                       child: ElevatedButton(
                                                         onPressed: () {
                                                           provider
@@ -243,7 +250,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
-                                                              fontSize: isTablet ? 18 : 14,
+                                                              fontSize: isTablet ? 16 : 14,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700,

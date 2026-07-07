@@ -53,7 +53,10 @@ class _PromotionsSectionState extends State<PromotionsSection> {
 
   void _scroll(bool forward) {
     if (!_scrollController.hasClients) return;
-    const double scrollAmount = 250;
+    final orientation = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+    final double scrollAmount = 1.sw / crossAxisCount;
+    
     final double target = forward
         ? _scrollController.offset + scrollAmount
         : _scrollController.offset - scrollAmount;
@@ -117,17 +120,19 @@ class _PromotionsSectionState extends State<PromotionsSection> {
         }
 
         final promotions = response.results!;
-        final double cardWidth = (1.sw / 2) - 10.w;
+        final orientation = MediaQuery.of(context).orientation;
+        final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+        final double cardWidth = (1.sw / crossAxisCount) - 10.w;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SectionHeaderWidget(
               title: "Promotions",
-              onPrevTap: (promotions.length > 2 && _canScrollLeft) ? () => _scroll(false) : null,
-              onNextTap: (promotions.length > 2 && _canScrollRight) ? () => _scroll(true) : null,
+              onPrevTap: (promotions.length > crossAxisCount && _canScrollLeft) ? () => _scroll(false) : null,
+              onNextTap: (promotions.length > crossAxisCount && _canScrollRight) ? () => _scroll(true) : null,
               itemCount: promotions.length,
-              minItemsForNav: 3,
+              minItemsForNav: crossAxisCount + 1,
             ),
             SingleChildScrollView(
               controller: _scrollController,

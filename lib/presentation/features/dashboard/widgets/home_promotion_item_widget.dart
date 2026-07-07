@@ -26,6 +26,8 @@ class HomePromotionItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Container(
       width: width,
       margin: EdgeInsets.only(bottom: 5.h),
@@ -48,7 +50,7 @@ class HomePromotionItemWidget extends StatelessWidget {
               children: [
                 // Image Section
                 SizedBox(
-                  height: 120.h, // @dimen/dimen_120
+                  height: isLandscape ? 160.h : 120.h, // Increased in landscape
                   width: double.infinity,
                   child: Stack(
                     children: [
@@ -103,7 +105,7 @@ class HomePromotionItemWidget extends StatelessWidget {
                           color: AppTheme.primaryColor, size: 12.sp),
                     ],
                   ),
-                  SizedBox(height: 4.h), // Replaced 12.h with a smaller spacer only for Shop Now
+                  SizedBox(height: 4.h), 
                 ],
               ],
             ),

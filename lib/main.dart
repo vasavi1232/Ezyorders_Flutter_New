@@ -36,11 +36,6 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
   await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
   HttpOverrides.global = MyHttpOverrides(); // Bypass SSL verification
 
@@ -57,6 +52,21 @@ class MyApp extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth >= 600;
+        
+        // Lock orientation: Phone (Portrait only), Tablet (Portrait & Landscape)
+        if (isTablet) {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+            DeviceOrientation.landscapeLeft,
+            DeviceOrientation.landscapeRight,
+          ]);
+        } else {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ]);
+        }
 
         return SafeArea(
           child: ScreenUtilInit(
@@ -117,4 +127,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

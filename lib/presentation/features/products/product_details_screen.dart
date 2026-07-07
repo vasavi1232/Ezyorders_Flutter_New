@@ -273,6 +273,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final bool hasPromotion = product.hasPromotion == "Yes" &&
         product.promotionPrice != null &&
         double.tryParse(product.promotionPrice ?? "0")! > 0;
+    
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Padding(
       padding: EdgeInsets.all(15.w),
@@ -290,7 +292,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     tag: "product_image_${product.productId}",
                     child: CachedNetworkImage(
                       imageUrl: _getImageUrl(product.image),
-                      height: 200.h,
+                      height: isLandscape ? 150.h : 200.h,
                       fit: BoxFit.contain,
                       cacheManager: ImageCacheManager(),
                       placeholder: (context, url) =>
@@ -492,7 +494,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             AppTheme.productButtonRadius.r)),
-                    minimumSize: Size(double.infinity, 40.h),
+                    minimumSize: Size(double.infinity, isLandscape ? 48.h : 40.h),
                   ),
                   child: Text(
                     product.qtyStatus == "Out Of Stock"
@@ -1081,6 +1083,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     // 3. Details: Title, etc.
     // 4. Action: "Add To Cart" (Orange Rounded) + Heart Icon (Outline/Filled)
 
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -1298,7 +1301,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               );
                                             }),
                                   child: Container(
-                                    height: 32.h,
+                                    height: isLandscape ? 40.h : 32.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart

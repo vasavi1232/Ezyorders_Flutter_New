@@ -31,7 +31,10 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
     _scrollController.addListener(() {
       if (!_scrollController.hasClients) return;
       
-      final itemWidth = (1.sw / 2) - 10.w + 6.w; // width + gap
+      final orientation = MediaQuery.of(context).orientation;
+      final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+      final itemWidth = (1.sw / crossAxisCount) - 10.w + 6.w; // width + gap
+      
       if (_scrollController.position.pixels >= 0) {
         int index = (_scrollController.position.pixels / itemWidth).round();
         if (index != _currentIndex) {
@@ -94,7 +97,10 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
 
       final maxScroll = _scrollController.position.maxScrollExtent;
       final currentScroll = _scrollController.offset;
-      final itemWidth = (1.sw / 2) - 10.w + 6.w;
+      
+      final orientation = MediaQuery.of(context).orientation;
+      final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+      final itemWidth = (1.sw / crossAxisCount) - 10.w + 6.w;
 
       double target;
       if (currentScroll >= maxScroll - 5) {
@@ -114,14 +120,16 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
   void _goToPage(bool forward, int totalItems) {
     if (!_scrollController.hasClients) return;
     
-    // Scroll by 2 items to match Best Sellers behavior conceptually 
-    // (though Best Sellers manual scroll doesn't auto-wrap, it just clamps)
-    int nextIndex = forward ? _currentIndex + 2 : _currentIndex - 2;
+    final orientation = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+    
+    // Scroll by crossAxisCount items
+    int nextIndex = forward ? _currentIndex + crossAxisCount : _currentIndex - crossAxisCount;
 
     if (nextIndex < 0) nextIndex = 0;
     if (nextIndex >= totalItems) nextIndex = totalItems - 1;
 
-    final itemWidth = (1.sw / 2) - 10.w + 6.w;
+    final itemWidth = (1.sw / crossAxisCount) - 10.w + 6.w;
     _scrollController.animateTo(
       nextIndex * itemWidth,
       duration: const Duration(milliseconds: 300),
@@ -138,90 +146,101 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DashboardProvider>(
-      builder: (context, provider, child) {
-        final response = provider.popularCategoriesResponse;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Consumer<DashboardProvider>(
+          builder: (context, provider, child) {
+            final response = provider.popularCategoriesResponse;
 
-        if (response == null ||
-            response.results == null ||
-            response.results!.isEmpty) {
-          return const SizedBox.shrink();
-        }
+            if (response == null ||
+                response.results == null ||
+                response.results!.isEmpty) {
+              return const SizedBox.shrink();
+            }
 
-        final categories = response.results!
-            .where((item) => item != null && item.categoryProductsCount != "0")
-            .toList();
+            final categories = response.results!
+                .where((item) => item != null && item.categoryProductsCount != "0")
+                .toList();
 
-        if (categories.isEmpty) return const SizedBox.shrink();
+            if (categories.isEmpty) return const SizedBox.shrink();
 
-        final double itemWidth = (1.sw / 2) - 10.w;
+            final orientation = MediaQuery.of(context).orientation;
+            final isLandscape = orientation == Orientation.landscape;
+            final crossAxisCount = isLandscape ? 3 : 2;
+            final double itemWidth = (1.sw / crossAxisCount) - 10.w;
+            
+            // Increased height significantly to avoid cutoff in landscape
+            final double sectionHeight = isLandscape ? 450.h : 220.h;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SectionHeaderWidget(
-              title: "Popular Categories",
-              onPrevTap: (categories.length > 2 && _canScrollLeft)
-                  ? () => _goToPage(false, categories.length)
-                  : null,
-              onNextTap: (categories.length > 2 && _canScrollRight)
-                  ? () => _goToPage(true, categories.length)
-                  : null,
-              itemCount: categories.length,
-              minItemsForNav: 3,
-            ),
-            SizedBox(
-              height: 220.h,
-              child: ListView.separated(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                itemCount: categories.length + (provider.isPopularCategoriesLoadingMore ? 1 : 0),
-                separatorBuilder: (context, index) => SizedBox(width: 6.w),
-                itemBuilder: (context, index) {
-                  if (index == categories.length) {
-                    return Container(
-                      width: 50.w,
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                      ),
-                    );
-                  }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeaderWidget(
+                  title: "Popular Categories",
+                  onPrevTap: (categories.length > crossAxisCount && _canScrollLeft)
+                      ? () => _goToPage(false, categories.length)
+                      : null,
+                  onNextTap: (categories.length > crossAxisCount && _canScrollRight)
+                      ? () => _goToPage(true, categories.length)
+                      : null,
+                  itemCount: categories.length,
+                  minItemsForNav: crossAxisCount + 1,
+                ),
+                SizedBox(
+                  height: sectionHeight,
+                  child: ListView.separated(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    itemCount: categories.length + (provider.isPopularCategoriesLoadingMore ? 1 : 0),
+                    separatorBuilder: (context, index) => SizedBox(width: 6.w),
+                    itemBuilder: (context, index) {
+                      if (index == categories.length) {
+                        return Container(
+                          width: 50.w,
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          ),
+                        );
+                      }
 
-                  final category = categories[index];
-                  if (category == null) return const SizedBox.shrink();
+                      final category = categories[index];
+                      if (category == null) return const SizedBox.shrink();
 
-                  return HomePromotionItemWidget(
-                    imageUrl: category.image,
-                    title: category.groupLevel1 ?? category.popularCategory ?? "",
-                    subtitle: _buildSubtitle(category.categoryProductsCount),
-                    width: itemWidth,
-                      onTap: () {
-                        final productProvider = context.read<ProductListProvider>();
-                        productProvider.clearFilters();
-                        productProvider.setCategory(category.divisionId.toString());
-                        // Always reload when visiting Order Now
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (context.mounted) {
-                            final dashboardProvider = context.read<DashboardProvider>();
-                            final profile = dashboardProvider.profileResponse?.results?.firstOrNull;
-                            context.read<ProductListProvider>().init(
-                              isTablet: AppTheme.isTablet(context),
-                              profile: profile,
-                            );
-                          }
-                        });
-                        context.read<DashboardProvider>().setIndex(1);
-                      },
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 10.h),
-          ],
-        );
-      },
+                      return HomePromotionItemWidget(
+                        imageUrl: category.image,
+                        title: category.groupLevel1 ?? category.popularCategory ?? "",
+                        subtitle: _buildSubtitle(category.categoryProductsCount),
+                        width: itemWidth,
+                          onTap: () {
+                            final productProvider = context.read<ProductListProvider>();
+                            productProvider.clearFilters();
+                            productProvider.setCategory(category.divisionId.toString());
+                            // Always reload when visiting Order Now
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (context.mounted) {
+                                final dashboardProvider = context.read<DashboardProvider>();
+                                final profile = dashboardProvider.profileResponse?.results?.firstOrNull;
+                                context.read<ProductListProvider>().init(
+                                  isTablet: AppTheme.isTablet(context),
+                                  profile: profile,
+                                );
+                              }
+                            });
+                            context.read<DashboardProvider>().setIndex(1);
+                          },
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -230,4 +249,3 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
     return value == "1" ? "$value Product" : "$value Products";
   }
 }
-

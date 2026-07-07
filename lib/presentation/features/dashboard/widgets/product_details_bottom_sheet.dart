@@ -115,6 +115,8 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
     final bool hasPromotion = widget.product.hasPromotion == "Yes" &&
         (double.tryParse(widget.product.promotionPrice ?? "0") ?? 0) > 0;
     final bool isAdded = widget.product.addedToCart == "Yes";
+    
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Container(
       decoration: BoxDecoration(
@@ -515,25 +517,28 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Add/Update Cart Logic
-                    // If validation passes
-                    _addToCart(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButtonColor,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+                child: SizedBox(
+                  height: isLandscape ? 50.h : 45.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add/Update Cart Logic
+                      // If validation passes
+                      _addToCart(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryButtonColor,
+                      padding: EdgeInsets.zero,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    isAdded ? "Update Cart [$_quantity]" : "Add To Cart",
-                    style: TextStyle(
-                        color: AppTheme.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold),
+                    child: Text(
+                      isAdded ? "Update Cart [$_quantity]" : "Add To Cart",
+                      style: TextStyle(
+                          color: AppTheme.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -553,13 +558,12 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                       ),
                       child: const Icon(Icons.delete, color: Colors.white),
                     ))
-              ], // Closes the `if (isAdded) ...[` block
-            ], // Closes the `Row`'s children list
+              ], 
+            ], 
           ),
-          // Closes the `Row` widget
-        ], // Closes the `Column`'s children list
-      ), // Closes the `Column` widget
-    ); // Closes the `return` statement
+        ], 
+      ), 
+    ); 
   }
 
   void _addToCart(BuildContext context) {

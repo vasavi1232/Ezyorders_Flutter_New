@@ -254,6 +254,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   }
 
   Widget _buildSearchBar() {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       color: Colors.white,
@@ -261,7 +262,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
         children: [
           Expanded(
             child: Container(
-              height: 48.h,
+              height: isLandscape ? 60.h : 48.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5.r),
@@ -310,8 +311,8 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
           ),
           SizedBox(width: 10.w),
           Container(
-            height: 45.h,
-            width: 45.h,
+            height: isLandscape ? 60.h : 45.h,
+            width: isLandscape ? 60.h : 45.h,
             decoration: BoxDecoration(
               color: AppTheme.tealColor,
               borderRadius: BorderRadius.circular(5.r),
@@ -332,6 +333,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   }
 
   Widget _buildToggleBar() {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Consumer<ProductListProvider>(
       builder: (context, provider, child) {
         return Container(
@@ -347,7 +349,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                   Expanded(
                     flex: 48,
                     child: Container(
-                      height: 40.h,
+                      height: isLandscape ? 55.h : 40.h,
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[300]!),
@@ -441,12 +443,13 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
     required VoidCallback onTap,
     bool isActive = false,
   }) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(4.r),
       child: Container(
-        width: 38.w,
-        height: 38.w,
+        width: isLandscape ? 50.w : 38.w,
+        height: isLandscape ? 50.w : 38.w,
         padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
           color: isActive ? AppTheme.primaryColor : Colors.white,
@@ -531,11 +534,18 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
     final showSoldAs =
         dashboardProvider.profileResponse?.results?[0]?.showSoldAs == "Yes";
 
+    final orientation = MediaQuery.of(context).orientation;
+    final isLandscape = orientation == Orientation.landscape;
+
     final dimensions = dashboardProvider.profileResponse?.results?.firstOrNull?.productImageDimensions ?? "600x600";
-    double mainAxisExtent = 300.h; // Decreased further to reduce empty space
+    
+    // Significantly increased mainAxisExtent in landscape to fix overlap issues and accommodate taller images/buttons
+    double mainAxisExtent = isLandscape ? 500.h : 300.h; 
     if (dimensions.contains("600x400")) {
-      mainAxisExtent = 250.h; // Decreased further to remove empty space for 600x400
+      mainAxisExtent = isLandscape ? 450.h : 250.h; 
     }
+
+    int crossAxisCount = isLandscape ? 3 : 2;
 
     return CustomScrollView(
       controller: _scrollController,
@@ -547,8 +557,8 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           sliver: SliverGrid(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200.w,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
               mainAxisExtent: mainAxisExtent,
               crossAxisSpacing: 6.w,
               mainAxisSpacing: 6.h,

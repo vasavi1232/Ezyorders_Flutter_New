@@ -34,6 +34,8 @@ class ProductGridItem extends StatefulWidget {
 class _ProductGridItemState extends State<ProductGridItem> {
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    
     final bool isOutOfStock = widget.item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = widget.item.supplierAvailable == "1" &&
         widget.item.productAvailable == "1" &&
@@ -316,7 +318,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                                         );
                                       }),
                             child: Container(
-                              height: 35.h,
+                              height: isLandscape ? 45.h : 35.h,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: canAddToCart

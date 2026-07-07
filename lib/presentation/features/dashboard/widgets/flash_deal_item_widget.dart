@@ -95,6 +95,7 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
   Widget build(BuildContext context) {
     // Logic similar to ProductItemWidget but with Split layout
     final item = widget.item;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -244,7 +245,7 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
                                               );
                                             }),
                                   child: Container(
-                                    height: 35.h,
+                                    height: isLandscape ? 45.h : 35.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart

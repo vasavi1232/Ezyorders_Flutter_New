@@ -45,7 +45,10 @@ class _ProductListSectionState extends State<ProductListSection> {
     _scrollController.addListener(() {
       if (!_scrollController.hasClients) return;
       
-      final itemWidth = (1.sw / 2) - 10.w + 6.w; // width + gap
+      final orientation = MediaQuery.of(context).orientation;
+      final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+      final itemWidth = (1.sw / crossAxisCount) - 10.w + 6.w; // width + gap
+      
       if (_scrollController.position.pixels >= 0) {
         int index = (_scrollController.position.pixels / itemWidth).round();
         if (index != _currentIndex) {
@@ -85,12 +88,15 @@ class _ProductListSectionState extends State<ProductListSection> {
   }
 
   void _goToPage(bool forward, int totalItems) {
-    int nextIndex = forward ? _currentIndex + 2 : _currentIndex - 2;
+    final orientation = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+    
+    int nextIndex = forward ? _currentIndex + crossAxisCount : _currentIndex - crossAxisCount;
 
     if (nextIndex < 0) nextIndex = 0;
     if (nextIndex >= totalItems) nextIndex = totalItems - 1;
 
-    final itemWidth = (1.sw / 2) - 10.w + 6.w;
+    final itemWidth = (1.sw / crossAxisCount) - 10.w + 6.w;
     _scrollController.animateTo(
       nextIndex * itemWidth,
       duration: const Duration(milliseconds: 300),
@@ -111,21 +117,23 @@ class _ProductListSectionState extends State<ProductListSection> {
     }
 
     final products = widget.products!;
-    final double itemWidth = (1.sw / 2) - 10.w;
+    final orientation = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientation == Orientation.landscape ? 3 : 2;
+    final double itemWidth = (1.sw / crossAxisCount) - 10.w;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeaderWidget(
           title: widget.title,
-          onPrevTap: (products.length > 2 && _canScrollLeft)
+          onPrevTap: (products.length > crossAxisCount && _canScrollLeft)
               ? () => _goToPage(false, products.length)
               : null,
-          onNextTap: (products.length > 2 && _canScrollRight)
+          onNextTap: (products.length > crossAxisCount && _canScrollRight)
               ? () => _goToPage(true, products.length)
               : null,
           itemCount: products.length,
-          minItemsForNav: 3,
+          minItemsForNav: crossAxisCount + 1,
         ),
           SingleChildScrollView(
           controller: _scrollController,

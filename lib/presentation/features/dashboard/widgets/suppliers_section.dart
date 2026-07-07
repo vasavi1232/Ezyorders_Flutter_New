@@ -18,7 +18,7 @@ class _SuppliersSectionState extends State<SuppliersSection> {
   late ScrollController _scrollController;
   Timer? _autoScrollTimer;
 
-  /// Current page index (0-based). Each page = 2 supplier items.
+  /// Current page index (0-based).
   int _pageIndex = 0;
   bool _canScrollLeft = false;
   bool _canScrollRight = true;
@@ -29,8 +29,10 @@ class _SuppliersSectionState extends State<SuppliersSection> {
   double _itemWidth = 0;
   double _gapBetween = 0;
 
-  int get _itemsPerPage =>
-      _itemWidth == 0 ? 2 : (MediaQuery.of(context).size.width > 600 ? 3 : 2);
+  int get _itemsPerPage {
+    final orientation = MediaQuery.of(context).orientation;
+    return orientation == Orientation.landscape ? 3 : 2;
+  }
 
   @override
   void initState() {
@@ -60,7 +62,8 @@ class _SuppliersSectionState extends State<SuppliersSection> {
   void _onScroll() {
     if (!_scrollController.hasClients || _itemWidth == 0) return;
 
-    final double pageStep = _itemsPerPage * (_itemWidth + _gapBetween);
+    final itemsPerPage = _itemsPerPage;
+    final double pageStep = itemsPerPage * (_itemWidth + _gapBetween);
     final double px = _scrollController.position.pixels;
     final double maxScroll = _scrollController.position.maxScrollExtent;
 
@@ -70,7 +73,7 @@ class _SuppliersSectionState extends State<SuppliersSection> {
       // We are at the very end
       final provider = context.read<DashboardProvider>();
       final count = provider.supplierLogosResponse?.results?.length ?? 0;
-      newPage = (count / _itemsPerPage).ceil() - 1;
+      newPage = (count / itemsPerPage).ceil() - 1;
     } else {
       newPage = (px / pageStep).round();
     }
@@ -118,7 +121,8 @@ class _SuppliersSectionState extends State<SuppliersSection> {
       final suppliers = provider.supplierLogosResponse?.results ?? [];
       if (suppliers.isEmpty) return;
 
-      final int totalPages = (suppliers.length / _itemsPerPage).ceil();
+      final itemsPerPage = _itemsPerPage;
+      final int totalPages = (suppliers.length / itemsPerPage).ceil();
 
       // If we are at the last page, stay there for one cycle before looping
       if (_pageIndex >= totalPages - 1) {
@@ -132,7 +136,8 @@ class _SuppliersSectionState extends State<SuppliersSection> {
   // ── Navigation ─────────────────────────────────────────────────────────────
 
   void _goToPageNav(bool forward, int totalItems) {
-    final int totalPages = (totalItems / _itemsPerPage).ceil();
+    final itemsPerPage = _itemsPerPage;
+    final int totalPages = (totalItems / itemsPerPage).ceil();
     int nextPage = forward ? _pageIndex + 1 : _pageIndex - 1;
     if (nextPage >= totalPages) nextPage = 0;
     if (nextPage < 0) nextPage = totalPages - 1;
@@ -142,7 +147,8 @@ class _SuppliersSectionState extends State<SuppliersSection> {
   void _scrollToPage(int pageIndex) {
     if (!_scrollController.hasClients || _itemWidth == 0) return;
 
-    final double pageStep = _itemsPerPage * (_itemWidth + _gapBetween);
+    final itemsPerPage = _itemsPerPage;
+    final double pageStep = itemsPerPage * (_itemWidth + _gapBetween);
     final double targetOffset = (pageIndex * pageStep)
         .clamp(0.0, _scrollController.position.maxScrollExtent);
 
@@ -185,8 +191,10 @@ class _SuppliersSectionState extends State<SuppliersSection> {
             final double leftPad = 8.w;
             final double gapBetween = 6.w;
 
-            // Display 3 items on tablets/wider screens (>600dp), 2 on phones
-            final int itemsPerPage = totalWidth > 600 ? 3 : 2;
+            final orientation = MediaQuery.of(context).orientation;
+            // Display 3 items in landscape, 2 in portrait
+            final int itemsPerPage = orientation == Orientation.landscape ? 3 : 2;
+            
             final double itemWidth =
                 (totalWidth - leftPad - (gapBetween * (itemsPerPage - 1)) - leftPad) / itemsPerPage;
 
