@@ -40,7 +40,7 @@ class DashboardBannerItemWidget extends StatelessWidget {
               },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(0),
-          child: _buildImage(item.image),
+          child: _buildImage(context, item.image),
         ),
       ),
     );
@@ -53,10 +53,13 @@ class DashboardBannerItemWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildImage(String? path) {
+  Widget _buildImage(BuildContext context, String? path) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    double defaultHeight = isLandscape ? 400.h : 220.h;
+
     if (path == null || path.isEmpty) {
       return Container(
-          color: Colors.grey[200], height: 220.h);
+          color: Colors.grey[200], height: defaultHeight);
     }
     String finalUrl = path;
     if (!path.startsWith("http")) {
@@ -65,12 +68,12 @@ class DashboardBannerItemWidget extends StatelessWidget {
 
     return CachedNetworkImage(
       imageUrl: finalUrl,
-      height: 220,
+      height: double.infinity,
       width: double.infinity,
       fit: BoxFit.fill, // fitXY
       cacheManager: ImageCacheManager(),
       placeholder: (context, url) =>
-          Container(color: Colors.grey[200], height: 220),
+          Container(color: Colors.grey[200]),
       errorWidget: (context, url, error) =>
           const Icon(Icons.broken_image, color: Colors.grey),
     );

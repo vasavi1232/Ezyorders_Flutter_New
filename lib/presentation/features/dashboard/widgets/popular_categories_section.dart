@@ -171,7 +171,7 @@ class _PopularCategoriesSectionState extends State<PopularCategoriesSection> {
             final double itemWidth = (1.sw / crossAxisCount) - 10.w;
             
             // Increased height significantly to avoid cutoff in landscape
-            final double sectionHeight = isLandscape ? 450.h : 220.h;
+            final double sectionHeight = isLandscape ? 350.h : 220.h;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

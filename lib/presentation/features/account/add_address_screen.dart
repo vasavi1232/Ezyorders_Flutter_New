@@ -303,6 +303,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   Widget _buildTextField(String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text,
       String? Function(String?)? validator}) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final double labelFontSize = (isLandscape && isTablet) ? 16.sp : 14.sp;
+    final double verticalPadding = (isLandscape && isTablet) ? 20.h : 14.h;
+
     return Padding(
       padding: EdgeInsets.only(bottom: 16.h),
       child: TextFormField(
@@ -312,12 +317,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         style: TextStyle(fontSize: 14.sp, color: AppTheme.textColor),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: AppTheme.hintColor),
-          floatingLabelStyle: TextStyle(color: AppTheme.hintColor),
+          labelStyle: TextStyle(color: AppTheme.hintColor, fontSize: labelFontSize),
+          floatingLabelStyle: TextStyle(color: AppTheme.hintColor, fontSize: labelFontSize),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppTheme.inputRadius.r)),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+              EdgeInsets.symmetric(horizontal: 16.w, vertical: verticalPadding),
         ),
       ),
     );

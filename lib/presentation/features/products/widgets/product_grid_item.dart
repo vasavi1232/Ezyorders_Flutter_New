@@ -86,7 +86,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                       widget.item.soldAs!.isNotEmpty) {
                     return Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 5.h),
+                      padding: EdgeInsets.symmetric(vertical: isLandscape ? 12.h : 5.h), // Increased height in landscape
                       decoration: BoxDecoration(
                         color: AppTheme.tealColor,
                       ),

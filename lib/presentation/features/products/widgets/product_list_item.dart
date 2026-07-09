@@ -236,6 +236,7 @@ class _ProductListItemState extends State<ProductListItem> {
   }
 
   Widget _buildSoldAsBar() {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Consumer<DashboardProvider>(
       builder: (context, dashboard, child) {
         final bool showSoldAsProfile =
@@ -248,7 +249,7 @@ class _ProductListItemState extends State<ProductListItem> {
           return Container(
             width: double.infinity,
             margin: EdgeInsets.only(bottom: 5.h),
-            padding: EdgeInsets.symmetric(vertical: 5.h),
+            padding: EdgeInsets.symmetric(vertical: isLandscape ? 12.h : 5.h),
             decoration: BoxDecoration(
               color: AppTheme.tealColor,
             ),

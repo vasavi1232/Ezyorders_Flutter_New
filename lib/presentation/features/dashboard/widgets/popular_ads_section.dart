@@ -58,6 +58,7 @@ class _PopularAdsSectionState extends State<PopularAdsSection> {
 
         final items = response.results!;
         final totalPages = items.length;
+        final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +73,7 @@ class _PopularAdsSectionState extends State<PopularAdsSection> {
               minItemsForNav: 2,
             ),
             SizedBox(
-              height: 180.h,
+              height: isLandscape ? 450.h : 180.h,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: totalPages,

@@ -77,34 +77,18 @@ class ProductItemWidget extends StatelessWidget {
                     if (!showSoldAs) return const SizedBox.shrink();
 
                     if (item.soldAs != null &&
-                        item.soldAs!.isNotEmpty &&
-                        item.soldAs != "Each" &&
-                        item.qtyPerOuter != null) {
+                        item.soldAs!.isNotEmpty) {
                       return Container(
                         width: double.infinity,
-                        height: 24.h,
+                        padding: EdgeInsets.symmetric(vertical: isLandscape ? 12.h : 5.h),
                         decoration: BoxDecoration(
                           color: AppTheme.tealColor,
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          "${item.soldAs} (${item.qtyPerOuter} Units)",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w800),
-                        ),
-                      );
-                    } else if (item.soldAs == "Each") {
-                      return Container(
-                        width: double.infinity,
-                        height: 24.h,
-                        decoration: BoxDecoration(
-                          color: AppTheme.tealColor,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Each",
+                          item.soldAs == "Each"
+                              ? "Each"
+                              : "${item.soldAs} (${item.qtyPerOuter} Units)",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 11.sp,

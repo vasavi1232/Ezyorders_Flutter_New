@@ -29,6 +29,7 @@ class SupplierItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use passed width or fall back to screen-based calculation.
     double itemWidth = width ?? (1.sw - 22.w) / 2;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return GestureDetector(
         onTap: () {
@@ -67,7 +68,7 @@ class SupplierItemWidget extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: 90.h,
+                height: isLandscape ? 250.h : 90.h,
                 decoration: BoxDecoration(
                   color: AppTheme.white,
                   border: Border.all(
@@ -77,7 +78,7 @@ class SupplierItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(1.r),
                 ),
                 padding: EdgeInsets.all(1.5.w),
-                child: _buildImage(image),
+                child: _buildImage(image, isLandscape),
               ),
               Expanded(
                 child: Center(
@@ -103,9 +104,9 @@ class SupplierItemWidget extends StatelessWidget {
         ));
   }
 
-  Widget _buildImage(String? path) {
+  Widget _buildImage(String? path, bool isLandscape) {
     if (path == null || path.isEmpty) {
-      return Container(color: AppTheme.lightGrayBg, height: 120.h);
+      return Container(color: AppTheme.lightGrayBg, height: isLandscape ? 250.h : 120.h);
     }
     String finalUrl = path;
     if (!path.startsWith("http")) {
@@ -114,7 +115,7 @@ class SupplierItemWidget extends StatelessWidget {
 
     return CachedNetworkImage(
       imageUrl: finalUrl,
-      height: 90.h, // reduced for compact look
+      height: isLandscape ? 250.h : 90.h,
       width: double.infinity,
       fit: BoxFit.contain, // Prevent stretching, maintain aspect ratio
       placeholder: (context, url) => Center(

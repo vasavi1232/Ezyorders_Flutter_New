@@ -623,6 +623,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildMarquee(DashboardProvider provider) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final profile = provider.profileResponse?.results?.isNotEmpty == true
         ? provider.profileResponse!.results![0]
         : null;
@@ -672,7 +673,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         (double.tryParse(profile.marqueTextSize ?? '') ?? 18.0).sp;
 
     return Container(
-      height: 40.h,
+      height: isLandscape ? 120.h : 40.h, // Increased for landscape to prevent cut-off
       width: double.infinity,
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -711,10 +712,11 @@ class _DashboardScreenState extends State<DashboardScreen>
         provider.bannersResponse!.results!.isEmpty) {
       return const SizedBox.shrink();
     }
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
       children: [
         SizedBox(
-          height: 180.h, // Adjusted height to match compact look
+          height: isLandscape ? 450.h : 180.h, // Significantly increased height for landscape
           child: PageView.builder(
             controller: _bannerController,
             onPageChanged: (index) {
@@ -738,7 +740,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _buildNetworkImage(banner?.image, fit: BoxFit.fill),
                         // Overlay Card (Bottom Left)
                         Positioned(
-                          bottom: 50.h,
+                          bottom: isLandscape ? 25.h : 50.h,
                           left: 15.w,
                           child: Container(
                             width: 140.w, // Approximate width from screenshot
@@ -882,6 +884,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (results == null || results.isEmpty) {
       return const SizedBox.shrink();
     }
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Column(
       children: [
@@ -912,7 +915,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               : null,
         ),
         SizedBox(
-          height: 120.h,
+          height: isLandscape ? 450.h : 120.h,
           child: PageView.builder(
             controller: _footerPageController,
             itemCount: results.length,
