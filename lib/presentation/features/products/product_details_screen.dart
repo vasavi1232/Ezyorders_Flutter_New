@@ -292,11 +292,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     tag: "product_image_${product.productId}",
                     child: CachedNetworkImage(
                       imageUrl: _getImageUrl(product.image),
-                      height: isLandscape ? 150.h : 200.h,
+                      height: isLandscape ? 450.h : 300.h,
                       fit: BoxFit.contain,
                       cacheManager: ImageCacheManager(),
                       placeholder: (context, url) =>
-                          Container(color: Colors.grey[100], height: 200.h),
+                          Container(color: Colors.grey[100], height: isLandscape ? 450.h : 300.h),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.broken_image, size: 50),
                     ),
@@ -872,9 +872,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final dimensions = dashboardProvider.profileResponse?.results?.firstOrNull
             ?.productImageDimensions ??
         "600x600";
-    double listHeight = 300.h;
+    
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    double listHeight = isLandscape ? 520.h : 360.h;
     if (dimensions.contains("600x400")) {
-      listHeight = 245.h;
+      listHeight = isLandscape ? 380.h : 280.h;
     }
 
     return Column(
@@ -980,9 +982,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final dimensions = dashboardProvider.profileResponse?.results?.firstOrNull
             ?.productImageDimensions ??
         "600x600";
-    double listHeight = 300.h;
+    
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    double listHeight = isLandscape ? 520.h : 360.h;
     if (dimensions.contains("600x400")) {
-      listHeight = 250.h;
+      listHeight = isLandscape ? 380.h : 280.h;
     }
 
     return Column(
@@ -1149,7 +1153,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   // Image
                   Expanded(
-                    flex: 5,
+                    flex: isLandscape ? 4 : 5,
                     child: Stack(
                       children: [
                         Center(
@@ -1188,7 +1192,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   // Details
                   Expanded(
-                    flex: 6,
+                    flex: isLandscape ? 9 : 7,
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(8.w, 4.h, 8.w, 8.w),
                       child: Column(
@@ -1301,7 +1305,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               );
                                             }),
                                   child: Container(
-                                    height: isLandscape ? 40.h : 32.h,
+                                    height: isLandscape ? 50.h : 34.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart

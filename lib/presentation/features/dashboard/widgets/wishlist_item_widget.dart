@@ -82,8 +82,8 @@ class WishlistItemWidget extends StatelessWidget {
                   children: [
                     // 1. Checkbox
                     SizedBox(
-                      width: 24.w,
-                      height: 24.w,
+                      width: isLandscape ? 40.w : 24.w,
+                      height: isLandscape ? 40.w : 24.w,
                       child: Checkbox(
                         value: isSelected,
                         onChanged: isOutOfStock
@@ -107,8 +107,8 @@ class WishlistItemWidget extends StatelessWidget {
                     Stack(
                       children: [
                         Container(
-                          height: isLandscape ? 60.h : 80.h,
-                          width: 80.w,
+                          height: isLandscape ? 120.h : 80.h,
+                          width: isLandscape ? 120.w : 80.w,
                           alignment: Alignment.center,
                           child: _buildImage(item.image),
                         ),
@@ -262,7 +262,7 @@ class WishlistItemWidget extends StatelessWidget {
                                           child: Text(
                                             "-",
                                             style: TextStyle(
-                                              fontSize: 22.sp,
+                                              fontSize: isLandscape ? 28.sp : 22.sp,
                                               color: Colors.black54,
                                             ),
                                           ),
@@ -298,7 +298,7 @@ class WishlistItemWidget extends StatelessWidget {
                                           child: Text(
                                             "+",
                                             style: TextStyle(
-                                              fontSize: 22.sp,
+                                              fontSize: isLandscape ? 28.sp : 22.sp,
                                               color: Colors.black54,
                                             ),
                                           ),
@@ -386,7 +386,7 @@ class WishlistItemWidget extends StatelessWidget {
                         child: Icon(
                           Icons.favorite, // Filled Red Heart logic
                           color: AppTheme.redColor,
-                          size: 28.sp, // "little bit bigger to look good"
+                          size: isLandscape ? 34.sp : 28.sp, // Increased for landscape
                         ),
                       ),
                     ),
