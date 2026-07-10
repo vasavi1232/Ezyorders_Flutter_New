@@ -29,6 +29,8 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       backgroundColor: AppTheme.white,
       bottomNavigationBar: const CustomBottomNavBar(),
@@ -89,7 +91,7 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                   // Horizontal Categories List
                   if (provider.myWishlistCategories.isNotEmpty)
                     Container(
-                      height: 40.h,
+                      height: isLandscape ? 55.h : 40.h,
                       margin: EdgeInsets.symmetric(vertical: 20.h),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,

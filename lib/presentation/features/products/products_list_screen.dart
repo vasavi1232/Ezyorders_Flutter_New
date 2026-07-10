@@ -153,6 +153,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       bottomNavigationBar: widget.isStandalone ? const CustomBottomNavBar() : null,
       appBar: AppBar(
@@ -189,7 +190,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             },
           ),
           SizedBox(
-            height: 12.h,
+            height: isLandscape ? 8.h : 12.h,
           ),
 
           // Product Count Here
@@ -210,7 +211,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     }(),
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 18.sp,
+                      fontSize: isLandscape ? 14.sp : 18.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -256,69 +257,74 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   Widget _buildSearchBar() {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: isLandscape ? 5.h : 10.h),
       color: Colors.white,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Container(
-              height: isLandscape ? 60.h : 48.h,
+              height: isLandscape ? 40.w : 48.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5.r),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: TextField(
-                controller: _searchController,
-                style: TextStyle(fontSize: 14.sp),
-                decoration: InputDecoration(
-                  hintText: "Search products...",
-                  hintStyle: TextStyle(
-                    color: AppTheme.hintColor,
-                    fontSize: 14.sp,
-                  ),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      color: Colors.grey.shade600,
-                      size: 20.sp,
+              child: Center(
+                child: TextField(
+                  controller: _searchController,
+                  style: TextStyle(fontSize: isLandscape ? 13.sp : 14.sp),
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    hintText: "Search products...",
+                    hintStyle: TextStyle(
+                      color: AppTheme.hintColor,
+                      fontSize: isLandscape ? 13.sp : 14.sp,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _searchController.clear();
-                      });
+                    isCollapsed: true,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.grey.shade600,
+                        size: isLandscape ? 18.sp : 20.sp,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                        });
 
-                      context.read<ProductListProvider>().setSearchText("");
-                      context.read<ProductListProvider>().fetchProducts(page: 1);
-                    },
-                  )
-                      : null,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 12.h,
-                    horizontal: 10.w,
+                        context.read<ProductListProvider>().setSearchText("");
+                        context.read<ProductListProvider>().fetchProducts(page: 1);
+                      },
+                    )
+                        : null,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                    ),
                   ),
+                  onSubmitted: (value) {
+                    context.read<ProductListProvider>().setSearchText(value);
+                    context.read<ProductListProvider>().fetchProducts(page: 1);
+                  },
                 ),
-                onSubmitted: (value) {
-                  context.read<ProductListProvider>().setSearchText(value);
-                  context.read<ProductListProvider>().fetchProducts(page: 1);
-                },
               ),
             ),
           ),
           SizedBox(width: 10.w),
           Container(
-            height: isLandscape ? 60.h : 45.h,
-            width: isLandscape ? 60.h : 45.h,
+            height: isLandscape ? 40.w : 45.h,
+            width: isLandscape ? 40.w : 45.h,
             decoration: BoxDecoration(
               color: AppTheme.tealColor,
               borderRadius: BorderRadius.circular(5.r),
             ),
             child: IconButton(
-              icon: Icon(Icons.search, color: Colors.white, size: 24.sp),
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.search, color: Colors.white, size: isLandscape ? 20.sp : 24.sp),
               onPressed: () {
                 context
                     .read<ProductListProvider>()
@@ -342,14 +348,14 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10.h),
+              SizedBox(height: isLandscape ? 5.h : 10.h),
               Row(
                 children: [
                   // Availability Spinner
                   Expanded(
                     flex: 48,
                     child: Container(
-                      height: isLandscape ? 55.h : 40.h,
+                      height: isLandscape ? 34.w : 40.h,
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[300]!),
@@ -377,7 +383,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                               child: Text(
                                 value,
                                 style: TextStyle(
-                                    fontSize: 12.sp,
+                                    fontSize: isLandscape ? 11.sp : 12.sp,
                                     color: AppTheme.blackColor,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -448,9 +454,9 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(4.r),
       child: Container(
-        width: isLandscape ? 50.w : 38.w,
-        height: isLandscape ? 50.w : 38.w,
-        padding: EdgeInsets.all(8.w),
+        width: isLandscape ? 34.w : 38.w,
+        height: isLandscape ? 34.w : 38.w,
+        padding: EdgeInsets.all(isLandscape ? 6.w : 8.w),
         decoration: BoxDecoration(
           color: isActive ? AppTheme.primaryColor : Colors.white,
           border: Border.all(
@@ -470,7 +476,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             : Icon(
                 fallbackIcon,
                 color: isActive ? Colors.white : AppTheme.primaryColor,
-                size: 20.sp,
+                size: isLandscape ? 16.sp : 20.sp,
               ),
       ),
     );

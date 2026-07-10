@@ -112,9 +112,9 @@ class _ProductGridItemState extends State<ProductGridItem> {
               Consumer<DashboardProvider>(
                 builder: (context, dashboard, child) {
                   final dimensions = dashboard.profileResponse?.results?.firstOrNull?.productImageDimensions ?? "600x600";
-                  double imageHeight = 90.h;
+                  double imageHeight = isLandscape ? 200.h : 90.h;
                   if (dimensions.contains("600x400")) {
-                    imageHeight = 75.h; // Balanced height for landscape
+                    imageHeight = isLandscape ? 160.h : 75.h;
                   }
                   
                   return Stack(
