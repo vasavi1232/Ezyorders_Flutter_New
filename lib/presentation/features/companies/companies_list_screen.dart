@@ -81,12 +81,17 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                       final isLandscape = mediaQuery.orientation == Orientation.landscape;
                                       final isTablet = mediaQuery.size.shortestSide >= 600;
                                       
-                                      // 3 columns in landscape mode, 2 in portrait
-                                      int crossAxisCount = isLandscape ? 3 : 2;
+                                      // Only use landscape-specific layout if the device is a tablet
+                                      final bool isLandscapeTablet = isLandscape && isTablet;
+                                      
+                                      // 3 columns only for tablets in landscape, otherwise 2
+                                      int crossAxisCount = isLandscapeTablet ? 3 : 2;
+                                      
+                                      // Default aspect ratio for phone is 0.58. For tablet 0.85.
                                       double aspectRatio = isTablet ? 0.85 : 0.58;
                                       
-                                      if (isLandscape && isTablet) {
-                                        aspectRatio = 1.0; // Adjusting aspect ratio for landscape tablet
+                                      if (isLandscapeTablet) {
+                                        aspectRatio = 0.9; // Adjusting aspect ratio for landscape tablet
                                       }
 
                                       // Calculate a global fallback color from any company that has a primaryButtonColor
@@ -217,7 +222,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                             bottom: 8),
                                                     child: SizedBox(
                                                       width: double.infinity,
-                                                      height: isTablet ? 44.h : 35.h,
+                                                      height: isLandscapeTablet 
+                                                          ? 75.h
+                                                          : (isTablet ? 44.h : 35.h),
                                                       child: ElevatedButton(
                                                         onPressed: () {
                                                           provider
@@ -235,7 +242,7 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        isTablet ? 24 : 20),
+                                                                        isLandscapeTablet ? 32.r : (isTablet ? 24.r : 20.r)),
                                                           ),
                                                         ),
                                                         child: FittedBox(
@@ -250,7 +257,9 @@ class _CompaniesListScreenState extends State<CompaniesListScreen> {
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
-                                                              fontSize: isTablet ? 16 : 14,
+                                                              fontSize: isLandscapeTablet 
+                                                                  ? 16.sp
+                                                                  : (isTablet ? 16.sp : 14.sp),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700,
