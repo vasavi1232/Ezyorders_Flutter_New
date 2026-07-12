@@ -444,13 +444,16 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
   }
 
   Widget _buildQuantityPicker() {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+
     return Container(
       width: double.infinity,
-      height: 50.h,
+      height: (isLandscape && isTablet) ? 85.h : 50.h,
       color: const Color(0xFFEEEEEE), // Grey Background
       child: Center(
         child: SizedBox(
-          height: 50.h,
+          height: (isLandscape && isTablet) ? 85.h : 50.h,
           width: 150.w, // Approx 3 items * 50 width
           child: RotatedBox(
             quarterTurns: -1,
@@ -528,6 +531,10 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
     final provider = context.watch<ProductListProvider>();
     bool isAdded = widget.product.addedToCart == "Yes";
     bool isLoading = provider.isLoading;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+
+    double buttonHeight = (isLandscape && isTablet) ? 75.h : 40.h;
 
     return Row(
       children: [
@@ -588,7 +595,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
             style: ElevatedButton.styleFrom(
               backgroundColor:
                   AppTheme.primaryButtonColor, // Synchronized orange
-              minimumSize: Size(double.infinity, 40.h),
+              minimumSize: Size(double.infinity, buttonHeight),
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(AppTheme.authButtonRadius.r)),
@@ -616,8 +623,8 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
               }
             },
             child: Container(
-              width: 40.h,
-              height: 40.h,
+              width: buttonHeight,
+              height: buttonHeight,
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius:

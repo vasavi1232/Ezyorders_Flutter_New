@@ -10,6 +10,9 @@ class LogoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
@@ -70,6 +73,8 @@ class LogoutDialog extends StatelessWidget {
                   text: "Yes",
                   color: AppTheme.primaryButtonColor,
                   textColor: Colors.white,
+                  isLandscape: isLandscape,
+                  isTablet: isTablet,
                   onTap: () {
                     Navigator.pop(context);
                     onYes();
@@ -81,6 +86,8 @@ class LogoutDialog extends StatelessWidget {
                   text: "No",
                   color: AppTheme.secondaryButtonColor,
                   textColor: Colors.white,
+                  isLandscape: isLandscape,
+                  isTablet: isTablet,
                   hasBorder: false,
                   onTap: () => Navigator.pop(context),
                 ),
@@ -98,13 +105,23 @@ class LogoutDialog extends StatelessWidget {
     required Color color,
     required Color textColor,
     required VoidCallback onTap,
+    bool isLandscape = false,
+    bool isTablet = false,
     bool hasBorder = false,
   }) {
+    // Increase height specifically for tablet landscape
+    double height = 38.h;
+    if (isTablet && isLandscape) {
+      height = 55.h;
+    } else if (isLandscape) {
+      height = 45.h;
+    }
+
     return InkWell(
       onTap: onTap,
       child: Container(
         width: 110.w,
-        height: 38.h,
+        height: height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: color,

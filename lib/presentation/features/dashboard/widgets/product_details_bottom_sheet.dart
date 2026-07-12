@@ -117,6 +117,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
     final bool isAdded = widget.product.addedToCart == "Yes";
     
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -427,11 +428,11 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
           // Rotated ListWheelScrollView for 3-item visible "Wheel" effect
           Container(
             width: double.infinity,
-            height: 50.h,
+            height: (isLandscape && isTablet) ? 85.h : 50.h,
             color: const Color(0xFFEEEEEE), // Grey Background
             child: Center(
               child: SizedBox(
-                height: 50.h,
+                height: (isLandscape && isTablet) ? 85.h : 50.h,
                 width: 150.w, // Approx 3 items * 50 width
                 child: RotatedBox(
                   quarterTurns: -1,
@@ -518,7 +519,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
             children: [
               Expanded(
                 child: SizedBox(
-                  height: isLandscape ? 50.h : 45.h,
+                  height: (isLandscape && isTablet) ? 75.h : (isLandscape ? 50.h : 45.h),
                   child: ElevatedButton(
                     onPressed: () {
                       // Add/Update Cart Logic
@@ -551,6 +552,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                       Navigator.pop(context);
                     },
                     child: Container(
+                      height: (isLandscape && isTablet) ? 75.h : null,
                       padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
                         color: AppTheme.redColor,

@@ -151,6 +151,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 4, // 👈 controls shadow intensity
@@ -230,27 +233,51 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             return null;
                           }),
                       SizedBox(height: 10.h),
-                      CheckboxListTile(
-                        title: const Text("Set as Default Address"),
-                        value: _isDefault,
-                        onChanged: (val) {
-                          setState(() {
-                            _isDefault = val ?? false;
-                          });
-                        },
-                        activeColor: AppTheme.primaryButtonColor,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: EdgeInsets.zero,
+                      
+                      // Custom Checkbox Row for better scaling control in tablet landscape
+                      InkWell(
+                        onTap: () => setState(() => _isDefault = !_isDefault),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          child: Row(
+                            children: [
+                              Transform.scale(
+                                scale: (isLandscape && isTablet) ? 1.8 : 1.1,
+                                child: Checkbox(
+                                  value: _isDefault,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _isDefault = val ?? false;
+                                    });
+                                  },
+                                  activeColor: AppTheme.darkerGrayColor,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              ),
+                              SizedBox(width: (isLandscape && isTablet) ? 10.w : 4.w),
+                              Text(
+                                "Set as Default Address",
+                                style: TextStyle(
+                                  fontSize: (isLandscape && isTablet) ? 16.sp : 14.sp,
+                                  color: AppTheme.darkerGrayColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                      
                       SizedBox(height: 30.h),
                       SizedBox(
                         width: double.infinity,
-                        height: 50.h,
+                        height: (isLandscape && isTablet) ? 75.h : 50.h,
                         child: ElevatedButton(
                           onPressed: provider.isLoading ? null : _onSubmit,
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.primaryButtonColor,
-                              minimumSize: Size(double.infinity, 45.h),
+                              minimumSize: Size(double.infinity, (isLandscape && isTablet) ? 65.h : 45.h),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       AppTheme.authButtonRadius.r))),

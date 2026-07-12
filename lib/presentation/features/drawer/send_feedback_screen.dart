@@ -103,6 +103,9 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -149,11 +152,11 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                   SizedBox(height: 30.h),
                   SizedBox(
                     width: double.infinity,
-                    height: 45.h,
+                    height: (isLandscape && isTablet) ? 75.h : 45.h,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryButtonColor,
-                        minimumSize: Size(double.infinity, 45.h),
+                        minimumSize: Size(double.infinity, (isLandscape && isTablet) ? 75.h : 45.h),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                                 AppTheme.authButtonRadius.r)),
