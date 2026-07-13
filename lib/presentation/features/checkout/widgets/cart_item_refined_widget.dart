@@ -69,6 +69,10 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTabletLandscape =
+        MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,42 +134,48 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                  GestureDetector(
-                                   onTapDown: (details) {
-                                     double n = double.tryParse(
-                                             widget.item.normalPrice ?? "0") ??
-                                         0;
-                                     double s = double.tryParse(
-                                             widget.item.salePrice ?? "0") ??
-                                         0;
-                                     bool hasDiscount = s > 0 && s < n;
- 
-                                     if (hasDiscount) {
-                                       final String dId = (widget.item.specialId ?? "").trim();
-                                       final String dName = (widget.item.specialName ?? "").trim();
-                                       
-                                       if (dId.isNotEmpty || dName.isNotEmpty) {
-                                         final RenderBox? box = _percentageStripKey.currentContext?.findRenderObject() as RenderBox?;
-                                         if (box != null) {
-                                           final position = box.localToGlobal(Offset.zero);
-                                           final rect = position & box.size;
-                                           SpecialsTooltip.show(
-                                             context,
-                                             discountId: dId,
-                                             discountName: dName,
-                                             targetRect: rect,
-                                           );
-                                         } else {
-                                           SpecialsTooltip.show(
-                                             context,
-                                             discountId: dId,
-                                             discountName: dName,
-                                             tapPosition: details.globalPosition,
-                                           );
-                                         }
-                                       }
-                                     }
-                                   },
+                                GestureDetector(
+                                  onTapDown: (details) {
+                                    double n = double.tryParse(
+                                            widget.item.normalPrice ?? "0") ??
+                                        0;
+                                    double s = double.tryParse(
+                                            widget.item.salePrice ?? "0") ??
+                                        0;
+                                    bool hasDiscount = s > 0 && s < n;
+
+                                    if (hasDiscount) {
+                                      final String dId =
+                                          (widget.item.specialId ?? "").trim();
+                                      final String dName =
+                                          (widget.item.specialName ?? "")
+                                              .trim();
+
+                                      if (dId.isNotEmpty || dName.isNotEmpty) {
+                                        final RenderBox? box =
+                                            _percentageStripKey.currentContext
+                                                ?.findRenderObject() as RenderBox?;
+                                        if (box != null) {
+                                          final position =
+                                              box.localToGlobal(Offset.zero);
+                                          final rect = position & box.size;
+                                          SpecialsTooltip.show(
+                                            context,
+                                            discountId: dId,
+                                            discountName: dName,
+                                            targetRect: rect,
+                                          );
+                                        } else {
+                                          SpecialsTooltip.show(
+                                            context,
+                                            discountId: dId,
+                                            discountName: dName,
+                                            tapPosition: details.globalPosition,
+                                          );
+                                        }
+                                      }
+                                    }
+                                  },
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -246,14 +256,15 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                           ),
 
                           // Delete Icon
-                          InkWell(
-                            onTap: widget.onDelete,
-                            child: Padding(
-                              padding: EdgeInsets.all(5.w),
-                              child: Icon(Icons.delete,
-                                  color: AppTheme.redColor, size: 24.sp),
+                          if (!isTabletLandscape)
+                            InkWell(
+                              onTap: widget.onDelete,
+                              child: Padding(
+                                padding: EdgeInsets.all(5.w),
+                                child: Icon(Icons.delete,
+                                    color: AppTheme.redColor, size: 24.sp),
+                              ),
                             ),
-                          ),
                         ],
                       ),
 
@@ -296,46 +307,64 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                             },
                           ),
 
-                      InkWell(
-                        onTap: () => _showQuantityPicker(context),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: Container(
-                          height: 32.h,
-                          margin: EdgeInsets.only(top: 5.h),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: AppTheme.borderColor),
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          Row(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                child: Icon(Icons.remove,
-                                    size: 16.sp, color: Colors.grey),
-                              ),
-                              SizedBox(
-                                width: 30.w,
-                                child: Center(
-                                  child: Text(
-                                    widget.item.qty.toString(),
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                              InkWell(
+                                onTap: () => _showQuantityPicker(context),
+                                borderRadius: BorderRadius.circular(20.r),
+                                child: Container(
+                                  height: isTabletLandscape ? 70.h : 32.h,
+                                  margin: EdgeInsets.only(top: 5.h),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border:
+                                        Border.all(color: AppTheme.borderColor),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w),
+                                        child: Icon(Icons.remove,
+                                            size: 16.sp, color: Colors.grey),
+                                      ),
+                                      SizedBox(
+                                        width: 30.w,
+                                        child: Center(
+                                          child: Text(
+                                            widget.item.qty.toString(),
+                                            style: TextStyle(
+                                                fontSize: 14.sp,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w),
+                                        child: Icon(Icons.add,
+                                            size: 16.sp, color: Colors.grey),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                child: Icon(Icons.add,
-                                    size: 16.sp, color: Colors.grey),
-                              ),
+                              if (isTabletLandscape) ...[
+                                SizedBox(width: 10.w),
+                                InkWell(
+                                  onTap: widget.onDelete,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 5.h),
+                                    child: Icon(Icons.delete,
+                                        color: AppTheme.redColor, size: 24.sp),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
-                        ),
-                      ),
                         ],
                       ),
                     ],
@@ -348,7 +377,6 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
       ],
     );
   }
-
 
   Widget _buildHeader(BuildContext context) {
     return SizedBox.shrink();
