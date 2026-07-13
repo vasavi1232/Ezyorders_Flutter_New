@@ -25,6 +25,10 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
   Widget build(BuildContext context) {
     final provider = context.watch<CheckoutProvider>();
 
+    final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
+
     return Column(
       children: [
         // Scrollable Content
@@ -401,7 +405,7 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: SizedBox(
-                    height: 45.h,
+                    height: buttonHeight,
                     child: ElevatedButton(
                       onPressed: () {
                         provider.previousStep();
@@ -461,7 +465,7 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: SizedBox(
-                    height: 45.h,
+                    height: buttonHeight,
                     child: ElevatedButton(
                       onPressed: () {
                         if (!provider.isCompanyActive) {

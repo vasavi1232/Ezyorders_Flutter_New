@@ -29,6 +29,10 @@ class _StepCartWidgetState extends State<StepCartWidget> {
     final provider = context.watch<CheckoutProvider>();
     final cartResult = provider.cartResult;
 
+    final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
+
     // Error State
     if (!provider.isLoading && provider.errorMessage.isNotEmpty && (cartResult == null || (cartResult.brands?.isEmpty ?? true))) {
       return Center(
@@ -415,7 +419,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: SizedBox(
-                              height: 45.h,
+                              height: buttonHeight,
                               child: ElevatedButton(
                                 onPressed: () => _showClearCartDialog(context, provider),
                                 style: ElevatedButton.styleFrom(
@@ -448,7 +452,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: SizedBox(
-                              height: 45.h,
+                              height: buttonHeight,
                               child: ElevatedButton(
                                 onPressed: () {
                                   bool requiresDelivery = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment == "Yes";

@@ -17,6 +17,10 @@ class StepPreviewWidget extends StatelessWidget {
     final dashboardProvider = context.read<DashboardProvider>();
     final bool showSoldAs = dashboardProvider.profileResponse?.results?.firstOrNull?.showSoldAs == "Yes";
     
+    final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
+
     // Use cartResult.brands for grouped items, fallback to cartItems if empty
     final brands = provider.cartResult?.brands;
     final flatItems = provider.cartItems;
@@ -392,7 +396,7 @@ class StepPreviewWidget extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: SizedBox(
-                     height: 45.h,
+                     height: buttonHeight,
                      child: ElevatedButton(
                       onPressed: () {
                         provider.previousStep();
@@ -451,7 +455,7 @@ class StepPreviewWidget extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: SizedBox(
-                    height: 45.h,
+                    height: buttonHeight,
                     child: ElevatedButton(
                       onPressed: provider.isLoading
                           ? null
