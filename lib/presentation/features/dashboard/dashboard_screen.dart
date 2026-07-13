@@ -144,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         AppAssets.placeholder,
         fit: fit,
         errorBuilder: (context, error, stackTrace) =>
-            const Icon(Icons.broken_image, color: Colors.grey),
+        const Icon(Icons.broken_image, color: Colors.grey),
       );
     }
     return CachedNetworkImage(
@@ -156,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         AppAssets.placeholder,
         fit: fit,
         errorBuilder: (context, error, stackTrace) =>
-            const Icon(Icons.broken_image, color: Colors.grey),
+        const Icon(Icons.broken_image, color: Colors.grey),
       ),
       placeholder: (context, url) => Container(color: Colors.grey[200]),
     );
@@ -214,164 +214,164 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 4, // 👈 controls shadow intensity
-        shadowColor: Colors.black.withValues(alpha: 0.25),
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.menu_rounded,
-            size: 30.sp,
-            weight: 300,
-            color: Colors.white,
-          ), // Thinner menu icon
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        ),
-        title: Selector<DashboardProvider, String?>(
-          selector: (context, provider) => provider.companyImage,
-          builder: (context, companyImage, child) {
-            if (companyImage != null && companyImage.isNotEmpty) {
-              return CachedNetworkImage(
-                imageUrl: _getImageUrl(companyImage),
-                height: 36.h,
-                fit: BoxFit.contain,
-                placeholder: (context, url) => const SizedBox.shrink(),
-                errorWidget: (context, url, error) => const SizedBox.shrink(),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        actions: [
-          Consumer<DashboardProvider>(
-            builder: (context, provider, child) {
-              final unreadCount = provider.unreadNotificationCount;
-              final hasUnread = unreadCount > 0;
-
-              return IconButton(
-                icon: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Image.asset(
-                      AppAssets.bellIcon,
-                      width: 30.sp,
-                      height: 30.sp,
-                      color: Colors.white,
-                    ),
-                    if (hasUnread)
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 16.w,
-                            minHeight: 16.w,
-                          ),
-                          child: Text(
-                            unreadCount.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                onPressed: () {
-                  context.push(AppRoutes.notifications);
-                },
-              );
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 4, // 👈 controls shadow intensity
+          shadowColor: Colors.black.withValues(alpha: 0.25),
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: Icon(
+              Icons.menu_rounded,
+              size: 30.sp,
+              weight: 300,
+              color: Colors.white,
+            ), // Thinner menu icon
+            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          ),
+          title: Selector<DashboardProvider, String?>(
+            selector: (context, provider) => provider.companyImage,
+            builder: (context, companyImage, child) {
+              if (companyImage != null && companyImage.isNotEmpty) {
+                return CachedNetworkImage(
+                  imageUrl: _getImageUrl(companyImage),
+                  height: 36.h,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => const SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
-
-        ],
-      ),
-      drawer: _buildDrawer(),
-      body: VisibilityDetector(
-        key: const Key('dashboard-visibility-key'),
-        onVisibilityChanged: (info) {
-          if (info.visibleFraction == 1.0) {
-            // When the screen becomes fully visible (e.g., returning from another screen), refresh data
-            if (mounted) {
-              context.read<DashboardProvider>().init();
-            }
-          }
-        },
-        child: Stack(
-          children: [
+          actions: [
             Consumer<DashboardProvider>(
-            builder: (context, provider, child) {
-              if (provider.isPortalBlocked) {
-                return Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Text(
-                        "Sorry for the inconvenience. ${provider.companyName ?? 'The Store'} is closed today",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.blackColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
+              builder: (context, provider, child) {
+                final unreadCount = provider.unreadNotificationCount;
+                final hasUnread = unreadCount > 0;
 
-              if (provider.errorMsg != null && !provider.isLoading) {
-                return ErrorView(
-                  errorMessage: provider.errorMsg,
-                  onRetry: () => provider.refreshDashboard(),
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  await provider.refreshDashboard(isSilent: true);
-                },
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                return IconButton(
+                  icon: Stack(
+                    clipBehavior: Clip.none,
                     children: [
-                      SizedBox(height: 10.h),
-                      _buildMarquee(provider),
-                      SizedBox(height: 10.h),
-                      _buildBanners(provider),
-                      GstMessageWidget(),
-                      _buildTopSuppliers(provider),
-                      //SizedBox(height: 15.h),
-                      const HomeBlocksSection(),
-                      _buildProductSections(provider),
-                      _buildBottomSuppliers(provider),
-                      SizedBox(height: 10.h), // Bottom padding
+                      Image.asset(
+                        AppAssets.bellIcon,
+                        width: 30.sp,
+                        height: 30.sp,
+                        color: Colors.white,
+                      ),
+                      if (hasUnread)
+                        Positioned(
+                          right: -2,
+                          top: -2,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 16.w,
+                              minHeight: 16.w,
+                            ),
+                            child: Text(
+                              unreadCount.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                ),
-              );
-            },
+                  onPressed: () {
+                    context.push(AppRoutes.notifications);
+                  },
+                );
+              },
+            ),
+
+          ],
+        ),
+        drawer: _buildDrawer(),
+        body: VisibilityDetector(
+          key: const Key('dashboard-visibility-key'),
+          onVisibilityChanged: (info) {
+            if (info.visibleFraction == 1.0) {
+              // When the screen becomes fully visible (e.g., returning from another screen), refresh data
+              if (mounted) {
+                context.read<DashboardProvider>().init();
+              }
+            }
+          },
+          child: Stack(
+            children: [
+              Consumer<DashboardProvider>(
+                builder: (context, provider, child) {
+                  if (provider.isPortalBlocked) {
+                    return Container(
+                      color: Colors.white,
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Text(
+                            "Sorry for the inconvenience. ${provider.companyName ?? 'The Store'} is closed today",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.blackColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (provider.errorMsg != null && !provider.isLoading) {
+                    return ErrorView(
+                      errorMessage: provider.errorMsg,
+                      onRetry: () => provider.refreshDashboard(),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await provider.refreshDashboard(isSilent: true);
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10.h),
+                          _buildMarquee(provider),
+                          SizedBox(height: 10.h),
+                          _buildBanners(provider),
+                          GstMessageWidget(),
+                          _buildTopSuppliers(provider),
+                          //SizedBox(height: 15.h),
+                          const HomeBlocksSection(),
+                          _buildProductSections(provider),
+                          _buildBottomSuppliers(provider),
+                          SizedBox(height: 10.h), // Bottom padding
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _buildDrawer() {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final isTablet = mediaQuery.size.shortestSide >= 600;
-    
+
     // Increase drawer width in landscape mode for tablets
     double drawerWidth = 304.0; // Default Flutter drawer width
     if (isLandscape && isTablet) {
@@ -396,7 +396,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 },
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
                       color: AppTheme.tealColor), // Teal
                   child: SafeArea(
@@ -408,10 +408,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                           radius: 30.r,
                           backgroundColor: Colors.white,
                           backgroundImage:
-                              user?.image != null && user!.image!.isNotEmpty
-                                  ? CachedNetworkImageProvider(
-                                      _getImageUrl(user.image)) as ImageProvider
-                                  : const AssetImage(AppAssets.userIcon),
+                          user?.image != null && user!.image!.isNotEmpty
+                              ? CachedNetworkImageProvider(
+                              _getImageUrl(user.image)) as ImageProvider
+                              : const AssetImage(AppAssets.userIcon),
                         ),
                         SizedBox(width: 10.w),
                         Expanded(
@@ -455,7 +455,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Consumer<DashboardProvider>(
                     builder: (context, provider, _) {
                       final allowScan = provider.profileResponse?.results
-                              ?.firstOrNull?.allowScanToOrder ==
+                          ?.firstOrNull?.allowScanToOrder ==
                           "Yes";
                       if (!allowScan) return const SizedBox.shrink();
                       return _buildDrawerItem(AppAssets.scanIcon, "Scan to Order", () {
@@ -467,10 +467,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Consumer<DashboardProvider>(
                     builder: (context, provider, _) {
                       final allowWishlist = provider.profileResponse?.results
-                              ?.firstOrNull?.allowCustomersToAddWishlist ==
+                          ?.firstOrNull?.allowCustomersToAddWishlist ==
                           "Yes";
                       final wishlistHeading = provider.profileResponse?.results
-                              ?.firstOrNull?.wishlistPageHeading ??
+                          ?.firstOrNull?.wishlistPageHeading ??
                           "My Favourites";
                       if (!allowWishlist) return const SizedBox.shrink();
                       return _buildDrawerItem(
@@ -493,8 +493,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (context.mounted) {
                         final dashboardProvider = context.read<DashboardProvider>();
-                        final profile = dashboardProvider.profileResponse?.results?.isEmpty == true 
-                            ? null 
+                        final profile = dashboardProvider.profileResponse?.results?.isEmpty == true
+                            ? null
                             : dashboardProvider.profileResponse?.results?[0];
                         context.read<ProductListProvider>().init(
                           isTablet: AppTheme.isTablet(context),
@@ -554,7 +554,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppTheme.primaryButtonColor,
                   borderRadius: BorderRadius.circular(5),
@@ -713,10 +713,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       return const SizedBox.shrink();
     }
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isLandscapeTablet = isLandscape && isTablet;
+
     return Column(
       children: [
         SizedBox(
-          height: isLandscape ? 450.h : 180.h, // Significantly increased height for landscape
+          height: isLandscapeTablet ? 550.h : (isLandscape ? 450.h : 180.h), // Significantly increased height for landscape
           child: PageView.builder(
             controller: _bannerController,
             onPageChanged: (index) {
@@ -738,77 +741,81 @@ class _DashboardScreenState extends State<DashboardScreen>
                       fit: StackFit.expand,
                       children: [
                         _buildNetworkImage(banner?.image, fit: BoxFit.fill),
-                        // Overlay Card (Bottom Left)
+                        // Overlay Card (Bottom Left or Vertical Center)
                         Positioned(
-                          bottom: isLandscape ? 25.h : 50.h,
+                          top: isLandscapeTablet ? 0 : null,
+                          bottom: isLandscapeTablet ? 0 : (isLandscape ? 25.h : 50.h),
                           left: 15.w,
-                          child: Container(
-                            width: 140.w, // Approximate width from screenshot
-                            padding: EdgeInsets.all(6.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(6.r),
-                              border: Border.all(
-                                color: AppTheme.borderColor,
-                                width: 1.5, // Adjust thickness if needed
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5),
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (banner?.topCaption != null &&
-                                    banner!.topCaption!.isNotEmpty)
-                                  Text(
-                            CommonMethods.decodeHtmlEntities(banner.topCaption!),
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 10.sp, fontWeight: FontWeight.bold),
-                                  ),
-                                Text(
-                                  CommonMethods.decodeHtmlEntities(banner?.name ?? ""),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w800),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                          child: Align(
+                            alignment: isLandscapeTablet ? Alignment.centerLeft : Alignment.bottomLeft,
+                            child: Container(
+                              width: 140.w, // Approximate width from screenshot
+                              padding: EdgeInsets.all(6.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6.r),
+                                border: Border.all(
+                                  color: AppTheme.borderColor,
+                                  width: 1.5, // Adjust thickness if needed
                                 ),
-                                if (banner?.bottomCaption != null &&
-                                    banner!.bottomCaption!.isNotEmpty)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 2.h),
-                                    child: Text(
-                                      CommonMethods.decodeHtmlEntities(banner.bottomCaption!),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 5),
+                                  )
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (banner?.topCaption != null &&
+                                      banner!.topCaption!.isNotEmpty)
+                                    Text(
+                                      CommonMethods.decodeHtmlEntities(banner.topCaption!),
                                       style: TextStyle(
-                                          color: Colors.grey[700], 
+                                          color: Colors.grey, fontSize: 10.sp, fontWeight: FontWeight.bold),
+                                    ),
+                                  Text(
+                                    CommonMethods.decodeHtmlEntities(banner?.name ?? ""),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w800),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (banner?.bottomCaption != null &&
+                                      banner!.bottomCaption!.isNotEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 2.h),
+                                      child: Text(
+                                        CommonMethods.decodeHtmlEntities(banner.bottomCaption!),
+                                        style: TextStyle(
+                                            color: Colors.grey[700],
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  SizedBox(height: 8.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w, vertical: 6.h),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.primaryButtonColor,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Text(
+                                      "Shop Now",
+                                      style: TextStyle(
+                                          color: AppTheme.white,
                                           fontSize: 10.sp,
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                SizedBox(height: 8.h),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w, vertical: 6.h),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.primaryButtonColor,
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Text(
-                                    "Shop Now",
-                                    style: TextStyle(
-                                        color: AppTheme.white,
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -895,23 +902,23 @@ class _DashboardScreenState extends State<DashboardScreen>
           title: "", // No title for footer banners usually, but has arrows
           onPrevTap: _currentFooterIndex > 0
               ? () {
-                  int prevIndex = _currentFooterIndex - 1;
-                  _footerPageController.animateToPage(
-                    prevIndex,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                }
+            int prevIndex = _currentFooterIndex - 1;
+            _footerPageController.animateToPage(
+              prevIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
               : null,
           onNextTap: _currentFooterIndex < results.length - 1
               ? () {
-                  int nextIndex = _currentFooterIndex + 1;
-                  _footerPageController.animateToPage(
-                    nextIndex,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                }
+            int nextIndex = _currentFooterIndex + 1;
+            _footerPageController.animateToPage(
+              nextIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
               : null,
         ),
         SizedBox(
@@ -931,7 +938,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: InkWell(
-                    onTap: () => _handleBannerTap(banner),
+                  onTap: () => _handleBannerTap(banner),
                   child: SizedBox(
                     width: double.infinity, // ✅ full width
                     child: _buildNetworkImage(
