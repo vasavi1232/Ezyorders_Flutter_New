@@ -716,13 +716,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
        decodedContent = _manualNutritionTableParser(decodedContent);
     }
 
-    // 4. Wrap tables for horizontal scrolling if they are large
+    /*// 4. Wrap tables for horizontal scrolling if they are large
     if (decodedContent.contains("<table")) {
       // Ensure the table doesn't have internal scrolling styles that interfere
       decodedContent = decodedContent
           .replaceAll('<table', '<table-scroll><table')
           .replaceAll('</table>', '</table></table-scroll>');
-    }
+    }*/
 
     showDialog(
       context: context,
@@ -778,7 +778,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     "table": Style(
                       display: Display.table,
                       width: Width.auto(), // Shrink-wrap table
-                      border: Border.all(color: AppTheme.borderColor, width: 1.0),
+                      border: Border.all(color: AppTheme.white, width: 1.0),
                       margin: Margins.only(bottom: 15.h),
                     ),
                     "tr": Style(
