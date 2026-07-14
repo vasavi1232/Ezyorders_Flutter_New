@@ -1303,8 +1303,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   description: item.notAvailableDaysMessage ?? "",
                                                 ),
                                               );
-                                            }),
-                                  child: Container(
+                                            }),                                  child: Container(
                                     height: isLandscape ? 50.h : 34.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -1381,6 +1380,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.9),
       builder: (context) {
+        final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
         return Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.zero,
@@ -1407,11 +1409,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
               Positioned(
-                top: 40,
-                right: 20,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                  onPressed: () => Navigator.pop(context),
+                top: 10.h,
+                right: 20.w,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: EdgeInsets.all(5.w),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: isTabletLandscape ? 40.sp : 30.sp,
+                    ),
+                  ),
                 ),
               ),
             ],
