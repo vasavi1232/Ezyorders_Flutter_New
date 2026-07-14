@@ -28,6 +28,7 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
     final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
         MediaQuery.of(context).orientation == Orientation.landscape;
     final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
+    final double couponHeight = isTabletLandscape ? 75.h : 40.h;
 
     return Column(
       children: [
@@ -142,13 +143,16 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                               fontSize: 13.sp, color: Colors.grey.shade700)),
                       SizedBox(height: 10.h),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             flex: 2,
                             child: SizedBox(
-                              height: 40.h,
+                              height: couponHeight,
                               child: TextFormField(
                                 controller: provider.couponController,
+                                textAlignVertical: TextAlignVertical.center,
+                                style: TextStyle(fontSize: 14.sp),
                                 onChanged: (val) {
                                   if (val.trim().isEmpty) {
                                     provider.clearError();
@@ -159,8 +163,11 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                                   hintStyle: TextStyle(
                                       color: AppTheme.hintColor,
                                       fontSize: 13.sp),
+                                  isDense: true,
                                   contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10.w),
+                                      EdgeInsets.symmetric(
+                                          horizontal: 10.w, 
+                                          vertical: isTabletLandscape ? 28.h : 10.h),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.r),
                                     borderSide:
@@ -179,7 +186,7 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                           Expanded(
                             flex: 1,
                             child: SizedBox(
-                              height: 40.h,
+                              height: couponHeight,
                               child: ValueListenableBuilder<TextEditingValue>(
                                 valueListenable: provider.couponController,
                                 builder: (context, value, child) {
@@ -427,7 +434,6 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                             child: Padding(
                               padding: EdgeInsets.only(right: 8.w),
                               child: FittedBox(
-                                fit: BoxFit.scaleDown,
                                 child: Text(
                                   "Back",
                                   maxLines: 1,
@@ -449,7 +455,6 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
               Expanded(
                 child: Center(
                   child: FittedBox(
-                    fit: BoxFit.scaleDown,
                     child: Text("${provider.currentStep + 1}/${provider.totalSteps}",
                         maxLines: 1,
                         style: TextStyle(
@@ -498,7 +503,6 @@ class _StepPaymentWidgetState extends State<StepPaymentWidget> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.w),
                         child: FittedBox(
-                          fit: BoxFit.scaleDown,
                           child: MediaQuery(
                             data: MediaQuery.of(context).copyWith(
                               textScaler: const TextScaler.linear(1.0), // 🔒 ignore system font size
