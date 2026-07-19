@@ -41,6 +41,8 @@ class WishlistItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
     
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
@@ -82,8 +84,8 @@ class WishlistItemWidget extends StatelessWidget {
                   children: [
                     // 1. Checkbox
                     SizedBox(
-                      width: isLandscape ? 40.w : 24.w,
-                      height: isLandscape ? 40.w : 24.w,
+                      width: isTabletLandscape ? 50.w : (isLandscape ? 40.w : 24.w),
+                      height: isTabletLandscape ? 50.w : (isLandscape ? 40.w : 24.w),
                       child: Checkbox(
                         value: isSelected,
                         onChanged: isOutOfStock
@@ -244,8 +246,8 @@ class WishlistItemWidget extends StatelessWidget {
                               children: [
                                 // Quantity Controls
                                 Container(
-                                  height: isLandscape ? 45.h : 35.h,
-                                  width: 110.w,
+                                  height: isTabletLandscape ? 60.h : (isLandscape ? 45.h : 35.h),
+                                  width: isTabletLandscape ? 160.w : 110.w,
                                   decoration: BoxDecoration(
                                     border: Border.all(color: AppTheme.borderColor),
                                     borderRadius: BorderRadius.circular(4.r),
@@ -257,12 +259,12 @@ class WishlistItemWidget extends StatelessWidget {
                                       InkWell(
                                         onTap: onDecrementQuantity,
                                         child: Container(
-                                          width: 30.w,
+                                          width: isTabletLandscape ? 45.w : 30.w,
                                           alignment: Alignment.center,
                                           child: Text(
                                             "-",
                                             style: TextStyle(
-                                              fontSize: isLandscape ? 28.sp : 22.sp,
+                                              fontSize: isTabletLandscape ? 32.sp : (isLandscape ? 28.sp : 22.sp),
                                               color: Colors.black54,
                                             ),
                                           ),
@@ -293,12 +295,12 @@ class WishlistItemWidget extends StatelessWidget {
                                       InkWell(
                                         onTap: onIncrementQuantity,
                                         child: Container(
-                                          width: 30.w,
+                                          width: isTabletLandscape ? 45.w : 30.w,
                                           alignment: Alignment.center,
                                           child: Text(
                                             "+",
                                             style: TextStyle(
-                                              fontSize: isLandscape ? 28.sp : 22.sp,
+                                              fontSize: isTabletLandscape ? 32.sp : (isLandscape ? 28.sp : 22.sp),
                                               color: Colors.black54,
                                             ),
                                           ),
@@ -345,7 +347,7 @@ class WishlistItemWidget extends StatelessWidget {
                                 InkWell(
                                   onTap: canAddToCart ? onAddToCart : null,
                                   child: Container(
-                                    height: isLandscape ? 45.h : 32.h,
+                                    height: isTabletLandscape ? 60.h : (isLandscape ? 45.h : 32.h),
                                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -366,7 +368,7 @@ class WishlistItemWidget extends StatelessWidget {
                                               ? "Update Cart [${item.addedQty ?? '1'}]"
                                               : "Add To Cart"),
                                       style: TextStyle(
-                                          fontSize: 11.sp,
+                                          fontSize: isTabletLandscape ? 14.sp : 11.sp,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -386,7 +388,7 @@ class WishlistItemWidget extends StatelessWidget {
                         child: Icon(
                           Icons.favorite, // Filled Red Heart logic
                           color: AppTheme.redColor,
-                          size: isLandscape ? 34.sp : 28.sp, // Increased for landscape
+                          size: isTabletLandscape ? 50.h : (isLandscape ? 34.sp : 28.sp), // Increased for landscape
                         ),
                       ),
                     ),

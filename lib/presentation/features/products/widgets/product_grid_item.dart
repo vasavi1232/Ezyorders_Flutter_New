@@ -35,6 +35,8 @@ class _ProductGridItemState extends State<ProductGridItem> {
   @override
   Widget build(BuildContext context) {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
     
     final bool isOutOfStock = widget.item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = widget.item.supplierAvailable == "1" &&
@@ -318,7 +320,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                                         );
                                       }),
                             child: Container(
-                              height: isLandscape ? 45.h : 35.h,
+                              height: isTabletLandscape ? 60.h : (isLandscape ? 45.h : 35.h),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: canAddToCart
@@ -339,7 +341,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                                             : "Add To Cart"),
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 12.sp,
+                                        fontSize: isTabletLandscape ? 14.sp : 12.sp,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -364,8 +366,8 @@ class _ProductGridItemState extends State<ProductGridItem> {
                                     widget.item.isFavourite == "Yes"
                                         ? "assets/images/favadded.png"
                                         : "assets/images/fav_new.png",
-                                    width: 30.h,
-                                    height: 30.h,
+                                    width: isTabletLandscape ? 60.h : 30.h,
+                                    height: isTabletLandscape ? 60.h : 30.h,
                                   ),
                                 ),
                               ],

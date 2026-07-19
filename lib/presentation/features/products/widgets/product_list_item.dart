@@ -362,7 +362,10 @@ class _ProductListItemState extends State<ProductListItem> {
 
   Widget _buildAddToCartButton(bool isOutOfStock, bool canAddToCart) {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    final double buttonHeight = isLandscape ? 45.h : 35.h;
+    final bool isTablet = MediaQuery.of(context).size.width >= 600;
+    final bool isTabletLandscape = isLandscape && isTablet;
+    
+    final double buttonHeight = isTabletLandscape ? 60.h : (isLandscape ? 45.h : 35.h);
 
     return InkWell(
       onTap: isOutOfStock
@@ -400,7 +403,7 @@ class _ProductListItemState extends State<ProductListItem> {
                     : "Add To Cart"),
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 12.sp,
+                fontSize: isTabletLandscape ? 14.sp : 12.sp,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -409,6 +412,10 @@ class _ProductListItemState extends State<ProductListItem> {
   }
 
   Widget _buildWishlistButton() {
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = MediaQuery.of(context).size.width >= 600;
+    final bool isTabletLandscape = isLandscape && isTablet;
+    
     return Consumer<DashboardProvider>(
       builder: (context, dashboard, _) {
         final allowWishlist = dashboard.profileResponse?.results?.firstOrNull
@@ -421,8 +428,8 @@ class _ProductListItemState extends State<ProductListItem> {
             widget.item.isFavourite == "Yes"
                 ? "assets/images/favadded.png"
                 : "assets/images/fav_new.png",
-            width: 30.w,
-            height: 30.w,
+            width: isTabletLandscape ? 60.h : 30.h,
+            height: isTabletLandscape ? 60.h : 30.h,
           ),
         );
       },

@@ -96,6 +96,9 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
     // Logic similar to ProductItemWidget but with Split layout
     final item = widget.item;
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -138,7 +141,7 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 110.h,
+                        height: isTabletLandscape ? 150.h : 110.h,
                         child: Stack(
                           children: [
                             Center(child: _buildImage(item.image)),
@@ -245,7 +248,7 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
                                               );
                                             }),
                                   child: Container(
-                                    height: isLandscape ? 45.h : 35.h,
+                                    height: isTabletLandscape ? 60.h : (isLandscape ? 45.h : 35.h),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart
@@ -263,7 +266,7 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
                                                 ? "Update Cart [${item.addedQty ?? '1'}]"
                                                 : "Add To Cart"),
                                         style: TextStyle(
-                                            fontSize: 11.sp,
+                                            fontSize: isTabletLandscape ? 14.sp : 11.sp,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -289,8 +292,8 @@ class _FlashDealItemWidgetState extends State<FlashDealItemWidget> {
                                       item.isFavourite == "Yes"
                                           ? "assets/images/favadded.png"
                                           : "assets/images/fav_new.png",
-                                      width: 30.h,
-                                      height: 30.h,
+                                      width: isTabletLandscape ? 60.h : 30.h,
+                                      height: isTabletLandscape ? 60.h : 30.h,
                                     ),
                                   );
                                 },

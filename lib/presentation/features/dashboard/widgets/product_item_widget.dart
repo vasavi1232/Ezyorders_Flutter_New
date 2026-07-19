@@ -34,6 +34,9 @@ class ProductItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+    
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -282,7 +285,7 @@ class ProductItemWidget extends StatelessWidget {
                                     );
                                   }),
                         child: Container(
-                          height: isLandscape ? 50.h : 35.h, // Increased button height in landscape
+                          height: isTabletLandscape ? 60.h : (isLandscape ? 50.h : 35.h), // Standardized button height
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: canAddToCart
@@ -302,7 +305,7 @@ class ProductItemWidget extends StatelessWidget {
                                         ? "Update Cart [${item.addedQty ?? '1'}]"
                                         : "Add To Cart"),
                                 style: TextStyle(
-                                    fontSize: 11.sp,
+                                    fontSize: isTabletLandscape ? 14.sp : 11.sp, // Standardized font size
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -325,8 +328,8 @@ class ProductItemWidget extends StatelessWidget {
                             item.isFavourite == "Yes"
                                 ? "assets/images/favadded.png"
                                 : "assets/images/fav_new.png",
-                            width: 30.h,
-                            height: 30.h,
+                            width: isTabletLandscape ? 60.h : 30.h, // Standardized fav icon size
+                            height: isTabletLandscape ? 60.h : 30.h,
                           ),
                         );
                       },

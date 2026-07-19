@@ -275,6 +275,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         double.tryParse(product.promotionPrice ?? "0")! > 0;
     
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
 
     return Padding(
       padding: EdgeInsets.all(15.w),
@@ -494,7 +496,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             AppTheme.productButtonRadius.r)),
-                    minimumSize: Size(double.infinity, isLandscape ? 48.h : 40.h),
+                    minimumSize: Size(double.infinity, isTabletLandscape ? 60.h : (isLandscape ? 48.h : 40.h)),
                   ),
                   child: Text(
                     product.qtyStatus == "Out Of Stock"
@@ -502,7 +504,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         : product.addedToCart == "Yes"
                             ? "Update Cart [${product.addedQty}]"
                             : "Add To Cart",
-                    style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                    style: TextStyle(color: Colors.white, fontSize: isTabletLandscape ? 14.sp : 14.sp),
                   ),
                 ),
               ),
@@ -520,8 +522,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       product.isFavourite == "Yes"
                           ? "assets/images/favadded.png"
                           : "assets/images/fav_new.png",
-                      width: 30.h,
-                      height: 30.h,
+                      width: isTabletLandscape ? 60.h : 30.h,
+                      height: isTabletLandscape ? 60.h : 30.h,
                     ),
                   );
                 },
@@ -1088,6 +1090,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     // 4. Action: "Add To Cart" (Orange Rounded) + Heart Icon (Outline/Filled)
 
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -1304,7 +1309,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 ),
                                               );
                                             }),                                  child: Container(
-                                    height: isLandscape ? 50.h : 34.h,
+                                    height: isTabletLandscape ? 50.h : (isLandscape ? 50.h : 34.h),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart
@@ -1344,7 +1349,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       color: item.isFavourite == "Yes"
                                           ? AppTheme.redColor
                                           : AppTheme.primaryColor,
-                                      size: 26.sp,
+                                      size: isTabletLandscape ? 30.sp : 26.sp,
                                     ),
                                   );
                                 },
@@ -1422,7 +1427,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Icon(
                       Icons.close,
                       color: Colors.white,
-                      size: isTabletLandscape ? 40.sp : 30.sp,
+                      size:  30.sp,
                     ),
                   ),
                 ),
