@@ -876,8 +876,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         "600x600";
     
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+
     double listHeight = isLandscape ? 520.h : 360.h;
-    if (dimensions.contains("600x400")) {
+    if (isTabletLandscape) {
+      listHeight = 680.h; // Increased for tablet
+    } else if (dimensions.contains("600x400")) {
       listHeight = isLandscape ? 380.h : 280.h;
     }
 
@@ -961,8 +966,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         final item = similarProducts[index];
                         if (item == null) return const SizedBox.shrink();
 
+                        double itemWidth = isTabletLandscape ? (1.sw / 3.1) : 170.w; // Match bestsellers width
                         return SizedBox(
-                          width: 170.w,
+                          width: itemWidth,
                           child: _buildProductCard(item),
                         );
                       },
@@ -986,8 +992,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         "600x600";
     
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+
     double listHeight = isLandscape ? 520.h : 360.h;
-    if (dimensions.contains("600x400")) {
+    if (isTabletLandscape) {
+      listHeight = 680.h; // Increased for tablet
+    } else if (dimensions.contains("600x400")) {
       listHeight = isLandscape ? 380.h : 280.h;
     }
 
@@ -1071,8 +1082,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         final item = sameCategoryProducts[index];
                         if (item == null) return const SizedBox.shrink();
 
+                        double itemWidth = isTabletLandscape ? (1.sw / 3.1) : 170.w; // Match bestsellers width
                         return SizedBox(
-                          width: 170.w,
+                          width: itemWidth,
                           child: _buildProductCard(item),
                         );
                       },
@@ -1089,9 +1101,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     // 3. Details: Title, etc.
     // 4. Action: "Add To Cart" (Orange Rounded) + Heart Icon (Outline/Filled)
 
-    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isTablet = AppTheme.isTablet(context);
-    final bool isTabletLandscape = isLandscape && isTablet;
+    final bool isTabletLandscape = MediaQuery.of(context).orientation == Orientation.landscape && isTablet;
 
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
@@ -1151,14 +1162,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         stripeText,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 10.sp,
+                            fontSize: isTabletLandscape ? 13.sp : 10.sp,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
 
                   // Image
                   Expanded(
-                    flex: isLandscape ? 4 : 5,
+                    flex: 5,
                     child: Stack(
                       children: [
                         Center(
@@ -1197,7 +1208,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   // Details
                   Expanded(
-                    flex: isLandscape ? 9 : 7,
+                    flex: isTabletLandscape? 7: isTablet ? 4 : 7,
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(8.w, 4.h, 8.w, 8.w),
                       child: Column(
@@ -1208,13 +1219,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   item.brandName ?? ""),
                               style: TextStyle(
                                   color: AppTheme.darkerGrayColor,
-                                  fontSize: 11.sp,
+                                  fontSize: isTabletLandscape ? 14.sp : 11.sp,
                                   fontWeight: FontWeight.w800),
                               maxLines: 1),
                           Text(CommonMethods.decodeHtmlEntities(item.title ?? ""),
                               style: TextStyle(
                                   color: AppTheme.textColor,
-                                  fontSize: 12.sp,
+                                  fontSize: isTabletLandscape ? 15.sp : 12.sp,
                                   fontWeight: FontWeight.w800),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis),
@@ -1225,7 +1236,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             Text(_formatPrice(item.price),
                                 style: TextStyle(
                                     color: AppTheme.darkerGrayColor,
-                                    fontSize: 12.sp,
+                                    fontSize: isTabletLandscape ? 15.sp : 12.sp,
                                     fontWeight: FontWeight.w800))
                           else
                             Wrap(
@@ -1236,12 +1247,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 Text(_formatPrice(item.price),
                                     style: TextStyle(
                                         color: AppTheme.darkerGrayColor,
-                                        fontSize: 12.sp,
+                                        fontSize: isTabletLandscape ? 15.sp : 12.sp,
                                         decoration: TextDecoration.lineThrough)),
                                 Text(_formatPrice(item.promotionPrice),
                                     style: TextStyle(
                                         color: AppTheme.redColor,
-                                        fontSize: 12.sp,
+                                        fontSize: isTabletLandscape ? 15.sp : 12.sp,
                                         fontWeight: FontWeight.bold)),
                                 Container(
                                   padding: EdgeInsets.symmetric(
@@ -1308,15 +1319,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   description: item.notAvailableDaysMessage ?? "",
                                                 ),
                                               );
-                                            }),                                  child: Container(
-                                    height: isTabletLandscape ? 50.h : (isLandscape ? 50.h : 34.h),
+                                            }),
+                                  child: Container(
+                                    height: isTabletLandscape ? 60.h : 34.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: canAddToCart
                                           ? AppTheme.primaryButtonColor
                                           : AppTheme.redColor,
                                       borderRadius:
-                                          BorderRadius.circular(20.r), // Rounded
+                                          BorderRadius.circular(AppTheme.productButtonRadius.r), // Rounded
                                     ),
                                     child: Text(
                                         isOutOfStock
@@ -1324,7 +1336,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             : "Add To Cart",
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 12.sp,
+                                            fontSize: isTabletLandscape ? 14.sp : 12.sp,
                                             fontWeight: FontWeight.bold)),
                                   ),
                                 ),
@@ -1342,14 +1354,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       _onFavorite(
                                           ProductDetailItem.fromJson(item.toJson()));
                                     },
-                                    child: Icon(
+                                    child: Image.asset(
                                       item.isFavourite == "Yes"
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: item.isFavourite == "Yes"
-                                          ? AppTheme.redColor
-                                          : AppTheme.primaryColor,
-                                      size: isTabletLandscape ? 30.sp : 26.sp,
+                                          ? "assets/images/favadded.png"
+                                          : "assets/images/fav_new.png",
+                                      width: isTabletLandscape ? 60.h : 30.h,
+                                      height: isTabletLandscape ? 60.h : 30.h,
                                     ),
                                   );
                                 },
