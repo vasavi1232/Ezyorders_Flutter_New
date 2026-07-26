@@ -139,6 +139,7 @@ class _CloseAccountDialogState extends State<CloseAccountDialog> {
         TextField(
           controller: _reasonController,
           maxLines: 4,
+          style: TextStyle(fontSize: 14.sp),
           decoration: InputDecoration(
             hintText: "Please Enter Reason",
             hintStyle: TextStyle(fontSize: 14.sp, color: Colors.grey),
@@ -165,7 +166,7 @@ class _CloseAccountDialogState extends State<CloseAccountDialog> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
-                child: Text("Cancel", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text("Cancel", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
               ),
             ),
             SizedBox(width: 15.w),
@@ -173,13 +174,13 @@ class _CloseAccountDialogState extends State<CloseAccountDialog> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _submit,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _reasonController.text.trim().isNotEmpty ? Colors.red.shade700 : Color(0xFFE28B9B), // Dark red when active, pinkish when inactive
+                  backgroundColor: _reasonController.text.trim().isNotEmpty ? Colors.red.shade700 : Color(0xFFE28B9B),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
                 child: _isLoading 
                   ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) 
-                  : Text("Confirm", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  : Text("Confirm", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
               ),
             ),
           ],

@@ -60,6 +60,10 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
         widget.orderData['order_id'] ??
         ""; 
 
+    final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -139,7 +143,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
               // Send Order Receipt Email Button (Orange)
               SizedBox(
                 width: double.infinity,
-                height: 45.h,
+                height: buttonHeight,
                 child: ElevatedButton(
                   onPressed: _showSendReceiptDialog,
                   style: ElevatedButton.styleFrom(
@@ -150,7 +154,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                     elevation: 2,
                   ),
                   child: Text("Send Order Receipt Email",
-                      style: TextStyle(fontSize: 14.sp)),
+                      style: TextStyle(fontSize: isTabletLandscape ? 16.sp : 14.sp)),
                 ),
               ),
               SizedBox(height: 15.h),
@@ -158,7 +162,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
               // Back to Home Button (Dark Blue)
               SizedBox(
                 width: double.infinity,
-                height: 45.h,
+                height: buttonHeight,
                 child: ElevatedButton(
                   onPressed: () {
                     context.read<DashboardProvider>().setIndex(0); // Home Tab
