@@ -30,6 +30,8 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
 
     return Scaffold(
       backgroundColor: AppTheme.white,
@@ -91,7 +93,7 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                   // Horizontal Categories List
                   if (provider.myWishlistCategories.isNotEmpty)
                     Container(
-                      height: isLandscape ? 55.h : 40.h,
+                      height: isTabletLandscape ? 80.h : (isLandscape ? 55.h : 40.h),
                       margin: EdgeInsets.symmetric(vertical: 20.h),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -144,7 +146,7 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                                   color: isSelected
                                       ? AppTheme.tealColor
                                       : AppTheme.blackColor,
-                                  fontSize: 12.sp,
+                                  fontSize: isTabletLandscape ? 16.sp : 12.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -293,11 +295,11 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                                         }
                                     },
                                     child: Container(
-                                        height: 40.h,
+                                        height: isTabletLandscape ? 80.h : 40.h,
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                             color: AppTheme.primaryButtonColor,
-                                            borderRadius: BorderRadius.circular(20.r),
+                                            borderRadius: BorderRadius.circular(isTabletLandscape ? 40.r : 20.r),
                                         ),
                                         child: Builder(
                                             builder: (context) {
@@ -310,7 +312,7 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                                                     anyInCart ? "Update Cart" : "Add To Cart",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 14.sp,
+                                                        fontSize: isTabletLandscape ? 20.sp : 14.sp,
                                                         fontWeight: FontWeight.bold
                                                     ),
                                                 );
