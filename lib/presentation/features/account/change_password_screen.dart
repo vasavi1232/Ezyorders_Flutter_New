@@ -91,6 +91,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = MediaQuery.of(context).orientation == Orientation.landscape && isTablet;
+    final double buttonHeight = isTabletLandscape ? 75.h : 50.h;
+
     // Replicating Layout from Android XML likely (Simple form)
     return Scaffold(
       appBar: AppBar(
@@ -152,12 +156,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     // Submit Button
                     SizedBox(
                       width: double.infinity,
-                      height: 50.h,
+                      height: buttonHeight,
                       child: ElevatedButton(
                         onPressed: provider.isLoading ? null : _onSubmit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryButtonColor,
-                          minimumSize: Size(double.infinity, 45.h),
+                          minimumSize: Size(double.infinity, isTabletLandscape ? 75.h : 45.h),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   AppTheme.authButtonRadius.r)),

@@ -243,6 +243,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = MediaQuery.of(context).orientation == Orientation.landscape && isTablet;
+
     return Scaffold(
       // backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
@@ -514,7 +517,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   // Update Button
                                   SizedBox(
                                     width: double.infinity,
-                                    height: 45.h,
+                                    height: isTabletLandscape ? 75.h : 45.h,
                                     child: ElevatedButton(
                                       onPressed: _submit,
                                       style: ElevatedButton.styleFrom(
@@ -526,7 +529,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       ),
                                       child: Text("Update Details",
                                           style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: isTabletLandscape ? 16.sp : 14.sp,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold)),
                                     ),
