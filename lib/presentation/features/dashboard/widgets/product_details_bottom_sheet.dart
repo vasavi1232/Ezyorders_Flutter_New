@@ -118,6 +118,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
     
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
 
     return Container(
       decoration: BoxDecoration(
@@ -377,6 +378,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                         (int.tryParse(widget.product.qtyPerOuter ?? "1") ?? 1) > 1)
                       Container(
                         width: double.infinity,
+                        height: isTabletLandscape ? 75.h : 40.h,
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         decoration: BoxDecoration(
                           color: Colors.white,

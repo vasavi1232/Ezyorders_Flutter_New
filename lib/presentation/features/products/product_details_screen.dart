@@ -154,6 +154,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             color: Colors.white,
             fontWeight: FontWeight.w800,
             fontSize: 18.sp,
+            fontFamily: 'OpenSans',
           ),
         ),
         centerTitle: true,
@@ -252,6 +253,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               color: AppTheme.primaryColor,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'OpenSans',
                             ),
                           ),
                         ],
@@ -319,7 +321,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.sp,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'OpenSans'),
                       ),
                     ),
                   ),
@@ -333,7 +336,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             style: TextStyle(
                 color: AppTheme.textColor,
                 fontSize: 18.sp,
-                fontWeight: FontWeight.bold),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'OpenSans'),
           ),
           // Short Description
           if (product.shortDescription != null &&
@@ -345,7 +349,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 style: TextStyle(
                     color: AppTheme.darkGrayColor,
                     fontSize: 14.sp,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'),
               ),
             ),
           // Brand
@@ -355,7 +360,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             style: TextStyle(
                 color: Colors.black26,
                 fontSize: 14.sp,
-                fontWeight: FontWeight.bold),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'OpenSans'),
           ),
           SizedBox(height: 10.h),
           // Pricing
@@ -395,7 +401,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: TextStyle(
                         color: AppTheme.darkerGrayColor,
                         fontSize: 16.sp,
-                        decoration: TextDecoration.lineThrough),
+                        decoration: TextDecoration.lineThrough,
+                        fontFamily: 'OpenSans'),
                   ),
                   SizedBox(width: 10.w),
                   Text(
@@ -403,7 +410,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: TextStyle(
                         color: AppTheme.redColor,
                         fontSize: 18.sp,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans'),
                   ),
                   SizedBox(width: 10.w),
                   Container(
@@ -419,7 +427,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'OpenSans'),
                     ),
                   ),
                 ] else
@@ -428,7 +437,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: TextStyle(
                         color: AppTheme.darkerGrayColor,
                         fontSize: 18.sp,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans'),
                   ),
               ],
             ),
@@ -457,6 +467,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: AppTheme.redColor,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans',
                   ),
                 );
               }),
@@ -504,7 +515,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         : product.addedToCart == "Yes"
                             ? "Update Cart [${product.addedQty}]"
                             : "Add To Cart",
-                    style: TextStyle(color: Colors.white, fontSize: isTabletLandscape ? 14.sp : 14.sp),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: isTabletLandscape ? 14.sp : 14.sp,
+                        fontFamily: 'OpenSans'),
                   ),
                 ),
               ),
@@ -540,7 +554,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 style: TextStyle(
                     color: AppTheme.redColor,
                     fontSize: 14.sp,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'),
               ),
             ),
         ],
@@ -570,13 +585,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               unselectedLabelColor: AppTheme.darkGrayColor,
               indicatorColor: AppTheme.primaryColor,
               indicatorWeight: 2,
-              labelStyle: const TextStyle(
+              labelStyle: TextStyle(
                 fontWeight: FontWeight.w800,
-                fontSize: 16,
+                fontSize: 16.sp,
+                fontFamily: 'OpenSans',
               ),
-              unselectedLabelStyle: const TextStyle(
+              unselectedLabelStyle: TextStyle(
                 fontWeight: FontWeight.w800,
-                fontSize: 16,
+                fontSize: 16.sp,
+                fontFamily: 'OpenSans',
               ),
               onTap: (index) {
                 setState(() {
@@ -640,7 +657,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget _buildOtherInfoTab(ProductDetailItem product) {
     if (product.productSpecifications == null ||
         product.productSpecifications!.isEmpty) {
-      return const Center(child: Text("No specification available"));
+      return const Center(child: Text("No specification available", style: TextStyle(fontFamily: 'OpenSans')));
     }
 
     // We need to map the specifications to these 4 categories if possible.
@@ -689,6 +706,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: Colors.white,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
+                    fontFamily: 'OpenSans',
                   ),
                 ),
               ),
@@ -751,7 +769,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       style: TextStyle(
                           color: Colors.blue[900],
                           fontSize: 18.sp,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'OpenSans'),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -776,6 +795,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       lineHeight: LineHeight(1.4),
                       margin: Margins.zero,
                       padding: HtmlPaddings.zero,
+                      fontFamily: 'OpenSans',
                     ),
                     "table": Style(
                       display: Display.table,
@@ -792,11 +812,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       fontWeight: FontWeight.bold,
                       border: Border.all(color: AppTheme.borderColor, width: 0.5),
                       textAlign: TextAlign.center,
+                      fontFamily: 'OpenSans',
                     ),
                     "td": Style(
                       padding: HtmlPaddings.all(10),
                       border: Border.all(color: AppTheme.borderColor, width: 0.5),
                       verticalAlign: VerticalAlign.middle,
+                      fontFamily: 'OpenSans',
                     ),
                   },
                   extensions: [
@@ -820,10 +842,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 backgroundColor: Colors.grey.shade50,
                                 border: Border.all(color: AppTheme.borderColor, width: 0.5),
                                 fontWeight: FontWeight.bold,
+                                fontFamily: 'OpenSans',
                               ),
                               "td": Style(
                                 padding: HtmlPaddings.all(10),
                                 border: Border.all(color: AppTheme.borderColor, width: 0.5),
+                                fontFamily: 'OpenSans',
                               ),
                             },
                             extensions: [const TableHtmlExtension()],
@@ -851,12 +875,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               style: TextStyle(
                   color: AppTheme.primaryColor,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w700)),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'OpenSans')),
           Text(CommonMethods.decodeHtmlEntities(value),
               style: TextStyle(
                   color: AppTheme.darkerGrayColor,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w500)),
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'OpenSans')),
         ],
       ),
     );
@@ -921,19 +947,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: TextStyle(
                         color: AppTheme.primaryColor,
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'OpenSans'),
                     children: [
                       TextSpan(
                         text: "Click here",
                         style: TextStyle(
                           color: AppTheme.primaryColor,
                           fontWeight: FontWeight.w800,
+                          fontFamily: 'OpenSans',
                         ),
                       ),
                       TextSpan(
                         text: " to view",
                         style: TextStyle(
                           color: AppTheme.primaryColor,
+                          fontFamily: 'OpenSans',
                         ),
                       ),
                     ],
@@ -949,7 +978,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: (isLoading && similarProducts.isEmpty)
                 ? Center(child: CustomLoaderWidget(size: 40.w))
                 : similarProducts.isEmpty 
-                  ? Center(child: Text("No similar products found", style: TextStyle(fontSize: 12.sp)))
+                  ? Center(child: Text("No similar products found", style: TextStyle(fontSize: 12.sp, fontFamily: 'OpenSans')))
                   : ListView.builder(
                       controller: _similarScrollController,
                       scrollDirection: Axis.horizontal,
@@ -1037,19 +1066,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: TextStyle(
                         color: AppTheme.primaryColor,
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'OpenSans'),
                     children: [
                       TextSpan(
                         text: "Click here",
                         style: TextStyle(
                           color: AppTheme.primaryColor,
                           fontWeight: FontWeight.w800,
+                          fontFamily: 'OpenSans',
                         ),
                       ),
                       TextSpan(
                         text: " to view",
                         style: TextStyle(
                           color: AppTheme.primaryColor,
+                          fontFamily: 'OpenSans',
                         ),
                       ),
                     ],
@@ -1065,7 +1097,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: (isLoading && sameCategoryProducts.isEmpty)
                 ? Center(child: CustomLoaderWidget(size: 40.w))
                 : sameCategoryProducts.isEmpty
-                  ? Center(child: Text("No products found", style: TextStyle(fontSize: 12.sp)))
+                  ? Center(child: Text("No products found", style: TextStyle(fontSize: 12.sp, fontFamily: 'OpenSans')))
                   : ListView.builder(
                       controller: _sameCategoryScrollController,
                       scrollDirection: Axis.horizontal,
@@ -1163,7 +1195,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: isTabletLandscape ? 13.sp : 10.sp,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'OpenSans'),
                       ),
                     ),
 
@@ -1199,7 +1232,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 9.sp,
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'OpenSans')),
                             ),
                           ),
                       ],
@@ -1220,13 +1254,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               style: TextStyle(
                                   color: AppTheme.darkerGrayColor,
                                   fontSize: isTabletLandscape ? 14.sp : 11.sp,
-                                  fontWeight: FontWeight.w800),
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: 'OpenSans'),
                               maxLines: 1),
                           Text(CommonMethods.decodeHtmlEntities(item.title ?? ""),
                               style: TextStyle(
                                   color: AppTheme.textColor,
                                   fontSize: isTabletLandscape ? 15.sp : 12.sp,
-                                  fontWeight: FontWeight.w800),
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: 'OpenSans'),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis),
 
@@ -1237,7 +1273,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 style: TextStyle(
                                     color: AppTheme.darkerGrayColor,
                                     fontSize: isTabletLandscape ? 15.sp : 12.sp,
-                                    fontWeight: FontWeight.w800))
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'OpenSans'))
                           else
                             Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
@@ -1248,12 +1285,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     style: TextStyle(
                                         color: AppTheme.darkerGrayColor,
                                         fontSize: isTabletLandscape ? 15.sp : 12.sp,
-                                        decoration: TextDecoration.lineThrough)),
+                                        decoration: TextDecoration.lineThrough,
+                                        fontFamily: 'OpenSans')),
                                 Text(_formatPrice(item.promotionPrice),
                                     style: TextStyle(
                                         color: AppTheme.redColor,
                                         fontSize: isTabletLandscape ? 15.sp : 12.sp,
-                                        fontWeight: FontWeight.bold)),
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'OpenSans')),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 4.w, vertical: 2.h),
@@ -1266,7 +1305,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 10.sp,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'OpenSans'),
                                   ),
                                 ),
                               ],
@@ -1291,7 +1331,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: TextStyle(
                                       color: AppTheme.redColor,
                                       fontSize: 11.sp,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'OpenSans'),
                                 ),
                               );
                             }),
@@ -1337,7 +1378,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: isTabletLandscape ? 14.sp : 12.sp,
-                                            fontWeight: FontWeight.bold)),
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'OpenSans')),
                                   ),
                                 ),
                               ),
@@ -1460,9 +1502,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     if (match != null) {
       return """
         <tr style="border-bottom:1px solid #ddd;">
-          <td style="padding:10px; border-right:1px solid #ddd; font-weight:bold; font-size:12px;">${name.replaceAll("-", "")}</td>
-          <td style="padding:10px; border-right:1px solid #ddd; text-align:center; font-size:12px;">${match.group(1)?.trim() ?? '-'}</td>
-          <td style="padding:10px; text-align:center; font-size:12px;">${match.group(2)?.trim() ?? '-'}</td>
+          <td style="padding:10px; border-right:1px solid #ddd; font-weight:bold; font-size:12px; font-family:'OpenSans';">${name.replaceAll("-", "")}</td>
+          <td style="padding:10px; border-right:1px solid #ddd; text-align:center; font-size:12px; font-family:'OpenSans';">${match.group(1)?.trim() ?? '-'}</td>
+          <td style="padding:10px; text-align:center; font-size:12px; font-family:'OpenSans';">${match.group(2)?.trim() ?? '-'}</td>
         </tr>
       """;
     }
@@ -1480,12 +1522,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       metaTable = """
         <table style="width:100%; border:1px solid #ddd; border-collapse:collapse; margin-bottom:15px;">
           <tr style="background-color:#f8f9fa; border-bottom:1px solid #ddd;">
-             <th style="padding:10px; border-right:1px solid #ddd; text-align:left; font-size:12px;">Servings per pack</th>
-             <th style="padding:10px; text-align:left; font-size:12px;">Serving size</th>
+             <th style="padding:10px; border-right:1px solid #ddd; text-align:left; font-size:12px; font-family:'OpenSans';">Servings per pack</th>
+             <th style="padding:10px; text-align:left; font-size:12px; font-family:'OpenSans';">Serving size</th>
           </tr>
           <tr>
-             <td style="padding:10px; border-right:1px solid #ddd; font-size:13px;">${metaMatch.group(1)}</td>
-             <td style="padding:10px; font-size:13px;">${metaMatch.group(2)}</td>
+             <td style="padding:10px; border-right:1px solid #ddd; font-size:13px; font-family:'OpenSans';">${metaMatch.group(1)}</td>
+             <td style="padding:10px; font-size:13px; font-family:'OpenSans';">${metaMatch.group(2)}</td>
           </tr>
         </table>
       """;
@@ -1508,8 +1550,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       <table style="width:100%; border:1px solid #ddd; border-collapse:collapse;">
         <tr style="background-color:#f8f9fa; border-bottom:1px solid #ddd;">
           <th style="padding:10px; border-right:1px solid #ddd; width:40%;"></th>
-          <th style="padding:10px; border-right:1px solid #ddd; width:30%; font-size:13px;">Per Serving</th>
-          <th style="padding:10px; width:30%; font-size:13px;">Per 100g</th>
+          <th style="padding:10px; border-right:1px solid #ddd; width:30%; font-size:13px; font-family:'OpenSans';">Per Serving</th>
+          <th style="padding:10px; width:30%; font-size:13px; font-family:'OpenSans';">Per 100g</th>
         </tr>
         $rows
       </table>
@@ -1520,11 +1562,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final notesMatch = notesRegex.firstMatch(rawText);
     String notes = "";
     if (notesMatch != null) {
-      notes = "<p style='margin-top:15px; font-size:13px; color:#555;'>${notesMatch.group(1)}</p>";
+      notes = "<p style='margin-top:15px; font-size:13px; color:#555; font-family:\"OpenSans\";'>${notesMatch.group(1)}</p>";
     }
 
     return """
-      <div style="font-family:sans-serif;">
+      <div style="font-family:'OpenSans';">
         $metaTable
         $nutritionTable
         $notes

@@ -235,6 +235,10 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
     bool hasPromo =
         widget.product.hasPromotion == "Yes" && currentPromoPrice > 0;
 
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTablet = AppTheme.isTablet(context);
+    final bool isTabletLandscape = isLandscape && isTablet;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -374,7 +378,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
           widget.product.soldAs == "Each" &&
           (int.tryParse(widget.product.qtyPerOuter ?? "1") ?? 1) > 1)
         Container(
-          height: 42.h,
+          height: isTabletLandscape ? 75.h : 42.h,
           width: double.infinity,
           margin: EdgeInsets.only(top: 5.h),
           padding: EdgeInsets.symmetric(horizontal: 10.w),
