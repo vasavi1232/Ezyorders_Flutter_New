@@ -47,6 +47,10 @@ class _CartSuccessDialogState extends State<CartSuccessDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTabletLandscape =
+        MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
       clipBehavior: Clip.antiAlias,
@@ -109,14 +113,17 @@ class _CartSuccessDialogState extends State<CartSuccessDialog> {
 
                 // Close Button
                 SizedBox(
-                  width: 100.w,
+                  width: isTabletLandscape ? 150.w : 100.w,
+                  height: isTabletLandscape ? 50.h : null,
                   child: ElevatedButton(
                     onPressed: _dismissDialog,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.secondaryButtonColor, // Secondary
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      padding: isTabletLandscape
+                          ? EdgeInsets.zero
+                          : EdgeInsets.symmetric(vertical: 10.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4.r),
                       ),
