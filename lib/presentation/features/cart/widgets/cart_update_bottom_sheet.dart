@@ -52,6 +52,10 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTabletLandscape =
+        MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -69,8 +73,12 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
           Flexible(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(15.w).copyWith(
-                    bottom: 15.w + MediaQuery.of(context).padding.bottom),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: isTabletLandscape ? 10.h : 15.h,
+                ).copyWith(
+                    bottom: (isTabletLandscape ? 10.h : 15.w) +
+                        MediaQuery.of(context).padding.bottom),
                 child: Container(
                   padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(
@@ -84,11 +92,11 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Product Image & Tag
-                          _buildProductImage(),
+                          _buildProductImage(isTabletLandscape),
                           SizedBox(width: 15.w),
                           // Product Info
                           Expanded(
-                            child: _buildProductDetails(context),
+                            child: _buildProductDetails(context, isTabletLandscape),
                           ),
                         ],
                       ),
@@ -101,12 +109,12 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
                       SizedBox(height: 15.h),
 
                       // Quantity Picker
-                      _buildQuantityPicker(),
+                      _buildQuantityPicker(isTabletLandscape),
 
                       SizedBox(height: 15.h),
 
                       // Action Buttons
-                      _buildActionButtons(context),
+                      _buildActionButtons(context, isTabletLandscape),
                     ],
                   ),
                 ),
@@ -157,7 +165,7 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
     );
   }
 
-  Widget _buildProductImage() {
+  Widget _buildProductImage(bool isTabletLandscape) {
     String tagText = "";
     final String status = (widget.item.qtyStatus ?? "").toLowerCase().trim();
     if (status == "best seller" ||
@@ -166,11 +174,13 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
       tagText = widget.item.qtyStatus!.trim();
     }
 
+    double imageSize = isTabletLandscape ? 180.h : 120.w;
+
     return Stack(
       children: [
         Container(
-          width: 120.w,
-          height: 120.w,
+          width: imageSize,
+          height: imageSize,
           padding: EdgeInsets.all(5.w),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -209,7 +219,7 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
     );
   }
 
-  Widget _buildProductDetails(BuildContext context) {
+  Widget _buildProductDetails(BuildContext context, bool isTabletLandscape) {
     final dashboardProvider = context.read<DashboardProvider>();
     final showSoldAs =
         dashboardProvider.profileResponse?.results?[0]?.showSoldAs == "Yes";
@@ -301,7 +311,6 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
   Widget _buildStockInfo() {
     final String sunl = (widget.item.stockUnlimited ?? "").toLowerCase().trim();
     final String qstat = (widget.item.qtyStatus ?? "").toLowerCase().trim();
-    final String ato = (widget.item.allowToOrder ?? "").toLowerCase().trim();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,9 +333,6 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
               stockText = "In Stock : ${widget.item.availableStockQty}";
             }
             
-            // If it says Out of Stock but allowToOrder is Yes, maybe we should hide or show something else?
-            // But usually we just show the status and allow the picker to work.
-            
             return Text(
               stockText,
               style: TextStyle(
@@ -339,23 +345,24 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
     );
   }
 
-  Widget _buildQuantityPicker() {
+  Widget _buildQuantityPicker(bool isTabletLandscape) {
+    double pickerHeight = isTabletLandscape ? 80.h : 50.h;
     return Container(
       width: double.infinity,
-      height: 50.h,
+      height: pickerHeight,
       decoration: BoxDecoration(
         color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Center(
         child: SizedBox(
-          height: 50.h,
-          width: 150.w,
+          height: pickerHeight,
+          width: isTabletLandscape ? 300.w : 150.w,
           child: RotatedBox(
             quarterTurns: -1,
             child: ListWheelScrollView.useDelegate(
               controller: _scrollController,
-              itemExtent: 50.w,
+              itemExtent: pickerHeight,
               physics: const FixedExtentScrollPhysics(),
               perspective: 0.002,
               diameterRatio: 1.5,
@@ -395,7 +402,8 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, bool isTabletLandscape) {
+    double buttonHeight = isTabletLandscape ? 60.h : 40.h;
     return Row(
       children: [
         Expanded(
@@ -407,7 +415,7 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.tealColor,
-              minimumSize: Size(double.infinity, 40.h),
+              minimumSize: Size(double.infinity, buttonHeight),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.r)),
             ),
@@ -424,8 +432,8 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
             Navigator.pop(context);
           },
           child: Container(
-            width: 40.h,
-            height: 40.h,
+            width: buttonHeight,
+            height: buttonHeight,
             decoration: BoxDecoration(
               color: AppTheme.redColor,
               borderRadius: BorderRadius.circular(5.r),

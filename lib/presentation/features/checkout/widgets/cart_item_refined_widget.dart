@@ -112,8 +112,8 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                         children: [
                           // Image
                           Container(
-                            width: 60.w,
-                            height: 60.h,
+                            width:  isTabletLandscape? 90.w : 60.w,
+                            height: isTabletLandscape? 90.h : 60.h,
                             alignment: Alignment.center,
                             child: _buildImage(widget.item.image),
                           ),
