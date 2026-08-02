@@ -33,6 +33,30 @@ class _StepCartWidgetState extends State<StepCartWidget> {
         MediaQuery.of(context).orientation == Orientation.landscape;
     final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
 
+    // Helper to format labels specifically for Tablet Landscape mode
+    String formatLabel(String label, String suffix) {
+      if (!isTabletLandscape) return label;
+      String clean = label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+      
+      // If the clean label already contains the suffix in parentheses, return it
+      if (clean.contains("($suffix)")) {
+        return clean;
+      }
+      
+      // If the clean label contains the suffix but NOT in parentheses, wrap it
+      if (clean.contains(suffix)) {
+        return clean.replaceFirst(suffix, "($suffix)");
+      }
+      
+      // If it contains GST info in some other form (e.g. "Inc GST"), but not our specific suffix, 
+      // we'll just return it cleaned up to avoid duplication.
+      if (clean.toUpperCase().contains("GST")) {
+        return clean;
+      }
+      
+      return "$clean ($suffix)";
+    }
+
     // Error State
     if (!provider.isLoading && provider.errorMessage.isNotEmpty && (cartResult == null || (cartResult.brands?.isEmpty ?? true))) {
       return Center(
@@ -255,67 +279,35 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                   ),
                                 ],
                                 SizedBox(height: 10.h),
-                                Text(
-                                  "Delivery Location",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                                InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => DeliveryLocationDialog(
-                                        deliveryLocations: provider.deliveryLocations,
-                                        selectedDeliveryLocationId: provider.selectedDeliveryLocationId,
-                                        onLocationSelected: (locationId, charge) {
-                                          provider.updateDeliveryLocation(locationId, charge);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppTheme.borderColor),
-                                      borderRadius: BorderRadius.circular(4.r),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            provider.selectedDeliveryLocationId == null
-                                                ? "Select Delivery Location"
-                                                : () {
-                                                    final bool exists = provider.deliveryLocations.any((loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                                                    if (!exists) return "Select Delivery Location";
-                                                    final selectedLoc = provider.deliveryLocations.firstWhere(
-                                                        (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                                                    String displayText = selectedLoc.locationName ?? "Select Delivery Location";
-                                                    if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
-                                                      displayText += " - ${selectedLoc.subLocationName}";
-                                                    }
-                                                    return displayText;
-                                                  }(),
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: provider.selectedDeliveryLocationId == null
-                                                  ? Colors.grey.shade600
-                                                  : AppTheme.primaryColor,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                if (isTabletLandscape)
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Delivery Location",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
                                         ),
-                                        const Icon(Icons.keyboard_arrow_down, color: AppTheme.primaryColor),
-                                      ],
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Expanded(
+                                        child: _buildDeliveryDropdown(provider),
+                                      ),
+                                    ],
+                                  )
+                                else ...[
+                                  Text(
+                                    "Delivery Location",
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                ),
+                                  SizedBox(height: 5.h),
+                                  _buildDeliveryDropdown(provider),
+                                ],
                                 SizedBox(height: 5.h),
                                 if (provider.selectedDeliveryLocationId != null)
                                   Builder(builder: (context) {
@@ -344,9 +336,10 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             ),
 
                           _buildSummaryRow(
-                              provider.subTotalHeading,
+                              formatLabel(provider.subTotalHeading, "Ex. GST"),
                               CommonMethods.setPriceFormatString(provider.subTotal),
-                              isBlueValue: true),
+                              isBlueValue: true,
+                              isTabletLandscape: isTabletLandscape),
 
                           Builder(builder: (context) {
                             final profile = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
@@ -354,7 +347,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final includeLevy = profile?.includeLevyInPriceCalculation == "No";
                             final hasLevy = (double.tryParse(provider.levy) ?? 0) > 0;
                              if (showLevy && includeLevy && hasLevy) {
-                              return _buildSummaryRow("Levy :", CommonMethods.setPriceFormatString(provider.levy), isBlueValue: true);
+                              return _buildSummaryRow("Levy :", CommonMethods.setPriceFormatString(provider.levy), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
@@ -365,7 +358,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final includeWet = profile?.includeWetInPriceCalculation == "No";
                             final hasWet = (double.tryParse(provider.wet) ?? 0) > 0;
                              if (showWet && includeWet && hasWet) {
-                              return _buildSummaryRow("WET :", CommonMethods.setPriceFormatString(provider.wet), isBlueValue: true);
+                              return _buildSummaryRow("WET :", CommonMethods.setPriceFormatString(provider.wet), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
@@ -374,13 +367,15 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                               (double.tryParse(provider.shippingCharge) ?? 0) > 0)
                             _buildSummaryRow("Shipping :",
                                 CommonMethods.setPriceFormatString(provider.shippingCharge),
-                                isBlueValue: true),
+                                isBlueValue: true,
+                                isTabletLandscape: isTabletLandscape),
 
                           if (context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment != "Yes" &&
                               (double.tryParse(provider.shippingCharge) ?? 0) > 0)
                             _buildSummaryRow("Shipping :",
                                 CommonMethods.setPriceFormatString(provider.shippingCharge),
-                                isBlueValue: true),
+                                isBlueValue: true,
+                                isTabletLandscape: isTabletLandscape),
 
                           Builder(builder: (context) {
                             final profile = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
@@ -389,22 +384,23 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final taxTotalVal = double.tryParse(provider.taxTotal) ?? 0;
 
                             if (taxTotalVal > 0 || (showPriceIncGst == "No" && showGstInCart == "Yes")) {
-                              return _buildSummaryRow("GST :", CommonMethods.setPriceFormatString(provider.taxTotal), isBlueValue: true);
+                              return _buildSummaryRow("GST :", CommonMethods.setPriceFormatString(provider.taxTotal), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
 
                           if ((double.tryParse(provider.supplierCharge) ?? 0) > 0)
-                            _buildSummaryRow("Addnl. Supplier Charge :", CommonMethods.setPriceFormatString(provider.supplierCharge), isBlueValue: true),
+                            _buildSummaryRow("Addnl. Supplier Charge :", CommonMethods.setPriceFormatString(provider.supplierCharge), isBlueValue: true, isTabletLandscape: isTabletLandscape),
 
                           if ((double.tryParse(provider.couponDiscount) ?? 0) > 0)
-                            _buildSummaryRow("Coupon (${provider.couponName})", "-${CommonMethods.setPriceFormatString(provider.couponDiscount)}", isDiscount: true),
+                            _buildSummaryRow("Coupon (${provider.couponName})", "-${CommonMethods.setPriceFormatString(provider.couponDiscount)}", isDiscount: true, isTabletLandscape: isTabletLandscape),
 
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                           _buildSummaryRow(
-                              provider.totalHeading,
+                              formatLabel(provider.totalHeading, "Inc. GST"),
                               CommonMethods.setPriceFormatString(provider.totalAmount),
-                              isBlueValue: true),
+                              isBlueValue: true,
+                              isTabletLandscape: isTabletLandscape),
                           SizedBox(height: 5.h),
                         ],
                       ),
@@ -417,7 +413,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            padding: EdgeInsets.symmetric(horizontal: 2.w),
                             child: SizedBox(
                               height: buttonHeight,
                               child: ElevatedButton(
@@ -450,7 +446,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            padding: EdgeInsets.symmetric(horizontal: 2.w),
                             child: SizedBox(
                               height: buttonHeight,
                               child: ElevatedButton(
@@ -548,18 +544,82 @@ class _StepCartWidgetState extends State<StepCartWidget> {
     );
   }
 
+  Widget _buildDeliveryDropdown(CheckoutProvider provider) {
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => DeliveryLocationDialog(
+            deliveryLocations: provider.deliveryLocations,
+            selectedDeliveryLocationId: provider.selectedDeliveryLocationId,
+            onLocationSelected: (locationId, charge) {
+              provider.updateDeliveryLocation(locationId, charge);
+            },
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppTheme.borderColor),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                provider.selectedDeliveryLocationId == null
+                    ? "Select Delivery Location"
+                    : () {
+                        final bool exists = provider.deliveryLocations.any((loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
+                        if (!exists) return "Select Delivery Location";
+                        final selectedLoc = provider.deliveryLocations.firstWhere(
+                            (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
+                        String displayText = selectedLoc.locationName ?? "Select Delivery Location";
+                        if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
+                          displayText += " - ${selectedLoc.subLocationName}";
+                        }
+                        return displayText;
+                      }(),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: provider.selectedDeliveryLocationId == null
+                      ? Colors.grey.shade600
+                      : AppTheme.primaryColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Icon(Icons.keyboard_arrow_down, color: AppTheme.primaryColor),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSummaryRow(String label, String value,
-      {bool isDiscount = false, bool isBlueValue = false}) {
+      {bool isDiscount = false, bool isBlueValue = false, bool isTabletLandscape = false}) {
+    // Only remove newlines and enforce single line if in tablet landscape mode
+    final String displayLabel = isTabletLandscape 
+        ? label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim() 
+        : label;
+
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
+      padding: EdgeInsets.symmetric(vertical: isTabletLandscape ? 2.h : 4.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontSize: 13.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600)),
+          Expanded(
+            child: Text(displayLabel,
+                maxLines: isTabletLandscape ? 1 : null,
+                overflow: isTabletLandscape ? TextOverflow.ellipsis : null,
+                style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600)),
+          ),
           Text(value,
               style: TextStyle(
                   fontSize: 14.sp,
