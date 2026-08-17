@@ -40,8 +40,8 @@ android {
         applicationId = "com.k3tech.ezyorders"
         minSdk = flutter.minSdkVersion 
         targetSdk = 36
-        versionCode = 10016
-        versionName = "1.0.6"
+        versionCode = 10018
+        versionName = "1.0.8"
     }
 
     buildTypes {
