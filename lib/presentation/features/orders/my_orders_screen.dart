@@ -43,8 +43,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
 
   void _fetchInitialOrders() {
     context.read<OrdersProvider>().fetchOrders(
-          isRefresh: true,
-        );
+      isRefresh: true,
+    );
   }
 
   void _onScroll() {
@@ -157,11 +157,11 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                           Text(
                             "Please Wait",
                             textAlign: TextAlign.center,
-                             style: TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontSize: CommonMethods.safeSize(13.sp, defaultValue: 13),
-                                fontWeight: FontWeight.bold,
-                              ),
+                            style: TextStyle(
+                              color: AppTheme.primaryColor,
+                              fontSize: CommonMethods.safeSize(13.sp, defaultValue: 13),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -191,7 +191,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               prefixIcon: const Icon(Icons.search, color: Colors.grey),
               contentPadding: EdgeInsets.symmetric(vertical: CommonMethods.safeSize(10.h)),
               border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(CommonMethods.safeSize(4.r, defaultValue: 4))),
+              OutlineInputBorder(borderRadius: BorderRadius.circular(CommonMethods.safeSize(4.r, defaultValue: 4))),
             ),
           ),
           SizedBox(height: CommonMethods.safeSize(10.h)),
@@ -208,9 +208,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     suffixIcon: const Icon(Icons.calendar_today,
                         color: AppTheme.primaryColor),
                     contentPadding:
-                        EdgeInsets.symmetric(
-                            horizontal: CommonMethods.safeSize(10.w), 
-                            vertical: CommonMethods.safeSize(10.h)),
+                    EdgeInsets.symmetric(
+                        horizontal: CommonMethods.safeSize(10.w),
+                        vertical: CommonMethods.safeSize(10.h)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(CommonMethods.safeSize(4.r, defaultValue: 4))),
                   ),
@@ -235,9 +235,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     suffixIcon: const Icon(Icons.calendar_today,
                         color: AppTheme.primaryColor),
                     contentPadding:
-                        EdgeInsets.symmetric(
-                            horizontal: CommonMethods.safeSize(10.w), 
-                            vertical: CommonMethods.safeSize(10.h)),
+                    EdgeInsets.symmetric(
+                        horizontal: CommonMethods.safeSize(10.w),
+                        vertical: CommonMethods.safeSize(10.h)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(CommonMethods.safeSize(4.r, defaultValue: 4))),
                   ),
@@ -291,9 +291,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         if (provider.orders.isEmpty) {
           return Center(
               child: Text(
-            "No orders data found",
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-          ));
+                "No orders data found",
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+              ));
         }
 
         return ListView.builder(
@@ -310,12 +310,21 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             final order = provider.orders[index];
             return OrderListItemWidget(
               order: order,
-              onViewDetails: () {
-                Navigator.push(
+              onViewDetails: () async {
+                // Keep My Orders alive while opening details, then refresh
+                // the order history when the details page is closed.
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => OrderDetailsScreen(order: order)),
+                    builder: (context) => OrderDetailsScreen(order: order),
+                  ),
                 );
+
+                if (!mounted) return;
+
+                // Refresh the list because order details may have changed
+                // order status, cancellation, payment, etc.
+                _fetchInitialOrders();
               },
               onReorder: () => _handleReorder(order),
               onDuplicate: () => _handleDuplicate(order),
@@ -364,7 +373,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     authProvider.user?.accessToken ?? "",
                     authProvider.user?.customerId ?? "",
                     stabilize: true);
-                
+
                 // Update global cart count
                 dashboardProvider.setCartCount(CommonMethods.cartCount);
 
