@@ -8,6 +8,10 @@ import '../../../../core/utils/common_methods.dart';
 import '../../../../data/models/cart_models.dart';
 import '../../../providers/dashboard_provider.dart';
 import '../../../widgets/custom_loader_widget.dart';
+import '../../../widgets/specials_tooltip.dart';
+// Import the existing SpecialsTooltip implementation from your project.
+// Example:
+// import '../../../widgets/specials_tooltip.dart';
 
 class CartUpdateBottomSheet extends StatefulWidget {
   final CartProduct item;
@@ -34,6 +38,7 @@ class CartUpdateBottomSheet extends StatefulWidget {
 class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
   late int _quantity;
   late FixedExtentScrollController _scrollController;
+  final GlobalKey _percentageStripKey = GlobalKey();
 
   @override
   void initState() {
@@ -265,45 +270,105 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 5.h),
-        if (hasPromotion) ...[
-          Text(
-            CommonMethods.setPriceFormat(normalPrice),
-            style: TextStyle(
-                decoration: TextDecoration.lineThrough,
-                color: Colors.grey,
-                fontSize: 13.sp),
-          ),
-          Row(
+        GestureDetector(
+          onTapDown: (details) {
+            final double normal =
+                double.tryParse(widget.item.normalPrice ?? "0") ?? 0;
+            final double sale =
+                double.tryParse(widget.item.salePrice ?? "0") ?? 0;
+            final bool hasDiscount = sale > 0 && sale < normal;
+
+            if (!hasDiscount) return;
+
+            // These fields are used by the existing SpecialsTooltip
+            // implementation in the application.
+            final String discountId =
+            (widget.item.specialId ?? "").trim();
+            final String discountName =
+            (widget.item.specialName ?? "").trim();
+
+            if (discountId.isEmpty && discountName.isEmpty) return;
+
+            final RenderBox? box = _percentageStripKey.currentContext
+                ?.findRenderObject() as RenderBox?;
+
+            if (box != null) {
+              final Offset position = box.localToGlobal(Offset.zero);
+              final Rect rect = position & box.size;
+
+              SpecialsTooltip.show(
+                context,
+                discountId: discountId,
+                discountName: discountName,
+                targetRect: rect,
+              );
+            } else {
+              SpecialsTooltip.show(
+                context,
+                discountId: discountId,
+                discountName: discountName,
+                tapPosition: details.globalPosition,
+              );
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                CommonMethods.setPriceFormat(salePrice),
-                style: TextStyle(
-                    color: AppTheme.redColor, // Red for promo
+              // Price Section
+              if (hasPromotion) ...[
+                Text(
+                  CommonMethods.setPriceFormat(normalPrice),
+                  style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.grey,
+                    fontSize: 13.sp,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      CommonMethods.setPriceFormat(salePrice),
+                      style: TextStyle(
+                        color: AppTheme.redColor,
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                  ],
+                ),
+                Container(
+                  key: _percentageStripKey,
+                  margin: EdgeInsets.only(top: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 5.w,
+                    vertical: 2.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.redColor,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                  child: Text(
+                    "-${CommonMethods.calculateDiscount(normalPrice.toString(), salePrice.toString())}%",
+                    style: TextStyle(
+                      color: AppTheme.white,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ] else
+                Text(
+                  CommonMethods.setPriceFormat(normalPrice),
+                  style: TextStyle(
+                    color: AppTheme.primaryColor,
                     fontSize: 15.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 5.w),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                decoration: BoxDecoration(
-                  color: AppTheme.redColor,
-                  borderRadius: BorderRadius.circular(2.r),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Text(
-                  "-${CommonMethods.calculateDiscount(normalPrice.toString(), salePrice.toString())}%",
-                  style: TextStyle(color: AppTheme.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
-                ),
-              )
             ],
-          )
-        ] else
-          Text(
-            CommonMethods.setPriceFormat(normalPrice),
-            style: TextStyle(
-                color: AppTheme.primaryColor,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.bold),
           ),
+        ),
       ],
     );
   }
@@ -332,7 +397,7 @@ class _CartUpdateBottomSheetState extends State<CartUpdateBottomSheet> {
             } else if (widget.item.availableStockQty != null && qstat != "out of stock") {
               stockText = "In Stock : ${widget.item.availableStockQty}";
             }
-            
+
             return Text(
               stockText,
               style: TextStyle(
