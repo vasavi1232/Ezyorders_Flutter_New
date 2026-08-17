@@ -40,10 +40,11 @@ class WishlistItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isTablet = AppTheme.isTablet(context);
     final bool isTabletLandscape = isLandscape && isTablet;
-    
+
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
@@ -56,11 +57,12 @@ class WishlistItemWidget extends StatelessWidget {
     final double imageHeight = isTabletLandscape ? 180.h : 80.h;
     final double buttonHeight = isTabletLandscape ? 75.h : 32.h;
     final double qtyControlHeight = isTabletLandscape ? 80.h : 35.h;
+    final double qtyButtonWidth = isTabletLandscape ? 60.w : 30.w;
 
     return Container(
       width: width,
       margin:
-          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h), // List spacing
+      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h), // List spacing
       child: Card(
         elevation: 1,
         color: Colors.white,
@@ -70,7 +72,7 @@ class WishlistItemWidget extends StatelessWidget {
         ),
         child: InkWell(
           onTap: onTap ??
-              () {
+                  () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -87,30 +89,33 @@ class WishlistItemWidget extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 1. Checkbox
+// 1. Checkbox
                     SizedBox(
-                      width: isTabletLandscape ? 50.w : 24.w,
-                      height: isTabletLandscape ? 50.w  : 24.w,
-                      child: Checkbox(
-                        value: isSelected,
-                        onChanged: isOutOfStock
-                            ? null
-                            : (val) {
-                                if (onSelect != null) onSelect!();
-                              },
-                        activeColor: AppTheme.tealColor,
-                        side: BorderSide(
-                            color: isOutOfStock
-                                ? Colors.grey.withValues(alpha: 0.4)
-                                : Colors.grey,
-                            width: 1.5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2)),
+                      width: isTabletLandscape ? 60.w : 24.w,
+                      height: isTabletLandscape ? 60.h : 24.h,
+                      child: Transform.scale(
+                        scale: isTabletLandscape ? 1.7 : 1.0,
+                        child: Checkbox(
+                          value: isSelected,
+                          onChanged: isOutOfStock
+                              ? null
+                              : (val) {
+                            if (onSelect != null) onSelect!();
+                          },
+                          activeColor: AppTheme.tealColor,
+                          side: BorderSide(
+                              color: isOutOfStock
+                                  ? Colors.grey.withValues(alpha: 0.4)
+                                  : Colors.grey,
+                              width: 1.5),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2)),
+                        ),
                       ),
                     ),
                     SizedBox(width: 8.w),
 
-                    // 2. Image
+// 2. Image
                     Stack(
                       children: [
                         Container(
@@ -143,7 +148,7 @@ class WishlistItemWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 10.w),
 
-                    // 3. Details Column
+// 3. Details Column
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +175,7 @@ class WishlistItemWidget extends StatelessWidget {
                           ),
                           _buildMOQ(),
                           SizedBox(height: 5.h),
-                          // Price Section
+// Price Section
                           if (!hasPromotion) ...[
                             Text(
                               _formatPrice(item.price),
@@ -179,7 +184,7 @@ class WishlistItemWidget extends StatelessWidget {
                                   fontSize: isTabletLandscape ? 18.sp : 14.sp),
                             ),
                           ] else ...[
-                            // Formatting for promo
+// Formatting for promo
                             Text(
                               _formatPrice(item.promotionPrice),
                               style: TextStyle(
@@ -194,7 +199,8 @@ class WishlistItemWidget extends StatelessWidget {
                                   _formatPrice(item.price),
                                   style: TextStyle(
                                       color: AppTheme.primaryColor,
-                                      fontSize: isTabletLandscape ? 18.sp : 14.sp,
+                                      fontSize:
+                                      isTabletLandscape ? 18.sp : 14.sp,
                                       fontWeight: FontWeight.bold,
                                       decorationThickness: 1.5,
                                       decoration: TextDecoration.lineThrough),
@@ -203,8 +209,8 @@ class WishlistItemWidget extends StatelessWidget {
                                 Builder(
                                   builder: (context) {
                                     String discountStr = "";
-                                      discountStr =
-                                          "-${CommonMethods.calculateDiscount(item.price, item.promotionPrice)}%";
+                                    discountStr =
+                                    "-${CommonMethods.calculateDiscount(item.price, item.promotionPrice)}%";
                                     if (discountStr.isEmpty) {
                                       return const SizedBox.shrink();
                                     }
@@ -214,7 +220,7 @@ class WishlistItemWidget extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: AppTheme.redColor,
                                         borderRadius:
-                                            BorderRadius.circular(4.r),
+                                        BorderRadius.circular(4.r),
                                       ),
                                       child: Text(
                                         discountStr,
@@ -239,153 +245,176 @@ class WishlistItemWidget extends StatelessWidget {
 
                 SizedBox(height: 10.h),
 
-                // Bottom Row: Action and Heart Button
+// Bottom Row: Action and Heart Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Left Side: Add to Cart button OR Quantity Editing Layout
+// Left Side: Add to Cart button OR Quantity Editing Layout
                     Expanded(
                       child: isSelected
                           ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+// Quantity Controls
+                          Container(
+                            height: qtyControlHeight,
+                            width: isTabletLandscape ? 200.w : 110.w,
+                            decoration: BoxDecoration(
+                              border:
+                              Border.all(color: AppTheme.borderColor),
+                              borderRadius: BorderRadius.circular(4.r),
+                              color: AppTheme.white,
+                            ),
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.stretch,
                               children: [
-                                // Quantity Controls
-                                Container(
-                                  height: qtyControlHeight,
-                                  width: isTabletLandscape ? 200.w : 110.w,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppTheme.borderColor),
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    color: AppTheme.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InkWell(
-                                        onTap: onDecrementQuantity,
-                                        child: Container(
-                                          width: isTabletLandscape ? 60.w : 30.w,
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "-",
-                                            style: TextStyle(
-                                              fontSize: isTabletLandscape ? 40.sp : (isLandscape ? 28.sp : 22.sp),
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        width: 1,
-                                        thickness: 1,
-                                        color: AppTheme.hintColor,
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "${selectedQuantity ?? 1}",
-                                            style: TextStyle(
-                                              fontSize: isTabletLandscape ? 18.sp : 14.sp,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        width: 1,
-                                        thickness: 1,
-                                        color: AppTheme.hintColor,
-                                      ),
-                                      InkWell(
-                                        onTap: onIncrementQuantity,
-                                        child: Container(
-                                          width: isTabletLandscape ? 60.w : 30.w,
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "+",
-                                            style: TextStyle(
-                                              fontSize: isTabletLandscape ? 40.sp : 22.sp,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                
-                                // Sub Total
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Sub Total : ",
-                                      style: TextStyle(
-                                        color: AppTheme.blackColor,
-                                        fontSize: isTabletLandscape ? 16.sp : 13.sp,
-                                        fontWeight: FontWeight.bold,
+                                SizedBox(
+                                  width: qtyButtonWidth,
+                                  child: InkWell(
+                                    onTap: onDecrementQuantity,
+                                    child: Center(
+                                      child: Text(
+                                        '-',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: isTabletLandscape
+                                                ? 38.sp
+                                                : 22.sp,
+                                            height: 1.0,
+                                            color: Colors.black54),
                                       ),
                                     ),
-                                    Builder(
-                                      builder: (context) {
-                                        double basePrice = double.tryParse(item.price ?? "0") ?? 0.0;
-                                        if (item.hasPromotion == "Yes" && item.promotionPrice != null) {
-                                          basePrice = double.tryParse(item.promotionPrice!) ?? basePrice;
-                                        }
-                                        double subtotal = basePrice * (selectedQuantity ?? 1);
-                                        return Text(
-                                          _formatPrice(subtotal.toString()),
-                                          style: TextStyle(
-                                            color: AppTheme.primaryColor,
-                                            fontSize: isTabletLandscape ? 16.sp : 13.sp,
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  ],
-                                )
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                // Button
-                                InkWell(
-                                  onTap: canAddToCart ? onAddToCart : null,
-                                  child: Container(
-                                    height: buttonHeight,
-                                    padding: EdgeInsets.symmetric(horizontal: isTabletLandscape ? 30.w : 15.w),
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: canAddToCart
-                                            ? AppTheme.primaryButtonColor
-                                            : AppTheme.redColor,
-                                        borderRadius: BorderRadius.circular(isTabletLandscape ? 40.r : 20.r),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: AppTheme.shadowBlack,
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2))
-                                        ]),
+                                  ),
+                                ),
+                                VerticalDivider(
+                                    width: 1,
+                                    thickness: 1,
+                                    color: AppTheme.hintColor),
+                                Expanded(
+                                  child: Center(
                                     child: Text(
-                                      isOutOfStock
-                                          ? "Out Of Stock"
-                                          : (item.addedToCart == "Yes"
-                                              ? "Update Cart [${item.addedQty ?? '1'}]"
-                                              : "Add To Cart"),
+                                      '${selectedQuantity ?? 1}',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: isTabletLandscape ? 16.sp : 11.sp,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: isTabletLandscape
+                                              ? 18.sp
+                                              : 14.sp,
+                                          height: 1.0,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                ),
+                                VerticalDivider(
+                                    width: 1,
+                                    thickness: 1,
+                                    color: AppTheme.hintColor),
+                                SizedBox(
+                                  width: qtyButtonWidth,
+                                  child: InkWell(
+                                    onTap: onIncrementQuantity,
+                                    child: Center(
+                                      child: Text(
+                                        '+',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: isTabletLandscape
+                                                ? 32.sp
+                                                : 22.sp,
+                                            height: 1.0,
+                                            color: Colors.black54),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
+                          ),
+
+// Sub Total
+                          Row(
+                            children: [
+                              Text(
+                                "Sub Total : ",
+                                style: TextStyle(
+                                  color: AppTheme.blackColor,
+                                  fontSize:
+                                  isTabletLandscape ? 16.sp : 13.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Builder(
+                                builder: (context) {
+                                  double basePrice = double.tryParse(
+                                      item.price ?? "0") ??
+                                      0.0;
+                                  if (item.hasPromotion == "Yes" &&
+                                      item.promotionPrice != null) {
+                                    basePrice = double.tryParse(
+                                        item.promotionPrice!) ??
+                                        basePrice;
+                                  }
+                                  double subtotal =
+                                      basePrice * (selectedQuantity ?? 1);
+                                  return Text(
+                                    _formatPrice(subtotal.toString()),
+                                    style: TextStyle(
+                                      color: AppTheme.primaryColor,
+                                      fontSize: isTabletLandscape
+                                          ? 16.sp
+                                          : 13.sp,
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                          : Row(
+                        children: [
+// Button
+                          InkWell(
+                            onTap: canAddToCart ? onAddToCart : null,
+                            child: Container(
+                              height: buttonHeight,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                  isTabletLandscape ? 30.w : 15.w),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: canAddToCart
+                                      ? AppTheme.primaryButtonColor
+                                      : AppTheme.redColor,
+                                  borderRadius: BorderRadius.circular(
+                                      isTabletLandscape ? 40.r : 20.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: AppTheme.shadowBlack,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2))
+                                  ]),
+                              child: Text(
+                                isOutOfStock
+                                    ? "Out Of Stock"
+                                    : (item.addedToCart == "Yes"
+                                    ? "Update Cart [${item.addedQty ?? '1'}]"
+                                    : "Add To Cart"),
+                                style: TextStyle(
+                                    fontSize:
+                                    isTabletLandscape ? 16.sp : 11.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
                     SizedBox(width: 10.w),
 
-                    // Right Side: Heart Red Icon
+// Right Side: Heart Red Icon
                     InkWell(
                       onTap: onDelete,
                       child: Padding(
@@ -393,7 +422,11 @@ class WishlistItemWidget extends StatelessWidget {
                         child: Icon(
                           Icons.favorite, // Filled Red Heart logic
                           color: AppTheme.redColor,
-                          size: isTabletLandscape ? 60.h : (isLandscape ? 34.sp : 28.sp), // Increased for landscape
+                          size: isTabletLandscape
+                              ? 60.h
+                              : (isLandscape
+                              ? 34.sp
+                              : 28.sp), // Increased for landscape
                         ),
                       ),
                     ),
@@ -439,7 +472,7 @@ class WishlistItemWidget extends StatelessWidget {
       cacheManager: ImageCacheManager(),
       placeholder: (context, url) => Container(color: Colors.grey[200]),
       errorWidget: (context, url, error) =>
-          const Icon(Icons.broken_image, color: Colors.grey),
+      const Icon(Icons.broken_image, color: Colors.grey),
     );
   }
 
@@ -456,7 +489,8 @@ class WishlistItemWidget extends StatelessWidget {
           return Container(
             width: double.infinity,
             margin: EdgeInsets.only(bottom: 5.h),
-            padding: EdgeInsets.symmetric(vertical: isTabletLandscape ? 10.h : 5.h),
+            padding:
+            EdgeInsets.symmetric(vertical: isTabletLandscape ? 10.h : 5.h),
             decoration: BoxDecoration(
               color: AppTheme.tealColor,
             ),
