@@ -274,6 +274,7 @@ class CheckoutProvider extends ChangeNotifier {
     _accessToken = accessToken;
     _isLoading = true;
     _isStabilizing = stabilize;
+    _errorMessage = '';
     _clearOrderState(); // Clear any stale coupon/notes before starting
     notifyListeners();
     try {
@@ -378,9 +379,10 @@ class CheckoutProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateDeliveryLocation(
+  Future<Map<String, dynamic>> updateDeliveryLocation(
       String locationId, String locationCharge) async {
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
 
     try {
@@ -394,10 +396,12 @@ class CheckoutProvider extends ChangeNotifier {
       if (response['status'] == 200) {
         await refreshCartSummary(_customerId, _accessToken);
       } else {
-        _errorMessage = response['message'] ?? AppMessages.failureMsg;
+        _errorMessage = response['error'] ?? response['message'] ?? AppMessages.failureMsg;
       }
+      return response;
     } catch (e) {
       _errorMessage = e.toString();
+      return {'status': 500, 'message': e.toString()};
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -456,6 +460,7 @@ class CheckoutProvider extends ChangeNotifier {
       if (cartResponse.status == 200 &&
           cartResponse.results != null &&
           cartResponse.results!.isNotEmpty) {
+        _errorMessage = "";
         _cartResult = cartResponse.results![0];
         _flattenCartItems(_cartResult!);
 
@@ -573,6 +578,7 @@ class CheckoutProvider extends ChangeNotifier {
   Future<void> updateCartItem(String productId, String quantity, String brandId,
       String price, String soldAs) async {
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
     try {
       final response = await authRemoteDataSource.updateCartItem(
@@ -607,6 +613,7 @@ class CheckoutProvider extends ChangeNotifier {
 
   Future<void> deleteCartItem(String productId, String brandId) async {
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
     try {
       final response = await authRemoteDataSource.deleteCartItem(
@@ -635,6 +642,7 @@ class CheckoutProvider extends ChangeNotifier {
 
   Future<void> clearCart() async {
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
     try {
       final response = await authRemoteDataSource.clearCart(
@@ -1021,6 +1029,7 @@ class CheckoutProvider extends ChangeNotifier {
     }
 
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
     try {
       final response = await authRemoteDataSource.checkCouponCode(
@@ -1054,6 +1063,7 @@ class CheckoutProvider extends ChangeNotifier {
   // Create Order
   Future<Map<String, dynamic>?> createOrder() async {
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
 
     // Prepare Billing Address

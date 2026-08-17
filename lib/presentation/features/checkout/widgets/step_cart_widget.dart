@@ -552,8 +552,12 @@ class _StepCartWidgetState extends State<StepCartWidget> {
           builder: (context) => DeliveryLocationDialog(
             deliveryLocations: provider.deliveryLocations,
             selectedDeliveryLocationId: provider.selectedDeliveryLocationId,
-            onLocationSelected: (locationId, charge) {
-              provider.updateDeliveryLocation(locationId, charge);
+            onLocationSelected: (locationId, charge) async {
+              await provider.updateDeliveryLocation(locationId, charge);
+              if (provider.errorMessage.isNotEmpty && context.mounted) {
+                // If the error was a 403 or similar, CheckoutProvider sets the errorMessage
+                _showErrorAlertDialog(context, provider.errorMessage);
+              }
             },
           ),
         );
@@ -703,17 +707,76 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButtonColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.r)),
+              Center(
+                child: SizedBox(
+                  width: 100.w,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryButtonColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.r)),
+                    ),
+                    child: Text("OK",
+                        style: TextStyle(color: Colors.white, fontSize: 14.sp)),
                   ),
-                  child: Text("OK",
-                      style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showErrorAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        child: Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Alert",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(dialogContext),
+                    child: Icon(Icons.close, color: Colors.grey, size: 20.sp),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                message,
+                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              Center(
+                child: SizedBox(
+                  width: 100.w,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryButtonColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.r)),
+                    ),
+                    child: Text("OK",
+                        style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+                  ),
                 ),
               ),
             ],

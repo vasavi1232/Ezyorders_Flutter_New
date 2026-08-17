@@ -155,12 +155,16 @@ class _DeliveryLocationDialogState extends State<DeliveryLocationDialog> {
                               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 5.w),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                                    color: isSelected ? AppTheme.primaryColor : Colors.grey,
-                                    size: 20.w,
+                                  IgnorePointer(
+                                    child: Radio<String>(
+                                      value: location.deliveryLocationId ?? "",
+                                      groupValue: widget.selectedDeliveryLocationId,
+                                      onChanged: (_) {}, // Handled by InkWell
+                                      activeColor: AppTheme.primaryColor,
+                                      visualDensity: VisualDensity.compact,
+                                    ),
                                   ),
-                                  SizedBox(width: 10.w),
+                                  SizedBox(width: 5.w),
                                   Expanded(
                                     child: Text(
                                       displayText,
