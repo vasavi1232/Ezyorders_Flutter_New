@@ -264,6 +264,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
                               ),
                             ],
                           ),
+                        _buildSoldPriceLabel(),
 
                         // Stock Status
                         if (widget.item.stockUnlimited != "Yes")
@@ -412,6 +413,20 @@ class _ProductGridItemState extends State<ProductGridItem> {
         ),
       ),
     );
+  }
+
+  Widget _buildSoldPriceLabel() {
+    if (widget.item.soldPriceLabel != null &&
+        widget.item.soldPriceLabel!.trim().isNotEmpty) {
+      return Text(
+        "(${widget.item.soldPriceLabel})",
+        style: TextStyle(
+            color: AppTheme.darkerGrayColor,
+            fontSize: 11.sp,
+            fontWeight: FontWeight.w600),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   String _getImageUrl(String? path) {

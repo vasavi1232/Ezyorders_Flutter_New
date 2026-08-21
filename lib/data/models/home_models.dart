@@ -18,8 +18,8 @@ class BannersResponse {
       hideShopNowBlock: json['hide_shop_now_block']?.toString(),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? BannerItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? BannerItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -87,8 +87,8 @@ class FooterBannersResponse {
       message: json['message'],
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? BannerItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? BannerItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -106,8 +106,8 @@ class HomeBlocksResponse {
       message: json['message'],
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? HomeBlockItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? HomeBlockItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -188,6 +188,7 @@ class ProductItem {
   String? wishlistId; // Added for Wishlist
   String? wishlistCategoryId; // Added for Wishlist
   String? allowToOrder; // Added for ordering restriction
+  String? soldPriceLabel; // Added sold_price_label
   List<ProductItem>? products; // Added for Promotions Banner nested products
 
   ProductItem({
@@ -233,6 +234,7 @@ class ProductItem {
     this.wishlistId,
     this.wishlistCategoryId,
     this.allowToOrder,
+    this.soldPriceLabel,
     this.products,
   });
 
@@ -284,11 +286,12 @@ class ProductItem {
       wishlistId: json['wishlist_id']?.toString(),
       wishlistCategoryId: json['wishlist_category_id']?.toString(),
       allowToOrder: json['allow_to_order']?.toString(),
+      soldPriceLabel: json['sold_price_label']?.toString(),
       products: json['products'] != null
           ? (json['products'] as List)
-              .map((i) => i != null ? ProductItem.fromJson(i) : null)
-              .whereType<ProductItem>()
-              .toList()
+          .map((i) => i != null ? ProductItem.fromJson(i) : null)
+          .whereType<ProductItem>()
+          .toList()
           : null,
     );
   }
@@ -337,6 +340,7 @@ class ProductItem {
       'wishlist_id': wishlistId,
       'wishlist_category_id': wishlistCategoryId,
       'allow_to_order': allowToOrder,
+      'sold_price_label': soldPriceLabel,
       'products': products?.map((e) => e.toJson()).toList(),
     };
   }
@@ -368,8 +372,8 @@ class DashboardProductsResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? ProductItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? ProductItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -401,8 +405,8 @@ class PromotionsResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? ProductItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? ProductItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -434,8 +438,8 @@ class FlashDealsResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? ProductItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? ProductItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -493,8 +497,8 @@ class PopularCategoriesResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? PopularCategoryItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? PopularCategoryItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -561,8 +565,8 @@ class SupplierLogosResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? BrandItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? BrandItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -594,8 +598,8 @@ class PopularAdvertisementsResponse {
           : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
-              .map((i) => i != null ? BannerItem.fromJson(i) : null)
-              .toList()
+          .map((i) => i != null ? BannerItem.fromJson(i) : null)
+          .toList()
           : null,
     );
   }
@@ -609,6 +613,7 @@ extension ProductItemCopyWith on ProductItem {
     String? orderedAs,
     String? isFavourite,
     String? allowToOrder,
+    String? soldPriceLabel,
   }) {
     return ProductItem(
       productId: productId,
@@ -653,6 +658,7 @@ extension ProductItemCopyWith on ProductItem {
       wishlistId: wishlistId,
       wishlistCategoryId: wishlistCategoryId,
       allowToOrder: allowToOrder ?? this.allowToOrder,
+      soldPriceLabel: soldPriceLabel ?? this.soldPriceLabel,
       products: products,
     );
   }

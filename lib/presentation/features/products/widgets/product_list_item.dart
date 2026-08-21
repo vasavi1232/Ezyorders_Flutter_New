@@ -138,7 +138,13 @@ class _ProductListItemState extends State<ProductListItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _buildPriceSection(hasPromotion),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildPriceSection(hasPromotion),
+                        _buildSoldPriceLabel(),
+                      ],
+                    ),
                     Row(
                       children: [
                         _buildAddToCartButton(isOutOfStock, canAddToCart),
@@ -204,6 +210,7 @@ class _ProductListItemState extends State<ProductListItem> {
         _buildStockStatus(),
         SizedBox(height: 5.h),
         _buildPriceSection(hasPromotion),
+        _buildSoldPriceLabel(),
       ],
     );
   }
@@ -358,6 +365,20 @@ class _ProductListItemState extends State<ProductListItem> {
         ],
       );
     }
+  }
+
+  Widget _buildSoldPriceLabel() {
+    if (widget.item.soldPriceLabel != null &&
+        widget.item.soldPriceLabel!.trim().isNotEmpty) {
+      return Text(
+        "(${widget.item.soldPriceLabel})",
+        style: TextStyle(
+            color: AppTheme.darkerGrayColor,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildAddToCartButton(bool isOutOfStock, bool canAddToCart) {

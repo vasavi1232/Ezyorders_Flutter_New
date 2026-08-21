@@ -344,6 +344,7 @@ class ProductDetailItem extends ProductItem {
   String? shipperBarcode;
   String? outerBarcode;
   String? primaryBarcode;
+  String? soldPriceLabel;
   String? hasSimilarProducts;
   int? similarProductsCount;
   String? hasSameCategoryProducts;
@@ -397,6 +398,7 @@ class ProductDetailItem extends ProductItem {
     this.shipperBarcode,
     this.outerBarcode,
     this.primaryBarcode,
+    this.soldPriceLabel,
     this.hasSimilarProducts,
     this.similarProductsCount,
     this.hasSameCategoryProducts,
@@ -467,6 +469,7 @@ class ProductDetailItem extends ProductItem {
       shipperBarcode: json['shipper_barcode']?.toString(),
       outerBarcode: json['outer_barcode']?.toString(),
       primaryBarcode: json['primary_barcode']?.toString(),
+      soldPriceLabel: json['sold_price_label']?.toString() ,
       hasSimilarProducts: json['has_similar_products']?.toString(),
       similarProductsCount: int.tryParse(json['similar_products_count']?.toString() ?? "0"),
       hasSameCategoryProducts: json['has_same_category_products']?.toString(),
@@ -519,6 +522,7 @@ extension ProductDetailItemCopyWith on ProductDetailItem {
     String? orderedAs,
     String? isFavourite,
     String? allowToOrder,
+    String? soldPriceLabel,
   }) {
     return ProductDetailItem(
       addedToCart: addedToCart ?? this.addedToCart,
@@ -527,6 +531,7 @@ extension ProductDetailItemCopyWith on ProductDetailItem {
       orderedAs: orderedAs ?? this.orderedAs,
       isFavourite: isFavourite ?? this.isFavourite,
       allowToOrder: allowToOrder ?? this.allowToOrder,
+      soldPriceLabel: soldPriceLabel ?? this.soldPriceLabel,
       // Pass through all other fields
       productId: productId,
       name: name,
