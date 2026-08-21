@@ -37,23 +37,23 @@ class _StepCartWidgetState extends State<StepCartWidget> {
     String formatLabel(String label, String suffix) {
       if (!isTabletLandscape) return label;
       String clean = label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-
+      
       // If the clean label already contains the suffix in parentheses, return it
       if (clean.contains("($suffix)")) {
         return clean;
       }
-
+      
       // If the clean label contains the suffix but NOT in parentheses, wrap it
       if (clean.contains(suffix)) {
         return clean.replaceFirst(suffix, "($suffix)");
       }
-
+      
       // If it contains GST info in some other form (e.g. "Inc GST"), but not our specific suffix, 
       // we'll just return it cleaned up to avoid duplication.
       if (clean.toUpperCase().contains("GST")) {
         return clean;
       }
-
+      
       return "$clean ($suffix)";
     }
 
@@ -122,6 +122,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
       );
     }
 
+    final bool isNextDisabled = provider.hadNotAvailableProducts == "Yes";
+
     return Stack(
       children: [
         Column(
@@ -165,14 +167,14 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                     if (basePrice <= 0) {
                                       basePrice = double.tryParse(product.normalPrice ?? "0") ?? 0;
                                     }
-
+                                    
                                     await provider.updateCartItem(
                                         product.productId!,
                                         newQty,
                                         brand.brandId!,
                                         basePrice.toStringAsFixed(2),
                                         product.orderedAs ?? "");
-
+                                    
                                     if (context.mounted) {
                                       context.read<DashboardProvider>().setCartCount(CommonMethods.cartCount);
                                     }
@@ -312,7 +314,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                 if (provider.selectedDeliveryLocationId != null)
                                   Builder(builder: (context) {
                                     final selectedLoc = provider.deliveryLocations.firstWhere(
-                                            (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId,
+                                        (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId,
                                         orElse: () => DeliveryLocationResult());
                                     String displayText = selectedLoc.locationName ?? "";
                                     if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
@@ -346,7 +348,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final showLevy = profile?.showLevy == "Yes";
                             final includeLevy = profile?.includeLevyInPriceCalculation == "No";
                             final hasLevy = (double.tryParse(provider.levy) ?? 0) > 0;
-                            if (showLevy && includeLevy && hasLevy) {
+                             if (showLevy && includeLevy && hasLevy) {
                               return _buildSummaryRow("Levy :", CommonMethods.setPriceFormatString(provider.levy), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
@@ -357,7 +359,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final showWet = profile?.showWet == "Yes";
                             final includeWet = profile?.includeWetInPriceCalculation == "No";
                             final hasWet = (double.tryParse(provider.wet) ?? 0) > 0;
-                            if (showWet && includeWet && hasWet) {
+                             if (showWet && includeWet && hasWet) {
                               return _buildSummaryRow("WET :", CommonMethods.setPriceFormatString(provider.wet), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
@@ -450,7 +452,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             child: SizedBox(
                               height: buttonHeight,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: isNextDisabled ? null : () {
                                   bool requiresDelivery = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment == "Yes";
                                   if (requiresDelivery) {
                                     String? currentId = provider.selectedDeliveryLocationId?.trim();
@@ -482,7 +484,9 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: provider.companyId == "2" ? AppTheme.primaryColor : AppTheme.primaryButtonColor,
+                                  backgroundColor: isNextDisabled 
+                                    ? Colors.grey 
+                                    : (provider.companyId == "2" ? AppTheme.primaryColor : AppTheme.primaryButtonColor),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                                   padding: EdgeInsets.zero,
                                 ),
@@ -735,52 +739,63 @@ class _StepCartWidgetState extends State<StepCartWidget> {
       barrierDismissible: true,
       builder: (dialogContext) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-        child: Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+              color: AppTheme.redColor,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Alert",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primaryColor,
+                  Expanded(
+                    child: Text(
+                      "Delivery Location Confirmation",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(dialogContext),
-                    child: Icon(Icons.close, color: Colors.grey, size: 20.sp),
+                    child: Icon(Icons.close, color: Colors.white, size: 22.sp),
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
-              Text(
-                CommonMethods.htmltag(message ?? "") ,
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.h),
-              Center(
-                child: SizedBox(
-                  width: 100.w,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryButtonColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.r)),
-                    ),
-                    child: Text("OK",
-                        style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 30.h, 20.w, 20.h),
+              child: Column(
+                children: [
+                  Text(
+                    CommonMethods.htmltag(message),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.black87, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
                   ),
-                ),
+                  SizedBox(height: 25.h),
+                  Center(
+                    child: SizedBox(
+                      width: 110.w,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.redColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.r)),
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                        ),
+                        child: Text("OK",
+                            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
