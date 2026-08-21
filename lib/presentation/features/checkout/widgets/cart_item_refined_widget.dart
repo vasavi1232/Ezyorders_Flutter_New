@@ -70,15 +70,74 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
   void _showAvailabilityAlert(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Availability Alert"),
-        content: Text("${widget.item.notAvailableDaysMessage ?? ""}\n${widget.item.productsAvailabilityCheckedDateTime ?? ""}"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
-          ),
-        ],
+      barrierDismissible: true,
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+              color: AppTheme.redColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Product Availability",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(dialogContext),
+                    child: Icon(Icons.close, color: Colors.white, size: 22.sp),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 30.h, 20.w, 20.h),
+              child: Column(
+                children: [
+                  if (widget.item.notAvailableDaysMessage != null &&
+                      widget.item.notAvailableDaysMessage!.isNotEmpty)
+                    Text(
+                      CommonMethods.htmltag(widget.item.notAvailableDaysMessage),
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.black87),
+                      textAlign: TextAlign.center,
+                    ),
+                  SizedBox(height: 25.h),
+                  Center(
+                    child: SizedBox(
+                      width: 110.w,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.redColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.r)),
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                        ),
+                        child: Text("OK",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -116,11 +175,15 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                       // Brand Row
                       if (widget.showBrand) ...[
                         GestureDetector(
-                          onTap: isNotAvailable ? () => _showAvailabilityAlert(context) : null,
+                          onTap: isNotAvailable
+                              ? () => _showAvailabilityAlert(context)
+                              : null,
                           child: Text(
                             CommonMethods.htmltag(widget.brandName),
                             style: TextStyle(
-                                color: isNotAvailable ? Colors.red : AppTheme.primaryColor,
+                                color: isNotAvailable
+                                    ? Colors.red
+                                    : AppTheme.primaryColor,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800),
                           ),
@@ -134,8 +197,8 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                         children: [
                           // Image
                           Container(
-                            width:  isTabletLandscape? 90.w : 60.w,
-                            height: isTabletLandscape? 90.h : 60.h,
+                            width: isTabletLandscape ? 90.w : 60.w,
+                            height: isTabletLandscape ? 90.h : 60.h,
                             alignment: Alignment.center,
                             child: _buildImage(widget.item.image),
                           ),
@@ -332,7 +395,9 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                           Row(
                             children: [
                               InkWell(
-                                onTap: isNotAvailable ? null : () => _showQuantityPicker(context),
+                                onTap: isNotAvailable
+                                    ? null
+                                    : () => _showQuantityPicker(context),
                                 borderRadius: BorderRadius.circular(20.r),
                                 child: Container(
                                   height: isTabletLandscape ? 70.h : 32.h,
