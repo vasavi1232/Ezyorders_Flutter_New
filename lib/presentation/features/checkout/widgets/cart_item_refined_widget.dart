@@ -402,12 +402,15 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                                 child: Container(
                                   height: isTabletLandscape ? 70.h : 32.h,
                                   margin: EdgeInsets.only(top: 5.h),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border:
-                                        Border.all(color: AppTheme.borderColor),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
+                                  decoration: isNotAvailable
+                                      ? null
+                                      : BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: AppTheme.borderColor),
+                                          borderRadius:
+                                              BorderRadius.circular(20.r),
+                                        ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
