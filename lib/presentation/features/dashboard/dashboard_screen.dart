@@ -521,6 +521,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   }),
                   _buildDrawerItem(AppAssets.helpIcon, "Help & Support", () {
                     context.pop();
+                    context.read<ProductListProvider>().clearFilters();
                     context.push(AppRoutes.helpSupport);
                   }),
                   _buildDrawerItem(AppAssets.feedbackIcon, "Send Feedback", () {
@@ -742,6 +743,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       children: [
                         _buildNetworkImage(banner?.image, fit: BoxFit.fill),
                         // Overlay Card (Bottom Left or Vertical Center)
+                        if (banner?.hideShopNowBlock != "Yes")
                         Positioned(
                           top: isLandscapeTablet ? 0 : null,
                           bottom: isLandscapeTablet ? 0 : (isLandscape ? 25.h : 50.h),

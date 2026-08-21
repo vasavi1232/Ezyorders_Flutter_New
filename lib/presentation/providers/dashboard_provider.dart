@@ -114,6 +114,7 @@ class DashboardProvider extends ChangeNotifier {
     return "GST :";
   }
   BannersResponse? get bannersResponse => _bannersResponse;
+
   FooterBannersResponse? get footerBannersResponse => _footerBannersResponse;
   HomeBlocksResponse? get homeBlocksResponse => _homeBlocksResponse;
 
@@ -1750,7 +1751,7 @@ class DashboardProvider extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final accessToken = prefs.getString(StorageKeys.accessToken) ?? '';
-      final customerId = prefs.getString(StorageKeys.userId) ?? '';
+      final customerId = prefs.getString(StorageKeys.userId) ?? ''; double.tryParse(prefs.getString(StorageKeys.userPassword) ?? '0.0') ?? 0.0;
       final savedPassword = prefs.getString(StorageKeys.userPassword) ?? '';
 
       // Local Validation matching Android Native

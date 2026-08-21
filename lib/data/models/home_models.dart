@@ -1,14 +1,21 @@
 class BannersResponse {
   int? status;
   String? message;
+  String? hideShopNowBlock;
   List<BannerItem?>? results;
 
-  BannersResponse({this.status, this.message, this.results});
+  BannersResponse({
+    this.status,
+    this.message,
+    this.hideShopNowBlock,
+    this.results,
+  });
 
   factory BannersResponse.fromJson(Map<String, dynamic> json) {
     return BannersResponse(
       status: json['status'],
       message: json['message'],
+      hideShopNowBlock: json['hide_shop_now_block']?.toString(),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? BannerItem.fromJson(i) : null)
@@ -24,6 +31,7 @@ class BannerItem {
   String? image; // image (was banner_image)
   String? topCaption; // top_caption
   String? bottomCaption; // bottom_caption
+  String? hideShopNowBlock; // hide_shop_now_block
   String? linkImageTo; // link_image_to
   String? divisionId; // division_id
   String? groupId; // group_id
@@ -38,6 +46,7 @@ class BannerItem {
     this.image,
     this.topCaption,
     this.bottomCaption,
+    this.hideShopNowBlock,
     this.linkImageTo,
     this.divisionId,
     this.groupId,
@@ -54,6 +63,7 @@ class BannerItem {
       image: json['image']?.toString(),
       topCaption: json['top_caption']?.toString(),
       bottomCaption: json['bottom_caption']?.toString(),
+      hideShopNowBlock: json['hide_shop_now_block']?.toString(),
       linkImageTo: json['link_image_to']?.toString(),
       divisionId: json['division_id']?.toString(),
       groupId: json['group_id']?.toString(),
@@ -112,14 +122,15 @@ class HomeBlockItem {
   String? sortOrder;
   String? status;
 
-  HomeBlockItem(
-      {this.id,
-      this.companyId,
-      this.name,
-      this.image,
-      this.description,
-      this.sortOrder,
-      this.status});
+  HomeBlockItem({
+    this.id,
+    this.companyId,
+    this.name,
+    this.image,
+    this.description,
+    this.sortOrder,
+    this.status,
+  });
 
   factory HomeBlockItem.fromJson(Map<String, dynamic> json) {
     return HomeBlockItem(
@@ -168,8 +179,7 @@ class ProductItem {
   String? fromDate;
   String? toDate;
   String? hasPromotion; // Added field
-  String?
-      label; // Added for promotional badges (Best Seller, New Arrival, etc.)
+  String? label; // Added for promotional badges (Best Seller, New Arrival, etc.)
   String? discountPercentage; // Added for ProductDetailItem compatibility
   String? discountId; // Added for ProductDetailItem compatibility
   String? discountName; // Added for ProductDetailItem compatibility
@@ -339,13 +349,23 @@ class DashboardProductsResponse {
   int? totalRecords;
   List<ProductItem?>? results;
 
-  DashboardProductsResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  DashboardProductsResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory DashboardProductsResponse.fromJson(Map<String, dynamic> json) {
     return DashboardProductsResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? ProductItem.fromJson(i) : null)
@@ -362,13 +382,23 @@ class PromotionsResponse {
   int? totalRecords;
   List<ProductItem?>? results;
 
-  PromotionsResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  PromotionsResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory PromotionsResponse.fromJson(Map<String, dynamic> json) {
     return PromotionsResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? ProductItem.fromJson(i) : null)
@@ -385,13 +415,23 @@ class FlashDealsResponse {
   int? totalRecords;
   List<ProductItem?>? results;
 
-  FlashDealsResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  FlashDealsResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory FlashDealsResponse.fromJson(Map<String, dynamic> json) {
     return FlashDealsResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? ProductItem.fromJson(i) : null)
@@ -408,12 +448,13 @@ class PopularCategoryItem {
   String? popularCategory;
   String? categoryProductsCount; // Added
 
-  PopularCategoryItem(
-      {this.divisionId,
-      this.groupLevel1,
-      this.image,
-      this.popularCategory,
-      this.categoryProductsCount});
+  PopularCategoryItem({
+    this.divisionId,
+    this.groupLevel1,
+    this.image,
+    this.popularCategory,
+    this.categoryProductsCount,
+  });
 
   factory PopularCategoryItem.fromJson(Map<String, dynamic> json) {
     return PopularCategoryItem(
@@ -433,13 +474,23 @@ class PopularCategoriesResponse {
   int? totalRecords;
   List<PopularCategoryItem?>? results;
 
-  PopularCategoriesResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  PopularCategoriesResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory PopularCategoriesResponse.fromJson(Map<String, dynamic> json) {
     return PopularCategoriesResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? PopularCategoryItem.fromJson(i) : null)
@@ -459,15 +510,16 @@ class BrandItem {
   String? status;
   String? companyId;
 
-  BrandItem(
-      {this.brandId,
-      this.brandName,
-      this.image,
-      this.brandNumber,
-      this.topBrand,
-      this.majorBrand,
-      this.status,
-      this.companyId});
+  BrandItem({
+    this.brandId,
+    this.brandName,
+    this.image,
+    this.brandNumber,
+    this.topBrand,
+    this.majorBrand,
+    this.status,
+    this.companyId,
+  });
 
   factory BrandItem.fromJson(Map<String, dynamic> json) {
     return BrandItem(
@@ -490,13 +542,23 @@ class SupplierLogosResponse {
   int? totalRecords;
   List<BrandItem?>? results;
 
-  SupplierLogosResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  SupplierLogosResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory SupplierLogosResponse.fromJson(Map<String, dynamic> json) {
     return SupplierLogosResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? BrandItem.fromJson(i) : null)
@@ -513,13 +575,23 @@ class PopularAdvertisementsResponse {
   int? totalRecords;
   List<BannerItem?>? results;
 
-  PopularAdvertisementsResponse({this.status, this.message, this.totalPages, this.totalRecords, this.results});
+  PopularAdvertisementsResponse({
+    this.status,
+    this.message,
+    this.totalPages,
+    this.totalRecords,
+    this.results,
+  });
   factory PopularAdvertisementsResponse.fromJson(Map<String, dynamic> json) {
     return PopularAdvertisementsResponse(
       status: json['status'],
       message: json['message'],
-      totalPages: json['total_pages'] is int ? json['total_pages'] : int.tryParse(json['total_pages']?.toString() ?? ''),
-      totalRecords: json['total_records'] is int ? json['total_records'] : int.tryParse(json['total_records']?.toString() ?? ''),
+      totalPages: json['total_pages'] is int
+          ? json['total_pages']
+          : int.tryParse(json['total_pages']?.toString() ?? ''),
+      totalRecords: json['total_records'] is int
+          ? json['total_records']
+          : int.tryParse(json['total_records']?.toString() ?? ''),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? BannerItem.fromJson(i) : null)
@@ -529,7 +601,6 @@ class PopularAdvertisementsResponse {
   }
 }
 
-
 extension ProductItemCopyWith on ProductItem {
   ProductItem copyWith({
     String? addedToCart,
@@ -537,6 +608,7 @@ extension ProductItemCopyWith on ProductItem {
     String? addedSubTotal,
     String? orderedAs,
     String? isFavourite,
+    String? allowToOrder,
   }) {
     return ProductItem(
       productId: productId,
@@ -580,7 +652,7 @@ extension ProductItemCopyWith on ProductItem {
       specialName: specialName,
       wishlistId: wishlistId,
       wishlistCategoryId: wishlistCategoryId,
-      allowToOrder: allowToOrder,
+      allowToOrder: allowToOrder ?? this.allowToOrder,
       products: products,
     );
   }
