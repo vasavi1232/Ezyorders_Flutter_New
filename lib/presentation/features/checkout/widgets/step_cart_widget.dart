@@ -759,7 +759,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
               ),
               SizedBox(height: 12.h),
               Text(
-                message,
+                CommonMethods.htmltag(message ?? "") ,
                 style: TextStyle(fontSize: 14.sp, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
