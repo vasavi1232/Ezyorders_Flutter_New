@@ -3,14 +3,21 @@ import '../../core/utils/common_methods.dart';
 class CartResponse {
   int? status;
   String? message;
+  String? hadNotAvailableProducts;
   List<CartResult?>? results;
 
-  CartResponse({this.status, this.message, this.results});
+  CartResponse({
+    this.status,
+    this.message,
+    this.hadNotAvailableProducts,
+    this.results,
+  });
 
   factory CartResponse.fromJson(Map<String, dynamic> json) {
     return CartResponse(
       status: int.tryParse(json['status']?.toString() ?? "0"),
       message: json['message']?.toString(),
+      hadNotAvailableProducts: json['had_not_available_products']?.toString(),
       results: json['results'] != null
           ? (json['results'] as List)
               .map((i) => i != null ? CartResult.fromJson(i) : null)
@@ -50,7 +57,7 @@ class CartResult {
   String? maximumNumberOfSuppliersProductsForFreeShipping;
   String? allowToReviewOrderBeforeSubmmitting;
   String? showPromo;
-  String? shippingSegmentHeading; // Added for Delivery Location heading sync
+  String? shippingSegmentHeading;
   String? shippingSegmentText;
   String? showGstInCart;
   List<CartBrand?>? brands;
@@ -128,7 +135,7 @@ class CartResult {
       allowToReviewOrderBeforeSubmmitting:
           json['allow_to_review_order_before_submmitting']?.toString(),
       showPromo: json['show_promo']?.toString(),
-      shippingSegmentHeading: json['shipping_segment_heading']?.toString(), // Added for Delivery Location heading sync
+      shippingSegmentHeading: json['shipping_segment_heading']?.toString(),
       shippingSegmentText: json['shipping_segment_text']?.toString(),
       showGstInCart: json['show_gst_in_cart']?.toString(),
       brands: json['brands'] != null
@@ -174,6 +181,8 @@ class CartProduct {
   String? supplierAvailable;
   String? productAvailable;
   String? notAvailableDaysMessage;
+  String? productsAvailabilityCheckedDateTime;
+  String? subTotal;
   String? discountAmount;
   String? soldAs;
   String? orderedAs;
@@ -203,6 +212,8 @@ class CartProduct {
     this.supplierAvailable,
     this.productAvailable,
     this.notAvailableDaysMessage,
+    this.productsAvailabilityCheckedDateTime,
+    this.subTotal,
     this.discountAmount,
     this.soldAs,
     this.orderedAs,
@@ -210,7 +221,7 @@ class CartProduct {
     this.brandName,
     this.stockUnlimited,
     this.qtyStatus,
-     this.availableStockQty,
+    this.availableStockQty,
     this.qtyPerOuter,
     this.discountId,
     this.discountName,
@@ -234,6 +245,9 @@ class CartProduct {
       supplierAvailable: json['supplier_available']?.toString(),
       productAvailable: json['product_available']?.toString(),
       notAvailableDaysMessage: json['not_available_days_message']?.toString(),
+      productsAvailabilityCheckedDateTime:
+          json['products_availability_checked_date_time']?.toString(),
+      subTotal: json['sub_total']?.toString(),
       discountAmount: json['discount_amount']?.toString(),
       soldAs: json['sold_as']?.toString(),
       orderedAs: json['ordered_as']?.toString(),
@@ -245,15 +259,15 @@ class CartProduct {
       discountName: json['discount_name']?.toString(),
       specialId: json['special_id']?.toString(),
       specialName: json['special_name']?.toString(),
-      allowToOrder: json['allow_to_order']?.toString() ?? json['allow_order']?.toString(),
+      allowToOrder:
+          json['allow_to_order']?.toString() ?? json['allow_order']?.toString(),
     );
   }
+
   String? get discountPercent {
     try {
       double normal = double.tryParse(normalPrice ?? "0") ?? 0;
       double sale = double.tryParse(salePrice ?? "0") ?? 0;
-      // Match native Android: findDiscount(normalPrice, salePrice)
-      // = (1 - salePrice / normalPrice) * 100, with CEILING rounding
       if (normal > 0 && sale > 0 && sale < normal) {
         return CommonMethods.calculateDiscount(normalPrice, salePrice);
       }
@@ -262,22 +276,23 @@ class CartProduct {
     }
     return null;
   }
+
   int calculateMaxQty() {
-    // Aggressive normalization of values
     final String sunl = (stockUnlimited ?? "").toLowerCase().trim();
     final String qstat = (qtyStatus ?? "").toLowerCase().trim();
     final String ato = (allowToOrder ?? "").toLowerCase().trim();
 
-    // If company allows ordering, stock is unlimited, or status is missing/low, allow high limit
-    if (ato == "yes" || ato == "1" || sunl == "yes" || qstat == "low in stock" || qstat == "") {
+    if (ato == "yes" ||
+        ato == "1" ||
+        sunl == "yes" ||
+        qstat == "low in stock" ||
+        qstat == "") {
       return 1000;
     }
 
-    // Default to available stock
     int stock = int.tryParse(availableStockQty ?? "0") ?? 1000;
     int minOrder = int.tryParse(minimumOrderQty ?? "1") ?? 1;
-    
-    // Safety check: if stock is 0 but it's not explicitly 'out of stock', allow high limit
+
     if (stock <= 0 && qstat != "out of stock") {
       return 1000;
     }

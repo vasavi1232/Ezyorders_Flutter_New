@@ -67,11 +67,30 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
     );
   }
 
+  void _showAvailabilityAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Availability Alert"),
+        content: Text("${widget.item.notAvailableDaysMessage ?? ""}\n${widget.item.productsAvailabilityCheckedDateTime ?? ""}"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool isTabletLandscape =
         MediaQuery.of(context).size.shortestSide >= 600 &&
             MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final double subTotalVal = double.tryParse(widget.item.subTotal ?? "1") ?? 1;
+    final bool isNotAvailable = subTotalVal == 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,12 +115,15 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                     children: [
                       // Brand Row
                       if (widget.showBrand) ...[
-                        Text(
-                          CommonMethods.htmltag(widget.brandName),
-                          style: TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w800),
+                        GestureDetector(
+                          onTap: isNotAvailable ? () => _showAvailabilityAlert(context) : null,
+                          child: Text(
+                            CommonMethods.htmltag(widget.brandName),
+                            style: TextStyle(
+                                color: isNotAvailable ? Colors.red : AppTheme.primaryColor,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w800),
+                          ),
                         ),
                         SizedBox(height: 5.h),
                       ],
@@ -310,7 +332,7 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                           Row(
                             children: [
                               InkWell(
-                                onTap: () => _showQuantityPicker(context),
+                                onTap: isNotAvailable ? null : () => _showQuantityPicker(context),
                                 borderRadius: BorderRadius.circular(20.r),
                                 child: Container(
                                   height: isTabletLandscape ? 70.h : 32.h,
@@ -324,12 +346,13 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.w),
-                                        child: Icon(Icons.remove,
-                                            size: 16.sp, color: Colors.grey),
-                                      ),
+                                      if (!isNotAvailable)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w),
+                                          child: Icon(Icons.remove,
+                                              size: 16.sp, color: Colors.grey),
+                                        ),
                                       SizedBox(
                                         width: 30.w,
                                         child: Center(
@@ -342,12 +365,13 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.w),
-                                        child: Icon(Icons.add,
-                                            size: 16.sp, color: Colors.grey),
-                                      ),
+                                      if (!isNotAvailable)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w),
+                                          child: Icon(Icons.add,
+                                              size: 16.sp, color: Colors.grey),
+                                        ),
                                     ],
                                   ),
                                 ),

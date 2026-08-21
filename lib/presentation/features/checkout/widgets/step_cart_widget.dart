@@ -37,23 +37,23 @@ class _StepCartWidgetState extends State<StepCartWidget> {
     String formatLabel(String label, String suffix) {
       if (!isTabletLandscape) return label;
       String clean = label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-      
+
       // If the clean label already contains the suffix in parentheses, return it
       if (clean.contains("($suffix)")) {
         return clean;
       }
-      
+
       // If the clean label contains the suffix but NOT in parentheses, wrap it
       if (clean.contains(suffix)) {
         return clean.replaceFirst(suffix, "($suffix)");
       }
-      
+
       // If it contains GST info in some other form (e.g. "Inc GST"), but not our specific suffix, 
       // we'll just return it cleaned up to avoid duplication.
       if (clean.toUpperCase().contains("GST")) {
         return clean;
       }
-      
+
       return "$clean ($suffix)";
     }
 
@@ -165,14 +165,14 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                     if (basePrice <= 0) {
                                       basePrice = double.tryParse(product.normalPrice ?? "0") ?? 0;
                                     }
-                                    
+
                                     await provider.updateCartItem(
                                         product.productId!,
                                         newQty,
                                         brand.brandId!,
                                         basePrice.toStringAsFixed(2),
                                         product.orderedAs ?? "");
-                                    
+
                                     if (context.mounted) {
                                       context.read<DashboardProvider>().setCartCount(CommonMethods.cartCount);
                                     }
@@ -312,7 +312,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                 if (provider.selectedDeliveryLocationId != null)
                                   Builder(builder: (context) {
                                     final selectedLoc = provider.deliveryLocations.firstWhere(
-                                        (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId,
+                                            (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId,
                                         orElse: () => DeliveryLocationResult());
                                     String displayText = selectedLoc.locationName ?? "";
                                     if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
@@ -346,7 +346,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final showLevy = profile?.showLevy == "Yes";
                             final includeLevy = profile?.includeLevyInPriceCalculation == "No";
                             final hasLevy = (double.tryParse(provider.levy) ?? 0) > 0;
-                             if (showLevy && includeLevy && hasLevy) {
+                            if (showLevy && includeLevy && hasLevy) {
                               return _buildSummaryRow("Levy :", CommonMethods.setPriceFormatString(provider.levy), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
@@ -357,7 +357,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             final showWet = profile?.showWet == "Yes";
                             final includeWet = profile?.includeWetInPriceCalculation == "No";
                             final hasWet = (double.tryParse(provider.wet) ?? 0) > 0;
-                             if (showWet && includeWet && hasWet) {
+                            if (showWet && includeWet && hasWet) {
                               return _buildSummaryRow("WET :", CommonMethods.setPriceFormatString(provider.wet), isBlueValue: true, isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
@@ -576,16 +576,16 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 provider.selectedDeliveryLocationId == null
                     ? "Select Delivery Location"
                     : () {
-                        final bool exists = provider.deliveryLocations.any((loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                        if (!exists) return "Select Delivery Location";
-                        final selectedLoc = provider.deliveryLocations.firstWhere(
-                            (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                        String displayText = selectedLoc.locationName ?? "Select Delivery Location";
-                        if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
-                          displayText += " - ${selectedLoc.subLocationName}";
-                        }
-                        return displayText;
-                      }(),
+                  final bool exists = provider.deliveryLocations.any((loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
+                  if (!exists) return "Select Delivery Location";
+                  final selectedLoc = provider.deliveryLocations.firstWhere(
+                          (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
+                  String displayText = selectedLoc.locationName ?? "Select Delivery Location";
+                  if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
+                    displayText += " - ${selectedLoc.subLocationName}";
+                  }
+                  return displayText;
+                }(),
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: provider.selectedDeliveryLocationId == null
@@ -606,8 +606,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
   Widget _buildSummaryRow(String label, String value,
       {bool isDiscount = false, bool isBlueValue = false, bool isTabletLandscape = false}) {
     // Only remove newlines and enforce single line if in tablet landscape mode
-    final String displayLabel = isTabletLandscape 
-        ? label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim() 
+    final String displayLabel = isTabletLandscape
+        ? label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim()
         : label;
 
     return Padding(
@@ -630,8 +630,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                   color: isDiscount
                       ? AppTheme.redColor
                       : (isBlueValue
-                          ? AppTheme.primaryColor
-                          : AppTheme.darkBlue),
+                      ? AppTheme.primaryColor
+                      : AppTheme.darkBlue),
                   fontWeight: FontWeight.bold)),
         ],
       ),

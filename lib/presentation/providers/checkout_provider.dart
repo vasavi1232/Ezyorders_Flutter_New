@@ -102,6 +102,9 @@ class CheckoutProvider extends ChangeNotifier {
   List<CartProduct> _cartItems = [];
   List<CartProduct> get cartItems => _cartItems;
 
+  String? _hadNotAvailableProducts;
+  String? get hadNotAvailableProducts => _hadNotAvailableProducts;
+
   List<DeliveryLocationResult> _deliveryLocations = [];
   List<DeliveryLocationResult> get deliveryLocations => _deliveryLocations;
 
@@ -462,6 +465,7 @@ class CheckoutProvider extends ChangeNotifier {
           cartResponse.results!.isNotEmpty) {
         _errorMessage = "";
         _cartResult = cartResponse.results![0];
+        _hadNotAvailableProducts = cartResponse.hadNotAvailableProducts; // Store the new parameter
         _flattenCartItems(_cartResult!);
 
         _selectedDeliveryLocationId = (_cartResult?.deliveryLocationId == "0")
@@ -512,6 +516,7 @@ class CheckoutProvider extends ChangeNotifier {
       } else {
         _cartResult = null;
         _cartItems = [];
+        _hadNotAvailableProducts = null;
         if (response['status'] == 403 && response['error'] == 'No Data') {
           _errorMessage = "";
         } else {
@@ -523,6 +528,7 @@ class CheckoutProvider extends ChangeNotifier {
       _errorMessage = "Failed to load cart items. Please try again.";
       _cartResult = null;
       _cartItems = [];
+      _hadNotAvailableProducts = null;
     }
     notifyListeners();
   }
@@ -1197,6 +1203,7 @@ class CheckoutProvider extends ChangeNotifier {
   void clearCartLocal() {
     _cartItems = [];
     _cartResult = null;
+    _hadNotAvailableProducts = null;
     _currentStep = 0;
     billFirstNameController.clear();
     billLastNameController.clear();
