@@ -29,36 +29,40 @@ class _StepCartWidgetState extends State<StepCartWidget> {
     final provider = context.watch<CheckoutProvider>();
     final cartResult = provider.cartResult;
 
-    final bool isTabletLandscape = MediaQuery.of(context).size.shortestSide >= 600 &&
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final bool isTabletLandscape =
+        MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
     final double buttonHeight = isTabletLandscape ? 75.h : 45.h;
 
-    // Helper to format labels specifically for Tablet Landscape mode
+// Helper to format labels specifically for Tablet Landscape mode
     String formatLabel(String label, String suffix) {
       if (!isTabletLandscape) return label;
-      String clean = label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-      
-      // If the clean label already contains the suffix in parentheses, return it
+      String clean =
+          label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+
+// If the clean label already contains the suffix in parentheses, return it
       if (clean.contains("($suffix)")) {
         return clean;
       }
-      
-      // If the clean label contains the suffix but NOT in parentheses, wrap it
+
+// If the clean label contains the suffix but NOT in parentheses, wrap it
       if (clean.contains(suffix)) {
         return clean.replaceFirst(suffix, "($suffix)");
       }
-      
-      // If it contains GST info in some other form (e.g. "Inc GST"), but not our specific suffix, 
-      // we'll just return it cleaned up to avoid duplication.
+
+// If it contains GST info in some other form (e.g. "Inc GST"), but not our specific suffix,
+// we'll just return it cleaned up to avoid duplication.
       if (clean.toUpperCase().contains("GST")) {
         return clean;
       }
-      
+
       return "$clean ($suffix)";
     }
 
-    // Error State
-    if (!provider.isLoading && provider.errorMessage.isNotEmpty && (cartResult == null || (cartResult.brands?.isEmpty ?? true))) {
+// Error State
+    if (!provider.isLoading &&
+        provider.errorMessage.isNotEmpty &&
+        (cartResult == null || (cartResult.brands?.isEmpty ?? true))) {
       return Center(
         child: Padding(
           padding: EdgeInsets.all(20.sp),
@@ -76,7 +80,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
               ElevatedButton(
                 onPressed: () {
                   provider.clearError();
-                  provider.refreshCartSummary(provider.customerId, provider.accessToken);
+                  provider.refreshCartSummary(
+                      provider.customerId, provider.accessToken);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryButtonColor,
@@ -99,9 +104,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
             Icon(Icons.shopping_cart_outlined, size: 60.sp, color: Colors.grey),
             SizedBox(height: 10.h),
             Text("No Products added to Cart.",
-                style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.grey)),
+                style: TextStyle(fontSize: 16.sp, color: Colors.grey)),
             SizedBox(height: 20.h),
             ElevatedButton(
               onPressed: () {
@@ -134,7 +137,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 child: Column(
                   children: [
                     GstMessageWidget(),
-                    // Cart Items List Grouped by Brand
+// Cart Items List Grouped by Brand
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -146,15 +149,16 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Brand Header removed to match Android native parity (duplicate brand name)
-                            // Products
+// Brand Header removed to match Android native parity (duplicate brand name)
+// Products
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: brand.products?.length ?? 0,
                               itemBuilder: (context, pIndex) {
                                 final product = brand.products![pIndex];
-                                if (product == null) return const SizedBox.shrink();
+                                if (product == null)
+                                  return const SizedBox.shrink();
 
                                 return CartItemRefinedWidget(
                                   item: product,
@@ -163,27 +167,37 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                   brandName: brand.brandName ?? "",
                                   brandId: brand.brandId ?? "",
                                   onUpdateQty: (newQty) async {
-                                    double basePrice = double.tryParse(product.salePrice ?? "0") ?? 0;
+                                    double basePrice = double.tryParse(
+                                            product.salePrice ?? "0") ??
+                                        0;
                                     if (basePrice <= 0) {
-                                      basePrice = double.tryParse(product.normalPrice ?? "0") ?? 0;
+                                      basePrice = double.tryParse(
+                                              product.normalPrice ?? "0") ??
+                                          0;
                                     }
-                                    
+
                                     await provider.updateCartItem(
                                         product.productId!,
                                         newQty,
                                         brand.brandId!,
                                         basePrice.toStringAsFixed(2),
                                         product.orderedAs ?? "");
-                                    
+
                                     if (context.mounted) {
-                                      context.read<DashboardProvider>().setCartCount(CommonMethods.cartCount);
+                                      context
+                                          .read<DashboardProvider>()
+                                          .setCartCount(
+                                              CommonMethods.cartCount);
                                     }
                                   },
                                   onDelete: () async {
                                     await provider.deleteCartItem(
                                         product.productId!, brand.brandId!);
                                     if (context.mounted) {
-                                      context.read<DashboardProvider>().setCartCount(CommonMethods.cartCount);
+                                      context
+                                          .read<DashboardProvider>()
+                                          .setCartCount(
+                                              CommonMethods.cartCount);
                                     }
                                   },
                                 );
@@ -198,7 +212,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
               ),
             ),
 
-            // Bottom Section (Price Details & Actions)
+// Bottom Section (Price Details & Actions)
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -214,7 +228,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Expandable Price Details header
+// Expandable Price Details header
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -222,7 +236,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                       });
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15.w, vertical: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -254,13 +269,21 @@ class _StepCartWidgetState extends State<StepCartWidget> {
 
                   if (_isExpanded)
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                       color: Colors.white,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Delivery Location Selection
-                          if (context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment == "Yes" && provider.deliveryLocations.isNotEmpty)
+// Delivery Location Selection
+                          if (context
+                                      .read<DashboardProvider>()
+                                      .profileResponse
+                                      ?.results
+                                      ?.firstOrNull
+                                      ?.showShippingSegment ==
+                                  "Yes" &&
+                              provider.deliveryLocations.isNotEmpty)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -271,7 +294,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
-                                if (provider.shippingSegmentText.isNotEmpty) ...[
+                                if (provider
+                                    .shippingSegmentText.isNotEmpty) ...[
                                   SizedBox(height: 4.h),
                                   Text(
                                     provider.shippingSegmentText,
@@ -313,21 +337,33 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                 SizedBox(height: 5.h),
                                 if (provider.selectedDeliveryLocationId != null)
                                   Builder(builder: (context) {
-                                    final selectedLoc = provider.deliveryLocations.firstWhere(
-                                        (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId,
-                                        orElse: () => DeliveryLocationResult());
-                                    String displayText = selectedLoc.locationName ?? "";
-                                    if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
-                                      displayText += " - ${selectedLoc.subLocationName}";
+                                    final selectedLoc =
+                                        provider.deliveryLocations.firstWhere(
+                                            (loc) =>
+                                                loc.deliveryLocationId ==
+                                                provider
+                                                    .selectedDeliveryLocationId,
+                                            orElse: () =>
+                                                DeliveryLocationResult());
+                                    String displayText =
+                                        selectedLoc.locationName ?? "";
+                                    if (selectedLoc.subLocationName != null &&
+                                        selectedLoc
+                                            .subLocationName!.isNotEmpty) {
+                                      displayText +=
+                                          " - ${selectedLoc.subLocationName}";
                                     }
                                     return RichText(
                                       text: TextSpan(
                                         text: "Selected Delivery Location : ",
-                                        style: TextStyle(fontSize: 13.sp, color: AppTheme.primaryColor),
+                                        style: TextStyle(
+                                            fontSize: 13.sp,
+                                            color: AppTheme.primaryColor),
                                         children: [
                                           TextSpan(
                                             text: displayText,
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
@@ -339,68 +375,134 @@ class _StepCartWidgetState extends State<StepCartWidget> {
 
                           _buildSummaryRow(
                               formatLabel(provider.subTotalHeading, "Ex. GST"),
-                              CommonMethods.setPriceFormatString(provider.subTotal),
+                              CommonMethods.setPriceFormatString(
+                                  provider.subTotal),
                               isBlueValue: true,
                               isTabletLandscape: isTabletLandscape),
 
                           Builder(builder: (context) {
-                            final profile = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
+                            final profile = context
+                                .read<DashboardProvider>()
+                                .profileResponse
+                                ?.results
+                                ?.firstOrNull;
                             final showLevy = profile?.showLevy == "Yes";
-                            final includeLevy = profile?.includeLevyInPriceCalculation == "No";
-                            final hasLevy = (double.tryParse(provider.levy) ?? 0) > 0;
-                             if (showLevy && includeLevy && hasLevy) {
-                              return _buildSummaryRow("Levy :", CommonMethods.setPriceFormatString(provider.levy), isBlueValue: true, isTabletLandscape: isTabletLandscape);
+                            final includeLevy =
+                                profile?.includeLevyInPriceCalculation == "No";
+                            final hasLevy =
+                                (double.tryParse(provider.levy) ?? 0) > 0;
+                            if (showLevy && includeLevy && hasLevy) {
+                              return _buildSummaryRow(
+                                  "Levy :",
+                                  CommonMethods.setPriceFormatString(
+                                      provider.levy),
+                                  isBlueValue: true,
+                                  isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
 
                           Builder(builder: (context) {
-                            final profile = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
+                            final profile = context
+                                .read<DashboardProvider>()
+                                .profileResponse
+                                ?.results
+                                ?.firstOrNull;
                             final showWet = profile?.showWet == "Yes";
-                            final includeWet = profile?.includeWetInPriceCalculation == "No";
-                            final hasWet = (double.tryParse(provider.wet) ?? 0) > 0;
-                             if (showWet && includeWet && hasWet) {
-                              return _buildSummaryRow("WET :", CommonMethods.setPriceFormatString(provider.wet), isBlueValue: true, isTabletLandscape: isTabletLandscape);
+                            final includeWet =
+                                profile?.includeWetInPriceCalculation == "No";
+                            final hasWet =
+                                (double.tryParse(provider.wet) ?? 0) > 0;
+                            if (showWet && includeWet && hasWet) {
+                              return _buildSummaryRow(
+                                  "WET :",
+                                  CommonMethods.setPriceFormatString(
+                                      provider.wet),
+                                  isBlueValue: true,
+                                  isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
 
-                          if (context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment == "Yes" &&
-                              (double.tryParse(provider.shippingCharge) ?? 0) > 0)
-                            _buildSummaryRow("Shipping :",
-                                CommonMethods.setPriceFormatString(provider.shippingCharge),
+                          if (context
+                                      .read<DashboardProvider>()
+                                      .profileResponse
+                                      ?.results
+                                      ?.firstOrNull
+                                      ?.showShippingSegment ==
+                                  "Yes" &&
+                              (double.tryParse(provider.shippingCharge) ?? 0) >
+                                  0)
+                            _buildSummaryRow(
+                                "Shipping :",
+                                CommonMethods.setPriceFormatString(
+                                    provider.shippingCharge),
                                 isBlueValue: true,
                                 isTabletLandscape: isTabletLandscape),
 
-                          if (context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment != "Yes" &&
-                              (double.tryParse(provider.shippingCharge) ?? 0) > 0)
-                            _buildSummaryRow("Shipping :",
-                                CommonMethods.setPriceFormatString(provider.shippingCharge),
+                          if (context
+                                      .read<DashboardProvider>()
+                                      .profileResponse
+                                      ?.results
+                                      ?.firstOrNull
+                                      ?.showShippingSegment !=
+                                  "Yes" &&
+                              (double.tryParse(provider.shippingCharge) ?? 0) >
+                                  0)
+                            _buildSummaryRow(
+                                "Shipping :",
+                                CommonMethods.setPriceFormatString(
+                                    provider.shippingCharge),
                                 isBlueValue: true,
                                 isTabletLandscape: isTabletLandscape),
 
                           Builder(builder: (context) {
-                            final profile = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
-                            final showPriceIncGst = profile?.showPriceIncludingGst ?? "No";
-                            final showGstInCart = profile?.showGstInCart ?? "No";
-                            final taxTotalVal = double.tryParse(provider.taxTotal) ?? 0;
+                            final profile = context
+                                .read<DashboardProvider>()
+                                .profileResponse
+                                ?.results
+                                ?.firstOrNull;
+                            final showPriceIncGst =
+                                profile?.showPriceIncludingGst ?? "No";
+                            final showGstInCart =
+                                profile?.showGstInCart ?? "No";
+                            final taxTotalVal =
+                                double.tryParse(provider.taxTotal) ?? 0;
 
-                            if (taxTotalVal > 0 || (showPriceIncGst == "No" && showGstInCart == "Yes")) {
-                              return _buildSummaryRow("GST :", CommonMethods.setPriceFormatString(provider.taxTotal), isBlueValue: true, isTabletLandscape: isTabletLandscape);
+                            if (taxTotalVal > 0 ||
+                                (showPriceIncGst == "No" &&
+                                    showGstInCart == "Yes")) {
+                              return _buildSummaryRow(
+                                  "GST :",
+                                  CommonMethods.setPriceFormatString(
+                                      provider.taxTotal),
+                                  isBlueValue: true,
+                                  isTabletLandscape: isTabletLandscape);
                             }
                             return const SizedBox.shrink();
                           }),
 
-                          if ((double.tryParse(provider.supplierCharge) ?? 0) > 0)
-                            _buildSummaryRow("Addnl. Supplier Charge :", CommonMethods.setPriceFormatString(provider.supplierCharge), isBlueValue: true, isTabletLandscape: isTabletLandscape),
+                          if ((double.tryParse(provider.supplierCharge) ?? 0) >
+                              0)
+                            _buildSummaryRow(
+                                "Addnl. Supplier Charge :",
+                                CommonMethods.setPriceFormatString(
+                                    provider.supplierCharge),
+                                isBlueValue: true,
+                                isTabletLandscape: isTabletLandscape),
 
-                          if ((double.tryParse(provider.couponDiscount) ?? 0) > 0)
-                            _buildSummaryRow("Coupon (${provider.couponName})", "-${CommonMethods.setPriceFormatString(provider.couponDiscount)}", isDiscount: true, isTabletLandscape: isTabletLandscape),
+                          if ((double.tryParse(provider.couponDiscount) ?? 0) >
+                              0)
+                            _buildSummaryRow("Coupon (${provider.couponName})",
+                                "-${CommonMethods.setPriceFormatString(provider.couponDiscount)}",
+                                isDiscount: true,
+                                isTabletLandscape: isTabletLandscape),
 
                           const SizedBox(height: 5),
                           _buildSummaryRow(
                               formatLabel(provider.totalHeading, "Inc. GST"),
-                              CommonMethods.setPriceFormatString(provider.totalAmount),
+                              CommonMethods.setPriceFormatString(
+                                  provider.totalAmount),
                               isBlueValue: true,
                               isTabletLandscape: isTabletLandscape),
                           SizedBox(height: 5.h),
@@ -408,7 +510,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                       ),
                     ),
 
-                  // Action Buttons
+// Action Buttons
                   Padding(
                     padding: EdgeInsets.all(15.w),
                     child: Row(
@@ -419,17 +521,25 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             child: SizedBox(
                               height: buttonHeight,
                               child: ElevatedButton(
-                                onPressed: () => _showClearCartDialog(context, provider),
+                                onPressed: () =>
+                                    _showClearCartDialog(context, provider),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.redColor,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.r)),
                                   padding: EdgeInsets.zero,
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.w),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text("Clear Cart", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold), maxLines: 1),
+                                    child: Text("Clear Cart",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 1),
                                   ),
                                 ),
                               ),
@@ -440,9 +550,13 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                           child: Center(
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: Text("${provider.currentStep + 1}/${provider.totalSteps}",
+                              child: Text(
+                                  "${provider.currentStep + 1}/${provider.totalSteps}",
                                   maxLines: 1,
-                                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                  style: TextStyle(
+                                      color: AppTheme.primaryColor,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold)),
                             ),
                           ),
                         ),
@@ -452,42 +566,93 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                             child: SizedBox(
                               height: buttonHeight,
                               child: ElevatedButton(
-                                onPressed: isNextDisabled ? null : () {
-                                  bool requiresDelivery = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull?.showShippingSegment == "Yes";
-                                  if (requiresDelivery) {
-                                    String? currentId = provider.selectedDeliveryLocationId?.trim();
-                                    bool isInvalid = currentId == null || currentId.isEmpty || currentId == "0" || currentId.toLowerCase() == "null";
-                                    if (isInvalid) {
-                                      Fluttertoast.showToast(msg: "Please choose your delivery location");
-                                      return;
-                                    }
-                                  }
-                                  final profileResult = context.read<DashboardProvider>().profileResponse?.results?.firstOrNull;
-                                  final subtotalVal = double.tryParse(provider.subTotal) ?? 0.0;
-                                  if (profileResult?.restrictOnMinOrderAmountNotReached == "Yes") {
-                                    final minAmt = double.tryParse(profileResult?.minimumOrderAmount ?? "0") ?? 0.0;
-                                    if (minAmt - subtotalVal > 0.0) {
-                                      _showOrderAmountDialog(context, CommonMethods.decodeHtmlEntities(profileResult?.minOrderNotificationText ?? "Minimum order amount not reached.", stripTags: true));
-                                      return;
-                                    }
-                                  }
-                                  if (profileResult?.maxOrderUnlimited == "No" && profileResult?.restrictOnMaxOrderAmountReached == "Yes") {
-                                    final maxAmt = double.tryParse(profileResult?.maxOrderAmount ?? "0") ?? 0.0;
-                                    if (subtotalVal > maxAmt) {
-                                      _showOrderAmountDialog(context, CommonMethods.decodeHtmlEntities(profileResult?.maxOrderNotificationText ?? "Maximum order amount reached.", stripTags: true));
-                                      return;
-                                    }
-                                  }
-                                  provider.nextStep();
-                                  if (provider.errorMessage.isNotEmpty) {
-                                    Fluttertoast.showToast(msg: provider.errorMessage);
-                                  }
-                                },
+                                onPressed: isNextDisabled
+                                    ? null
+                                    : () {
+                                        bool requiresDelivery = context
+                                                .read<DashboardProvider>()
+                                                .profileResponse
+                                                ?.results
+                                                ?.firstOrNull
+                                                ?.showShippingSegment ==
+                                            "Yes";
+                                        if (requiresDelivery) {
+                                          String? currentId = provider
+                                              .selectedDeliveryLocationId
+                                              ?.trim();
+                                          bool isInvalid = currentId == null ||
+                                              currentId.isEmpty ||
+                                              currentId == "0" ||
+                                              currentId.toLowerCase() == "null";
+                                          if (isInvalid) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "Please choose your delivery location");
+                                            return;
+                                          }
+                                        }
+                                        final profileResult = context
+                                            .read<DashboardProvider>()
+                                            .profileResponse
+                                            ?.results
+                                            ?.firstOrNull;
+                                        final subtotalVal = double.tryParse(
+                                                provider.subTotal) ??
+                                            0.0;
+                                        if (profileResult
+                                                ?.restrictOnMinOrderAmountNotReached ==
+                                            "Yes") {
+                                          final minAmt = double.tryParse(
+                                                  profileResult
+                                                          ?.minimumOrderAmount ??
+                                                      "0") ??
+                                              0.0;
+                                          if (minAmt - subtotalVal > 0.0) {
+                                            _showOrderAmountDialog(
+                                                context,
+                                                CommonMethods.decodeHtmlEntities(
+                                                    profileResult
+                                                            ?.minOrderNotificationText ??
+                                                        "Minimum order amount not reached.",
+                                                    stripTags: true));
+                                            return;
+                                          }
+                                        }
+                                        if (profileResult?.maxOrderUnlimited ==
+                                                "No" &&
+                                            profileResult
+                                                    ?.restrictOnMaxOrderAmountReached ==
+                                                "Yes") {
+                                          final maxAmt = double.tryParse(
+                                                  profileResult
+                                                          ?.maxOrderAmount ??
+                                                      "0") ??
+                                              0.0;
+                                          if (subtotalVal > maxAmt) {
+                                            _showOrderAmountDialog(
+                                                context,
+                                                CommonMethods.decodeHtmlEntities(
+                                                    profileResult
+                                                            ?.maxOrderNotificationText ??
+                                                        "Maximum order amount reached.",
+                                                    stripTags: true));
+                                            return;
+                                          }
+                                        }
+                                        provider.nextStep();
+                                        if (provider.errorMessage.isNotEmpty) {
+                                          Fluttertoast.showToast(
+                                              msg: provider.errorMessage);
+                                        }
+                                      },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: isNextDisabled 
-                                    ? Colors.grey 
-                                    : (provider.companyId == "2" ? AppTheme.primaryColor : AppTheme.primaryButtonColor),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+                                  backgroundColor: isNextDisabled
+                                      ? Colors.grey
+                                      : (provider.companyId == "2"
+                                          ? AppTheme.primaryColor
+                                          : AppTheme.primaryButtonColor),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.r)),
                                   padding: EdgeInsets.zero,
                                 ),
                                 child: Row(
@@ -498,12 +663,18 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                         padding: EdgeInsets.only(left: 8.w),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
-                                          child: Text("Next", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold), maxLines: 1),
+                                          child: Text("Next",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.bold),
+                                              maxLines: 1),
                                         ),
                                       ),
                                     ),
                                     SizedBox(width: 5.w),
-                                    Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16.sp),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.white, size: 16.sp),
                                   ],
                                 ),
                               ),
@@ -519,7 +690,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
           ],
         ),
 
-        // Stabilization Overlay
+// Stabilization Overlay
         if (provider.isStabilizing)
           Container(
             color: Colors.white.withValues(alpha: 0.8),
@@ -529,7 +700,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 children: [
                   CircularProgressIndicator(
                     strokeWidth: 3.w,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
                   ),
                   SizedBox(height: 20.h),
                   Text(
@@ -551,16 +723,39 @@ class _StepCartWidgetState extends State<StepCartWidget> {
   Widget _buildDeliveryDropdown(CheckoutProvider provider) {
     return InkWell(
       onTap: () {
+// Keep the StepCartWidget context. The dialog context can become
+// unmounted when DeliveryLocationDialog closes after selection.
+        final parentContext = context;
+
         showDialog(
-          context: context,
-          builder: (context) => DeliveryLocationDialog(
+          context: parentContext,
+          builder: (dialogContext) => DeliveryLocationDialog(
             deliveryLocations: provider.deliveryLocations,
             selectedDeliveryLocationId: provider.selectedDeliveryLocationId,
             onLocationSelected: (locationId, charge) async {
-              await provider.updateDeliveryLocation(locationId, charge);
-              if (provider.errorMessage.isNotEmpty && context.mounted) {
-                // If the error was a 403 or similar, CheckoutProvider sets the errorMessage
-                _showErrorAlertDialog(context, provider.errorMessage);
+// Remove any previous API error before starting a new request.
+              provider.clearError();
+
+// Wait for the delivery-location API to complete.
+              await provider.updateDeliveryLocation(
+                locationId,
+                charge,
+              );
+
+// Capture the error immediately after the API response.
+              final String errorMessage = provider.errorMessage;
+
+              if (errorMessage.isNotEmpty && parentContext.mounted) {
+// Show the error after the delivery-location dialog has
+// completed its current frame/close operation.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!parentContext.mounted) return;
+
+                  _showErrorAlertDialog(
+                    parentContext,
+                    errorMessage,
+                  );
+                });
               }
             },
           ),
@@ -580,16 +775,23 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 provider.selectedDeliveryLocationId == null
                     ? "Select Delivery Location"
                     : () {
-                  final bool exists = provider.deliveryLocations.any((loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                  if (!exists) return "Select Delivery Location";
-                  final selectedLoc = provider.deliveryLocations.firstWhere(
-                          (loc) => loc.deliveryLocationId == provider.selectedDeliveryLocationId);
-                  String displayText = selectedLoc.locationName ?? "Select Delivery Location";
-                  if (selectedLoc.subLocationName != null && selectedLoc.subLocationName!.isNotEmpty) {
-                    displayText += " - ${selectedLoc.subLocationName}";
-                  }
-                  return displayText;
-                }(),
+                        final bool exists = provider.deliveryLocations.any(
+                            (loc) =>
+                                loc.deliveryLocationId ==
+                                provider.selectedDeliveryLocationId);
+                        if (!exists) return "Select Delivery Location";
+                        final selectedLoc = provider.deliveryLocations
+                            .firstWhere((loc) =>
+                                loc.deliveryLocationId ==
+                                provider.selectedDeliveryLocationId);
+                        String displayText = selectedLoc.locationName ??
+                            "Select Delivery Location";
+                        if (selectedLoc.subLocationName != null &&
+                            selectedLoc.subLocationName!.isNotEmpty) {
+                          displayText += " - ${selectedLoc.subLocationName}";
+                        }
+                        return displayText;
+                      }(),
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: provider.selectedDeliveryLocationId == null
@@ -608,8 +810,10 @@ class _StepCartWidgetState extends State<StepCartWidget> {
   }
 
   Widget _buildSummaryRow(String label, String value,
-      {bool isDiscount = false, bool isBlueValue = false, bool isTabletLandscape = false}) {
-    // Only remove newlines and enforce single line if in tablet landscape mode
+      {bool isDiscount = false,
+      bool isBlueValue = false,
+      bool isTabletLandscape = false}) {
+// Only remove newlines and enforce single line if in tablet landscape mode
     final String displayLabel = isTabletLandscape
         ? label.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim()
         : label;
@@ -634,8 +838,8 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                   color: isDiscount
                       ? AppTheme.redColor
                       : (isBlueValue
-                      ? AppTheme.primaryColor
-                      : AppTheme.darkBlue),
+                          ? AppTheme.primaryColor
+                          : AppTheme.darkBlue),
                   fontWeight: FontWeight.bold)),
         ],
       ),
@@ -649,26 +853,26 @@ class _StepCartWidgetState extends State<StepCartWidget> {
       builder: (dialogContext) => ClearCartDialog(
         onClose: () => Navigator.pop(dialogContext),
         onClear: () async {
-          // 1. Close dialog FIRST
+// 1. Close dialog FIRST
           Navigator.pop(dialogContext);
 
-          // 2. Perform Clear Action
+// 2. Perform Clear Action
           await provider.clearCart();
 
-          // 3. Force Update Dashboard Provider & Navigate
+// 3. Force Update Dashboard Provider & Navigate
           if (context.mounted) {
             final dashboardProvider = context.read<DashboardProvider>();
 
-            // Update global cart count to 0
+// Update global cart count to 0
             dashboardProvider.setCartCount("0");
 
-            // Reset to Home Tab
+// Reset to Home Tab
             dashboardProvider.setIndex(0);
 
-            // Trigger Full Refresh
+// Trigger Full Refresh
             dashboardProvider.init();
 
-            // Navigate to Dashboard (Home) to refresh state
+// Navigate to Dashboard (Home) to refresh state
             context.go(AppRoutes.dashboard);
           }
         },
@@ -772,7 +976,10 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                 children: [
                   Text(
                     CommonMethods.htmltag(message),
-                    style: TextStyle(fontSize: 14.sp, color: Colors.black87, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 25.h),
@@ -788,7 +995,10 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                           padding: EdgeInsets.symmetric(vertical: 10.h),
                         ),
                         child: Text("OK",
-                            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),

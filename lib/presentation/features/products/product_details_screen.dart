@@ -1439,7 +1439,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     if (product.soldPriceLabel != null &&
         product.soldPriceLabel!.trim().isNotEmpty) {
       return Text(
-        "(${product.soldPriceLabel})",
+        "${CommonMethods.htmltag(product.soldPriceLabel)}",
         style: TextStyle(
             color: AppTheme.darkerGrayColor,
             fontSize: 14.sp,

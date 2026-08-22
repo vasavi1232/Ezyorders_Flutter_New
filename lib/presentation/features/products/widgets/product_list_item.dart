@@ -371,7 +371,7 @@ class _ProductListItemState extends State<ProductListItem> {
     if (widget.item.soldPriceLabel != null &&
         widget.item.soldPriceLabel!.trim().isNotEmpty) {
       return Text(
-        "${widget.item.soldPriceLabel}",
+        "${CommonMethods.htmltag(widget.item.soldPriceLabel)}",
         style: TextStyle(
             color: AppTheme.darkerGrayColor,
             fontSize: 12.sp,
