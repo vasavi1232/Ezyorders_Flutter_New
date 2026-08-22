@@ -365,6 +365,18 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                       ),
                     ),
 
+                    if (widget.product.soldPriceLabel != null && widget.product.soldPriceLabel!.trim().isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Text(
+                          "${widget.product.soldPriceLabel}",
+                          style: TextStyle(
+                              color: AppTheme.darkerGrayColor,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+
                     SizedBox(height: 10.h),
 
                     // Dropdown / Sold As logic

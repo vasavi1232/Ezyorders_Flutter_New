@@ -306,6 +306,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                     discountId: dId,
                     discountName: dName,
                     targetRect: rect,
+                    tapPosition: details.globalPosition,
                   );
                 } else {
                   SpecialsTooltip.show(
@@ -367,6 +368,18 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
             ],
           ),
         ),
+
+        if (widget.product.soldPriceLabel != null && widget.product.soldPriceLabel!.trim().isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(top: 2.h),
+            child: Text(
+              "${widget.product.soldPriceLabel}",
+              style: TextStyle(
+                  color: AppTheme.darkerGrayColor,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
 
         SizedBox(height: 5.h),
 

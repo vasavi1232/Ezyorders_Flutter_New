@@ -443,6 +443,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ],
             ),
           ),
+          _buildSoldPriceLabel(product),
           SizedBox(height: 5.h),
           // In Stock Status (Native Parity)
           if (product.stockUnlimited != "Yes")
@@ -1311,6 +1312,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                               ],
                             ),
+                          if (item.soldPriceLabel != null && item.soldPriceLabel!.trim().isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Text(
+                                "${item.soldPriceLabel}",
+                                style: TextStyle(
+                                    color: AppTheme.darkerGrayColor,
+                                    fontSize: isTabletLandscape ? 13.sp : 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'OpenSans'),
+                              ),
+                            ),
                           if (item.stockUnlimited != "Yes")
                             Builder(builder: (context) {
                               if (item.qtyStatus == "Out Of Stock") return const SizedBox.shrink();
@@ -1420,6 +1433,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       );
     },
     );
+  }
+
+  Widget _buildSoldPriceLabel(ProductDetailItem product) {
+    if (product.soldPriceLabel != null &&
+        product.soldPriceLabel!.trim().isNotEmpty) {
+      return Text(
+        "(${product.soldPriceLabel})",
+        style: TextStyle(
+            color: AppTheme.darkerGrayColor,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'OpenSans'),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   String _getImageUrl(String? path) {
