@@ -14,16 +14,30 @@ class ClearCartDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    final bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    final bool isTablet = mediaQuery.size.shortestSide >= 600;
+
+// Increase button height only for tablet landscape.
+    final double buttonHeight = isTablet && isLandscape ? 65.h : 40.h;
+
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.r),
+      ),
       backgroundColor: Colors.white,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header
+// Header
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+              vertical: 10.h,
+            ),
             decoration: BoxDecoration(
               color: AppTheme.redColor,
               borderRadius: BorderRadius.only(
@@ -44,15 +58,22 @@ class ClearCartDialog extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: onClose,
-                  child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
                 ),
               ],
             ),
           ),
 
-          // Body
+// Body
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+            padding: EdgeInsets.symmetric(
+              vertical: 20.h,
+              horizontal: 20.w,
+            ),
             child: Text(
               "Are you sure to clear items in the cart?",
               style: TextStyle(
@@ -63,16 +84,20 @@ class ClearCartDialog extends StatelessWidget {
             ),
           ),
 
-          // Footer Buttons
+// Footer Buttons
           Padding(
-            padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+            padding: EdgeInsets.only(
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Clear Cart Button
+// Clear Cart Button
                 Expanded(
                   child: SizedBox(
-                    height: 40.h,
+                    height: buttonHeight,
                     child: ElevatedButton(
                       onPressed: onClear,
                       style: ElevatedButton.styleFrom(
@@ -94,11 +119,13 @@ class ClearCartDialog extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 SizedBox(width: 15.w),
-                // Close Button
+
+// Close Button
                 Expanded(
                   child: SizedBox(
-                    height: 40.h,
+                    height: buttonHeight,
                     child: ElevatedButton(
                       onPressed: onClose,
                       style: ElevatedButton.styleFrom(
