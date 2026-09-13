@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_theme.dart';
+import '../../../../core/utils/common_methods.dart';
 import '../../../../data/models/delivery_location_response.dart';
 
 class DeliveryLocationDialog extends StatefulWidget {
@@ -167,7 +168,7 @@ class _DeliveryLocationDialogState extends State<DeliveryLocationDialog> {
                                   SizedBox(width: 5.w),
                                   Expanded(
                                     child: Text(
-                                      displayText,
+                                      CommonMethods.decodeHtmlEntities(displayText),
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         color: isSelected ? AppTheme.primaryColor : Colors.black87,

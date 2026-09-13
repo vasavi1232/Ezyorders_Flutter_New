@@ -48,6 +48,7 @@ class WishlistItemWidget extends StatelessWidget {
     final bool isOutOfStock = item.qtyStatus == "Out Of Stock";
     final bool canAddToCart = item.supplierAvailable == "1" &&
         item.productAvailable == "1" &&
+        item.allowToOrder != "No" &&
         !isOutOfStock;
     final bool hasPromotion = item.hasPromotion == "Yes" &&
         item.promotionPrice != null &&
@@ -97,16 +98,14 @@ class WishlistItemWidget extends StatelessWidget {
                         scale: isTabletLandscape ? 1.7 : 1.0,
                         child: Checkbox(
                           value: isSelected,
-                          onChanged: isOutOfStock
-                              ? null
-                              : (val) {
-                            if (onSelect != null) onSelect!();
-                          },
+                          onChanged: canAddToCart
+                              ? (val) {
+                            if (onSelect != null) onSelect!();} : null ,
                           activeColor: AppTheme.tealColor,
                           side: BorderSide(
-                              color: isOutOfStock
-                                  ? Colors.grey.withValues(alpha: 0.4)
-                                  : Colors.grey,
+                              color: canAddToCart ? Colors.grey
+                                  : Colors.grey.withValues(alpha: 0.4)
+                                  ,
                               width: 1.5),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(2)),

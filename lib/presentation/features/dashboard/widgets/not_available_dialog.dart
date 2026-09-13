@@ -16,6 +16,9 @@ class NotAvailableDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTabletLandscape =
+        MediaQuery.of(context).size.shortestSide >= 600 &&
+            MediaQuery.of(context).orientation == Orientation.landscape;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.r), // Standardizing to match Android
@@ -96,8 +99,8 @@ class NotAvailableDialog extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 25.h),
               child: Center(
                 child: SizedBox(
-                  width: 120.w,
-                  height: 40.h,
+                  width: isTabletLandscape ? 150.w : 120.w,
+                  height: isTabletLandscape ? 60.h : 40.h,
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
