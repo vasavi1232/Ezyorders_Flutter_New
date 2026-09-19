@@ -175,15 +175,11 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                       // Brand Row
                       if (widget.showBrand) ...[
                         GestureDetector(
-                          onTap: isNotAvailable
-                              ? () => _showAvailabilityAlert(context)
-                              : null,
+                          onTap: null,
                           child: Text(
                             CommonMethods.htmltag(widget.brandName),
                             style: TextStyle(
-                                color: isNotAvailable
-                                    ? Colors.red
-                                    : AppTheme.primaryColor,
+                                color: AppTheme.primaryColor,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800),
                           ),
@@ -209,16 +205,24 @@ class _CartItemRefinedWidgetState extends State<CartItemRefinedWidget> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  CommonMethods.htmltag(
-                                      widget.item.title?.toUpperCase() ?? ""),
-                                  style: TextStyle(
-                                      color: AppTheme.textColor,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                GestureDetector(
+                                  onTap: isNotAvailable
+                                      ? () => _showAvailabilityAlert(context)
+                                      : null,
+                                  child: Text(
+                                    CommonMethods.htmltag(
+                                        widget.item.title?.toUpperCase() ?? ""),
+                                    style: TextStyle(
+                                        color: isNotAvailable
+                                            ? Colors.red
+                                            : AppTheme.textColor,
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.bold),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
+
                                 GestureDetector(
                                   onTapDown: (details) {
                                     double n = double.tryParse(
