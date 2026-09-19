@@ -606,7 +606,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                               child: ElevatedButton(
                                 onPressed: isNextDisabled
                                     ? null
-                                    : () {
+                                    : () async {
                                         bool requiresDelivery = context
                                                 .read<DashboardProvider>()
                                                 .profileResponse
@@ -626,6 +626,30 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     "Please choose your delivery location");
+                                            return;
+                                          }
+
+                                          // Wait for the delivery-location API to complete.
+                                          await provider.updateDeliveryLocation(
+                                            currentId,
+                                            provider.locationDeliveryCharge,
+                                          );
+
+                                          // Capture the error immediately after the API response.
+                                          final String errorMessage =
+                                              provider.errorMessage;
+
+                                          if (errorMessage.isNotEmpty &&
+                                              context.mounted) {
+                                            // Show the error using addPostFrameCallback as requested
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              if (!context.mounted) return;
+                                              _showErrorAlertDialog(
+                                                context,
+                                                errorMessage,
+                                              );
+                                            });
                                             return;
                                           }
                                         }
