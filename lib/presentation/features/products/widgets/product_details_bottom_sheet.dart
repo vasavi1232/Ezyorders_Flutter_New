@@ -547,6 +547,11 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
   Widget _buildActionButtons(BuildContext context) {
     final provider = context.watch<ProductListProvider>();
     bool isAdded = widget.product.addedToCart == "Yes";
+
+     bool isOutOfStock = widget.product.qtyStatus == "Out Of Stock";
+     bool canAddToCart = widget.product.supplierAvailable == "1" &&
+         widget.product.productAvailable == "1" &&
+        !isOutOfStock;
     bool isLoading = provider.isLoading;
     final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final bool isTablet = AppTheme.isTablet(context);
@@ -558,7 +563,9 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
         Expanded(
           flex: 4,
           child: ElevatedButton(
-            onPressed: isLoading
+            onPressed: isOutOfStock
+                ? null
+                :  isLoading
                 ? null
                 : () async {
                     final dashboardProvider = context.read<DashboardProvider>();
@@ -610,16 +617,25 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  AppTheme.primaryButtonColor, // Synchronized orange
-              minimumSize: Size(double.infinity, buttonHeight),
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppTheme.authButtonRadius.r)),
+          backgroundColor: isOutOfStock
+          ? AppTheme.redColor
+            : AppTheme.primaryButtonColor,
+
+            disabledBackgroundColor: isOutOfStock
+                ? AppTheme.redColor
+                : AppTheme.primaryButtonColor,
+
+            minimumSize: Size(double.infinity, buttonHeight),
+
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                AppTheme.authButtonRadius.r,
+              ),
             ),
+          ),
             child: isLoading
                 ? CustomLoaderWidget(size: 20.h)
-                : Text(
+                : Text(isOutOfStock ? "Out Of Stock" :
                     isAdded
                         ? "Update Cart [${widget.product.addedQty}]"
                         : "Add To Cart",
