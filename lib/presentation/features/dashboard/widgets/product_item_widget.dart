@@ -237,6 +237,8 @@ class ProductItemWidget extends StatelessWidget {
                     ),
                   ),
                 ],
+                
+                _buildSoldPriceLabel(),
 
                 // Stock Status
                 if (item.stockUnlimited != "Yes")
@@ -343,6 +345,20 @@ class ProductItemWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildSoldPriceLabel() {
+    if (item.soldPriceLabel != null &&
+        item.soldPriceLabel!.trim().isNotEmpty) {
+      return Text(
+        "${CommonMethods.decodeHtmlEntities(item.soldPriceLabel!)}",
+        style: TextStyle(
+            color: AppTheme.darkerGrayColor,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   String _formatPrice(String? price) {
