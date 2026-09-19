@@ -316,6 +316,22 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                           color: Colors.black,
                                         ),
                                       ),
+                                      if (provider.selectedDeliveryLocationId != null) ...[
+                                        SizedBox(width: 8.w),
+                                        InkWell(
+                                          onTap: () async {
+                                            await provider.updateDeliveryLocation("0", "0");
+                                          },
+                                          child: Text(
+                                            "Clear",
+                                            style: TextStyle(
+                                              color: AppTheme.redColor,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                       SizedBox(width: 10.w),
                                       Expanded(
                                         child: _buildDeliveryDropdown(provider),
@@ -323,13 +339,35 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                     ],
                                   )
                                 else ...[
-                                  Text(
-                                    "Delivery Location",
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Delivery Location",
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      if (provider.selectedDeliveryLocationId != null)
+                                        InkWell(
+                                          onTap: () async {
+                                            await provider.updateDeliveryLocation("0", "0");
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                            child: Text(
+                                              "Clear",
+                                              style: TextStyle(
+                                                color: AppTheme.redColor,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                   SizedBox(height: 5.h),
                                   _buildDeliveryDropdown(provider),

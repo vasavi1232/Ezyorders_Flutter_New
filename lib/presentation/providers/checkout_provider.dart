@@ -109,7 +109,13 @@ class CheckoutProvider extends ChangeNotifier {
   List<DeliveryLocationResult> get deliveryLocations => _deliveryLocations;
 
   String? _selectedDeliveryLocationId;
-  String? get selectedDeliveryLocationId => _selectedDeliveryLocationId;
+  String? get selectedDeliveryLocationId {
+    final id = _selectedDeliveryLocationId?.trim();
+    if (id == null || id.isEmpty || id == "0" || id.toLowerCase() == "null") {
+      return null;
+    }
+    return id;
+  }
 
   bool get isCartEmpty => _cartItems.isEmpty;
 
@@ -386,14 +392,27 @@ class CheckoutProvider extends ChangeNotifier {
       String locationId, String locationCharge) async {
     _isLoading = true;
     _errorMessage = '';
+    
+    // Explicitly handle clearing locally to ensure UI updates immediately
+    if (locationId == "0" || locationId.isEmpty) {
+      _selectedDeliveryLocationId = null;
+      if (_cartResult != null) {
+        _cartResult!.deliveryLocationId = "0";
+        _cartResult!.deliveryLocationCharge = "0";
+      }
+    }
     notifyListeners();
 
     try {
+      // Use empty string to clear on backend if "0" is provided
+      final String apiLocationId = (locationId == "0" || locationId.isEmpty) ? "" : locationId;
+      final String apiLocationCharge = (locationId == "0" || locationId.isEmpty) ? "0" : locationCharge;
+
       final response = await authRemoteDataSource.updateDeliveryLocation(
         accessToken: _accessToken,
         customerId: _customerId,
-        deliveryLocationId: locationId,
-        locationDeliveryCharge: locationCharge,
+        deliveryLocationId: apiLocationId,
+        locationDeliveryCharge: apiLocationCharge,
       );
 
       if (response['status'] == 200) {
@@ -401,6 +420,16 @@ class CheckoutProvider extends ChangeNotifier {
       } else {
         _errorMessage = response['error'] ?? response['message'] ?? AppMessages.failureMsg;
       }
+
+      // Re-verify null state if cleared
+      if (locationId == "0" || locationId.isEmpty) {
+        _selectedDeliveryLocationId = null;
+        if (_cartResult != null) {
+          _cartResult!.deliveryLocationId = "0";
+          _cartResult!.deliveryLocationCharge = "0";
+        }
+      }
+
       return response;
     } catch (e) {
       _errorMessage = e.toString();
@@ -468,9 +497,12 @@ class CheckoutProvider extends ChangeNotifier {
         _hadNotAvailableProducts = cartResponse.hadNotAvailableProducts; // Store the new parameter
         _flattenCartItems(_cartResult!);
 
-        _selectedDeliveryLocationId = (_cartResult?.deliveryLocationId == "0")
-            ? null
-            : _cartResult?.deliveryLocationId;
+        final String? locId = _cartResult?.deliveryLocationId?.trim();
+        if (locId == null || locId.isEmpty || locId == "0" || locId.toLowerCase() == "null") {
+          _selectedDeliveryLocationId = null;
+        } else {
+          _selectedDeliveryLocationId = locId;
+        }
         
         // Enrich cart items with stock info as get-cart-details doesn't provide it
         if (_cartItems.isNotEmpty) {
