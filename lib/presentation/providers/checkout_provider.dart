@@ -584,27 +584,6 @@ class CheckoutProvider extends ChangeNotifier {
         if (brand?.products != null) {
           for (var product in brand!.products!) {
             if (product != null) {
-              // Note: Assuming product model has fields set, implies we might need to manually set brand name if not there
-              // Android does: item?.brand_name = brand.brand_name
-              // Our CartProduct model does not strictly have brandName setters unless we added them.
-              // Wait, looking at CartProduct model, it DOES NOT receive brand info from JSON inside products list typically
-              // But we can check if we customized it.
-              // Checked CartProduct: has `title`, `image`, etc.
-              // Let's assume we might need a wrapper or just rely on index.
-              // Update: I did not add `brandName` to `CartProduct` in the `cart_models.dart`.
-              // Android `CartItemS` has `brand_name`.
-              // I will omit brand headers for now OR I should have added it.
-              // Wait, the plan says 1:1 parity and "Vendor Grouping".
-              // I can handle this in UI by checking `_cartResult?.brands`.
-              // Actually, flattening makes UI easier but losing hierarchy.
-              // Let's usage `_cartResult` directly in UI for sectioned list if possible.
-              // But `_cartItems` is good for "All items count" etc.
-              // PROCEEDING WITH FLATTENED LIST FOR SIMPLE ITERATION,
-              // BUT UI WIDGET SHOULD PROBABLY USE `_cartResult.brands` to drive the ListView.builder for sections.
-              // Android `MyCartAdapter` uses a flat list but checks `if(i==0 || brand_id != prev.brand_id)` for header.
-              // I'll stick to that. I'll need `brandId` and `brandName` in `CartProduct`.
-              // I'll re-check `cart_models.dart` briefly.
-              // ... Checking ...
               _cartItems.add(product);
             }
           }
@@ -743,16 +722,11 @@ class CheckoutProvider extends ChangeNotifier {
   }
 
   Future<void> startRazorpayPayment(BuildContext context) async {
-    // Native Android Flow (PaymentActivity.kt):
-    // 1. Open Razorpay FIRST (NO order created yet)
-    // 2. On success/failure callback → THEN create order → THEN update payment
-    // 3. On cancellation (PaymentData is null → NPE in native) → go back to checkout, NO order
     _isLoading = true;
     _errorMessage = "";
     notifyListeners();
 
     try {
-      // Launch Razorpay Checkout FIRST (matching native: PaymentActivity.startPayment())
       final prefs = await SharedPreferences.getInstance();
       final String razorKey = prefs.getString(StorageKeys.razorServerKey) ?? "";
       
@@ -769,9 +743,9 @@ class CheckoutProvider extends ChangeNotifier {
       var options = {
         'key': razorKey,
         'amount': amountInPaise,
-        'currency': 'INR', // Matches native Android: options.put("currency","INR")
-        'name': 'Razorpay Corp', // Matches native
-        'description': 'Test Payment', // Matches native: options.put("description","Test Payment")
+        'currency': 'INR',
+        'name': 'Razorpay Corp',
+        'description': 'Test Payment',
         'send_sms_hash': true,
         'prefill': {
           'contact': shipPhoneController.text.trim(),
@@ -780,7 +754,6 @@ class CheckoutProvider extends ChangeNotifier {
       };
 
       _razorpay.open(options);
-      // Note: _isLoading remains true until callback fires
     } catch (e) {
       _errorMessage = "Error in payment: $e";
       _isLoading = false;
@@ -788,11 +761,7 @@ class CheckoutProvider extends ChangeNotifier {
     }
   }
 
-  // Razorpay Callbacks — Matches native Android PaymentActivity.kt EXACTLY
-
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    // Native Android: PaymentActivity.onPaymentSuccess() lines 131-155
-    // 1. Check company active status first (matches native)
     if (!isCompanyActive) {
       final ctx = AppRouter.navigatorKey.currentContext;
       if (ctx != null && ctx.mounted) {
@@ -804,13 +773,9 @@ class CheckoutProvider extends ChangeNotifier {
     }
 
     try {
-      // Native: extracts razorpay_payment_id from PaymentData
-      // then calls createOrderApiCall("Success", razorpay_payment_id, jsonObject)
       final String paymentId = response.paymentId ?? "";
       await _createOrderThenUpdatePayment("Success", paymentId, response.toString());
     } catch (e) {
-      // Native: catch block sets paymentStatus="Cancelled", finishes activity,
-      // and goes BACK to ProceedtoBuyActivity (checkout screen)
       _isLoading = false;
       _errorMessage = "";
       notifyListeners();
@@ -818,8 +783,6 @@ class CheckoutProvider extends ChangeNotifier {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) async {
-    // Native Android: PaymentActivity.onPaymentError() lines 157-181
-    // 1. Check company active status first (matches native)
     if (!isCompanyActive) {
       final ctx = AppRouter.navigatorKey.currentContext;
       if (ctx != null && ctx.mounted) {
@@ -831,13 +794,6 @@ class CheckoutProvider extends ChangeNotifier {
     }
 
     try {
-      // Native Android: tries JSONObject(p2?.data.toString())
-      // If user CANCELLED, p2?.data is null → NPE → catch block → back to checkout
-      // If actual failure, p2?.data has payment info → createOrderApiCall("Failed", ...)
-
-      // In Flutter, when user cancels, response.code == 2 and response.message
-      // is typically null/undefined/"Payment cancelled by user"
-      // Detect cancellation: no payment data available (matches native NPE behavior)
       String paymentId = "";
       bool hasParsedPaymentData = false;
 
@@ -852,22 +808,15 @@ class CheckoutProvider extends ChangeNotifier {
           }
         }
       } catch (_) {
-        // Parsing failed — treat as cancellation (matches native NPE catch)
       }
 
       if (!hasParsedPaymentData) {
-        // No payment data → user CANCELLED (matches native catch block)
-        // Native: paymentStatus="Callback", finish(), go to ProceedtoBuyActivity
         throw Exception("Payment cancelled — no payment data");
       }
 
-      // Actual failure with payment data → create order then update payment
       await _createOrderThenUpdatePayment("Failed", paymentId, response.message ?? "Payment Failed");
 
     } catch (e) {
-      // Native: catch block sets paymentStatus="Callback"
-      // and goes BACK to ProceedtoBuyActivity (checkout screen)
-      // NO order is created when user cancels!
       _isLoading = false;
       _errorMessage = "";
       notifyListeners();
@@ -875,11 +824,6 @@ class CheckoutProvider extends ChangeNotifier {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) async {
-    // Native Android: PaymentActivity.onExternalWalletSelected() lines 184-200
-    // Sets paymentStatus="Success", shows toast, and navigates to CongratulationsActivity.
-    // Native reads order data from static CommonMethods variables.
-    // In Flutter, we need to create order + update payment to populate _lastOrderResponse
-    // since it's passed via route extra to OrderSuccessScreen.
     if (!isCompanyActive) {
       final ctx = AppRouter.navigatorKey.currentContext;
       if (ctx != null && ctx.mounted) {
@@ -891,25 +835,19 @@ class CheckoutProvider extends ChangeNotifier {
     }
 
     try {
-      // Create order and update payment as "Success" (external wallet = success)
       await _createOrderThenUpdatePayment("Success", "", "External Wallet: ${response.walletName}");
     } catch (e) {
-      // Native: catch block sets paymentStatus="Callback" and goes back to checkout
       _isLoading = false;
       _errorMessage = "";
       notifyListeners();
     }
   }
 
-  /// Creates order AFTER Razorpay callback, then updates payment status.
-  /// Matches native Android: PaymentViewModel.createOrderApiCall() → paymentApiCall()
   Future<void> _createOrderThenUpdatePayment(String status, String transactionId, String paymentResponse) async {
     try {
-      // Step 1: Create order with payment_type="Online" (matches native hardcode)
       final createOrderResponse = await createOrder();
 
       if (createOrderResponse == null || createOrderResponse['status'] != 200) {
-        // Order creation failed
         _isLoading = false;
         _errorMessage = _errorMessage.isNotEmpty ? _errorMessage : "Order creation failed";
         notifyListeners();
@@ -924,7 +862,6 @@ class CheckoutProvider extends ChangeNotifier {
         return;
       }
 
-      // Step 2: Update payment status (matches native: paymentApiCall())
       await authRemoteDataSource.updatePayment(
         accessToken: _accessToken,
         customerId: _customerId,
@@ -934,12 +871,10 @@ class CheckoutProvider extends ChangeNotifier {
         paymentResponse: paymentResponse,
       );
 
-      // Step 3: Navigate to success screen (matches native: screenRedirection observer)
       _isLoading = false;
       final context = AppRouter.navigatorKey.currentContext;
 
       if (status == "Success") {
-        // Native: screenRedirection=0 → "Payment process has been completed successfully"
         _successMessage = "Payment Successful";
         _clearOrderState();
         if (context != null && context.mounted) {
@@ -949,8 +884,6 @@ class CheckoutProvider extends ChangeNotifier {
           context.go(AppRoutes.orderSuccess, extra: _lastOrderResponse);
         }
       } else {
-        // Native: screenRedirection=1 → "Payment process has been Failed"
-        // Still navigates to CongratulationsActivity (order was created)
         _errorMessage = "Payment Failed";
         _clearOrderState();
         if (context != null && context.mounted) {
@@ -968,12 +901,9 @@ class CheckoutProvider extends ChangeNotifier {
     }
   }
 
-  void nextStep() {
+  Future<void> nextStep() async {
     _errorMessage = "";
     if (_currentStep == 0) {
-      // Validate Cart Step
-      // Android logic: Check minimum order amount
-      // if (restrict_on_min_order_amount_not_reached == "Yes") check total
       if (_cartResult?.restrictOnMinOrderAmountNotReached == "Yes") {
         double total = double.tryParse(_cartResult?.orderAmount ?? "0") ?? 0;
         double min = double.tryParse(_cartResult?.minOrderAmount ?? "0") ?? 0;
@@ -984,11 +914,51 @@ class CheckoutProvider extends ChangeNotifier {
           return;
         }
       }
-      // Move to Address
       _currentStep = 1;
     } else if (_currentStep == 1) {
       if (validateAddressStep()) {
-        _currentStep = 2; // Payment
+        _isLoading = true;
+        notifyListeners();
+        try {
+          // Edit Profile with Billing Details
+          await authRemoteDataSource.editProfile(
+            accessToken: _accessToken,
+            customerId: _customerId,
+            firstName: billFirstNameController.text.trim(),
+            lastName: billLastNameController.text.trim(),
+            mobile: billPhoneController.text.trim(),
+            email: billEmailController.text.trim(),
+            street: billStreetController.text.trim(),
+            street2: billStreet2Controller.text.trim(),
+            suburb: billCityController.text.trim(),
+            state: billStateController.text.trim(),
+            postcode: billPostCodeController.text.trim(),
+          );
+
+          // Add Address if shipping to a different address is checked
+          if (_isNewAddressChecked) {
+            await authRemoteDataSource.addAddress(
+              accessToken: _accessToken,
+              customerId: _customerId,
+              firstName: shipFirstNameController.text.trim(),
+              lastName: shipLastNameController.text.trim(),
+              mobile: shipPhoneController.text.trim(),
+              email: shipEmailController.text.trim(),
+              street: shipStreetController.text.trim(),
+              street2: shipStreet2Controller.text.trim(),
+              suburb: shipCityController.text.trim(),
+              state: shipStateController.text.trim(),
+              postcode: shipPostCodeController.text.trim(),
+              defaultAddress: "No",
+            );
+          }
+          _currentStep = 2; // Payment
+        } catch (e) {
+          debugPrint("Error syncing address details: $e");
+          _errorMessage = "Failed to save address details. Please try again.";
+        } finally {
+          _isLoading = false;
+        }
       } else {
         _errorMessage = AppMessages.pleaseFillAllRequiredFields;
       }
@@ -997,7 +967,6 @@ class CheckoutProvider extends ChangeNotifier {
         if (isPreviewEnabled) {
           _currentStep = 3; // Preview
         } else {
-          // Already at last step, UI should handle "Submit"
         }
       } else {
         _errorMessage = AppMessages.pleaseSelectPaymentMethod;
@@ -1025,7 +994,6 @@ class CheckoutProvider extends ChangeNotifier {
     if (index > 0 && index - 1 < _addressList.length) {
       _fillShippingFormWithAddress(_addressList[index - 1]);
     } else {
-      // Clear shipping form?
     }
     notifyListeners();
   }
@@ -1053,7 +1021,6 @@ class CheckoutProvider extends ChangeNotifier {
 
   // Payment Logic
   void selectPaymentMethod(String method) {
-    // method: "COD" or "Online Payment"
     _paymentMethod = method;
     notifyListeners();
   }
@@ -1072,7 +1039,6 @@ class CheckoutProvider extends ChangeNotifier {
     try {
       final response = await authRemoteDataSource.checkCouponCode(
           _accessToken, _customerId, code);
-      // Assuming AuthRemoteDataSource returns Map
       if (response['status'] == 200) {
         await refreshCartSummary(_customerId, _accessToken);
         _successMessage = "Coupon Applied Successfully";
@@ -1081,7 +1047,6 @@ class CheckoutProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        // Prioritize 'error' field for specific message like "Invalid Coupon Code"
         _errorMessage =
             response['error'] ?? response['message'] ?? "Invalid Coupon";
         couponController.clear();
@@ -1104,14 +1069,12 @@ class CheckoutProvider extends ChangeNotifier {
     _errorMessage = '';
     notifyListeners();
 
-    // Prepare Billing Address
     String street = billStreetController.text;
     String street2 = billStreet2Controller.text;
     String suburb = billCityController.text;
     String state = billStateController.text;
     String postcode = billPostCodeController.text;
 
-    // Prepare Shipping Address
     String sFirstName = isNewAddressChecked ? shipFirstNameController.text : billFirstNameController.text;
     String sLastName = isNewAddressChecked ? shipLastNameController.text : billLastNameController.text;
     String sPhone = isNewAddressChecked ? shipPhoneController.text : billPhoneController.text;
@@ -1124,14 +1087,11 @@ class CheckoutProvider extends ChangeNotifier {
 
     try {
       final deviceType = await CommonMethods.getDeviceType();
-      // Native Android: PaymentViewModel hardcodes var paymenttype = "Online"
-      // for ALL non-COD payments. The display name (e.g. "Razor Pay", "Online Payment")
-      // is irrelevant — only COD maps to "COD", everything else maps to "Online".
       String apiPaymentType;
       if (_paymentMethod == "Cash on Delivery" || _paymentMethod == "COD") {
         apiPaymentType = "COD";
       } else {
-        apiPaymentType = "Online"; // Hardcoded like native Android
+        apiPaymentType = "Online";
       }
 
       final response = await authRemoteDataSource.createOrder(
@@ -1178,7 +1138,6 @@ class CheckoutProvider extends ChangeNotifier {
   }
 
   bool validateAddressStep() {
-    // Validate Billing Address (Always Required)
     bool isBillingValid = billFirstNameController.text.isNotEmpty &&
         billLastNameController.text.isNotEmpty &&
         billStreetController.text.isNotEmpty &&
@@ -1190,7 +1149,6 @@ class CheckoutProvider extends ChangeNotifier {
 
     if (!isBillingValid) return false;
 
-    // Validate Shipping Address (Only if "Different Address" is checked)
     if (isNewAddressChecked) {
       return shipFirstNameController.text.isNotEmpty &&
           shipLastNameController.text.isNotEmpty &&
@@ -1239,8 +1197,6 @@ class CheckoutProvider extends ChangeNotifier {
     _currentStep = 0;
     billFirstNameController.clear();
     billLastNameController.clear();
-    // Keep others maybe? Or clear all.
-    // Android "cleardata()" clears everything.
     billStreetController.clear();
     billStreet2Controller.clear();
     billCityController.clear();
