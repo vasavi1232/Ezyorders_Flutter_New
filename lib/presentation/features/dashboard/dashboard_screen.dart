@@ -50,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   int _currentFooterIndex = 0;
   late AnimationController _marqueeController;
   late Animation<double> _marqueeAnimation;
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -181,6 +182,9 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     if (banner.linkImageTo == "Link To Product") {
       if (banner.productId != null && banner.productId != "0") {
+        if (_isBottomSheetOpen) return;
+        _isBottomSheetOpen = true;
+
         final productListProvider = context.read<ProductListProvider>();
         await productListProvider.fetchProductDetails(banner.productId!);
         if (mounted && productListProvider.productDetailItem != null) {
@@ -190,7 +194,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             backgroundColor: Colors.transparent,
             builder: (context) => ProductDetailsBottomSheet(
                 product: productListProvider.productDetailItem!),
-          );
+          ).then((_) {
+            _isBottomSheetOpen = false;
+          });
+        } else {
+          _isBottomSheetOpen = false;
         }
       }
       return;

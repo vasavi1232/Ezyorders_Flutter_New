@@ -37,6 +37,7 @@ class _ProductListSectionState extends State<ProductListSection> {
   int _currentIndex = 0;
   bool _canScrollLeft = false;
   bool _canScrollRight = true;
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -196,6 +197,9 @@ class _ProductListSectionState extends State<ProductListSection> {
         }
       },
       onAddToCart: () {
+        if (_isBottomSheetOpen) return;
+        _isBottomSheetOpen = true;
+
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -204,7 +208,9 @@ class _ProductListSectionState extends State<ProductListSection> {
             product: product,
             badgeLabel: widget.badgeLabel,
           ),
-        );
+        ).then((_) {
+          _isBottomSheetOpen = false;
+        });
       },
       badgeLabel: widget.badgeLabel,
     );

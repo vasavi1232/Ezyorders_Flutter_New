@@ -18,6 +18,7 @@ class PopularAdsSection extends StatefulWidget {
 class _PopularAdsSectionState extends State<PopularAdsSection> {
   late PageController _pageController;
   int _currentPage = 0;
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -94,10 +95,17 @@ class _PopularAdsSectionState extends State<PopularAdsSection> {
                         if (item.linkImageTo == "Link To Product" &&
                             item.productId != null &&
                             item.productId != "0") {
+                          if (_isBottomSheetOpen) return;
+                          
                           final productListProvider =
                               context.read<ProductListProvider>();
+                          
+                          // Pre-check to avoid showing multiple loaders or triggers
+                          _isBottomSheetOpen = true;
+                          
                           await productListProvider
                               .fetchProductDetails(item.productId!);
+                          
                           if (context.mounted &&
                               productListProvider.productDetailItem != null) {
                             showModalBottomSheet(
@@ -107,7 +115,11 @@ class _PopularAdsSectionState extends State<PopularAdsSection> {
                               builder: (context) => ProductDetailsBottomSheet(
                                   product:
                                       productListProvider.productDetailItem!),
-                            );
+                            ).then((_) {
+                              _isBottomSheetOpen = false;
+                            });
+                          } else {
+                            _isBottomSheetOpen = false;
                           }
                         } else if (item.bannerId != null) {
                            // Legacy/Default banner navigation

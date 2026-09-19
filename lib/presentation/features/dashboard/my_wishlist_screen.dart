@@ -21,6 +21,8 @@ class MyWishlistScreen extends StatefulWidget {
 }
 
 class _MyWishlistScreenState extends State<MyWishlistScreen> {
+  bool _isBottomSheetOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -243,6 +245,9 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                                         },
 
                                         onAddToCart: () {
+                                          if (_isBottomSheetOpen) return;
+                                          _isBottomSheetOpen = true;
+
                                           // Parity: Opens Bottom Sheet
                                           showModalBottomSheet(
                                             context: context,
@@ -251,6 +256,7 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
                                             builder: (ctx) => ProductDetailsBottomSheet(
                                                 product: item),
                                           ).then((_) {
+                                            _isBottomSheetOpen = false;
                                             provider.fetchMyWishlist();
                                           });
                                         },

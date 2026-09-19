@@ -21,6 +21,7 @@ class _FlashDealsSectionState extends State<FlashDealsSection> {
   Timer? _autoScrollTimer;
   bool _canScrollLeft = false;
   bool _canScrollRight = true;
+  bool _isBottomSheetOpen = false;
 
   // Computed once from ScreenUtil — same formula used in build().
   double get _pageSize => (1.sw - 14.w) + 6.w;
@@ -150,13 +151,18 @@ class _FlashDealsSectionState extends State<FlashDealsSection> {
                             );
                           },
                           onAddToCart: () {
+                            if (_isBottomSheetOpen) return;
+                            _isBottomSheetOpen = true;
+
                             showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
                               builder: (context) => ProductDetailsBottomSheet(
                                   product: products[i]!),
-                            );
+                            ).then((_) {
+                              _isBottomSheetOpen = false;
+                            });
                           },
                           onFavorite: () {
                             final prov = context.read<DashboardProvider>();

@@ -40,6 +40,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   int? _lastTabIndex;
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -127,12 +128,17 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   }
 
   void _onAddToCart(dynamic product) {
+    if (_isBottomSheetOpen) return;
+    _isBottomSheetOpen = true;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ProductDetailsBottomSheet(product: product),
-    );
+    ).then((_) {
+      _isBottomSheetOpen = false;
+    });
   }
 
   void _onFavorite(dynamic product) async {
