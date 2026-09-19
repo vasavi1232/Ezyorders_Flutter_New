@@ -321,30 +321,18 @@ class CheckoutProvider extends ChangeNotifier {
         billEmailController.text = profile.email ?? "";
         billPhoneController.text = profile.phone ?? "";
 
+        billStreetController.text = profile.street ?? "";
+        billStreet2Controller.text = profile.street2 ?? "";
+        billCityController.text = profile.suburb ?? "";
+        billStateController.text = profile.state ?? "";
+        billPostCodeController.text = profile.postcode ?? "";
         // Auto-select default address
         for (int i = 0; i < _addressList.length; i++) {
           if (_addressList[i].defaultAddress == "Yes") {
             _selectedAddressIndex = i + 1; // +1 because 0 is "Choose"
 
             // Auto-fill Billing Form
-            if (billFirstNameController.text.isEmpty) {
-              billFirstNameController.text = _addressList[i].firstName ?? "";
-            }
-            if (billLastNameController.text.isEmpty) {
-              billLastNameController.text = _addressList[i].lastName ?? "";
-            }
-            if (billPhoneController.text.isEmpty) {
-              billPhoneController.text = _addressList[i].phone ?? "";
-            }
-            if (billEmailController.text.isEmpty) {
-              billEmailController.text = _addressList[i].email ?? "";
-            }
 
-            billStreetController.text = _addressList[i].street ?? "";
-            billStreet2Controller.text = _addressList[i].street2 ?? "";
-            billCityController.text = _addressList[i].suburb ?? "";
-            billStateController.text = _addressList[i].state ?? "";
-            billPostCodeController.text = _addressList[i].postcode ?? "";
 
             _fillShippingFormWithAddress(_addressList[i]);
 
