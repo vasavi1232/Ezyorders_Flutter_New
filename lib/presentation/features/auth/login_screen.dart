@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // }
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppTheme.primaryColor,
       body: SafeArea(
         child: Consumer<AuthProvider>(
@@ -67,16 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Column(
                   children: [
-                    // =====================================================
-                    // SCROLLABLE LOGIN CONTENT
-                    // =====================================================
+// =====================================================
+// SCROLLABLE LOGIN CONTENT
+// =====================================================
                     Expanded(
                       child: Container(
                         width: double.infinity,
                         color: AppTheme.white,
                         child: SingleChildScrollView(
                           keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           padding: const EdgeInsets.only(
                             left: 20,
                             right: 20,
@@ -87,9 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               const SizedBox(height: 20),
 
-                              // =================================================
-                              // COMPANY NAME
-                              // =================================================
+// =================================================
+// COMPANY NAME
+// =================================================
                               Text(
                                 provider.companyName,
                                 textAlign: TextAlign.center,
@@ -102,21 +102,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 10),
 
-                              // =================================================
-                              // COMPANY LOGO
-                              // =================================================
+// =================================================
+// COMPANY LOGO
+// =================================================
                               if (imageUrl.isNotEmpty)
                                 CachedNetworkImage(
                                   imageUrl: imageUrl,
                                   height: 120,
                                   fit: BoxFit.contain,
                                   placeholder: (context, url) =>
-                                  const SizedBox(),
+                                      const SizedBox(),
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
-                                        AppAssets.logo,
-                                        height: 120,
-                                      ),
+                                    AppAssets.logo,
+                                    height: 120,
+                                  ),
                                 )
                               else
                                 Image.asset(
@@ -126,9 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 20),
 
-                              // =================================================
-                              // USERNAME LABEL
-                              // =================================================
+// =================================================
+// USERNAME LABEL
+// =================================================
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
@@ -146,9 +146,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 5),
 
-                              // =================================================
-                              // USERNAME INPUT
-                              // =================================================
+// =================================================
+// USERNAME INPUT
+// =================================================
                               TextField(
                                 controller: _emailController,
                                 textInputAction: TextInputAction.next,
@@ -160,8 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   filled: true,
                                   fillColor: AppTheme.white,
-                                  contentPadding:
-                                  const EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 10,
                                     vertical: 12,
                                   ),
@@ -192,9 +191,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 20),
 
-                              // =================================================
-                              // PASSWORD LABEL
-                              // =================================================
+// =================================================
+// PASSWORD LABEL
+// =================================================
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
@@ -212,9 +211,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 5),
 
-                              // =================================================
-                              // PASSWORD INPUT
-                              // =================================================
+// =================================================
+// PASSWORD INPUT
+// =================================================
                               TextField(
                                 controller: _passwordController,
                                 obscureText: !provider.isPasswordVisible,
@@ -227,8 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   filled: true,
                                   fillColor: AppTheme.white,
-                                  contentPadding:
-                                  const EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 10,
                                     vertical: 12,
                                   ),
@@ -258,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: AppTheme.hintColor,
                                     ),
                                     onPressed:
-                                    provider.togglePasswordVisibility,
+                                        provider.togglePasswordVisibility,
                                   ),
                                 ),
                                 style: TextStyle(
@@ -269,9 +267,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 20),
 
-                              // =================================================
-                              // FORGOT PASSWORD
-                              // =================================================
+// =================================================
+// FORGOT PASSWORD
+// =================================================
                               GestureDetector(
                                 onTap: () {
                                   if (context.mounted) {
@@ -295,9 +293,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               SizedBox(height: 16.h),
 
-                              // =================================================
-                              // LOGIN BUTTON
-                              // =================================================
+// =================================================
+// LOGIN BUTTON
+// =================================================
                               SizedBox(
                                 width: double.infinity,
                                 height: 45,
@@ -305,90 +303,88 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: provider.isLoading
                                       ? null
                                       : () async {
-                                    final success =
-                                    await provider.login(
-                                      _emailController.text.trim(),
-                                      _passwordController.text.trim(),
-                                    );
+                                          final success = await provider.login(
+                                            _emailController.text.trim(),
+                                            _passwordController.text.trim(),
+                                          );
 
-                                    if (success && context.mounted) {
-                                      context.go(
-                                        AppRoutes.dashboard,
-                                      );
-                                    } else if (
-                                    provider.errorMessage != null) {
-                                      if (provider.errorStatus == 500 &&
-                                          context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              AlertDialog(
-                                                shape:
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                    10,
-                                                  ),
-                                                ),
-                                                contentPadding:
-                                                const EdgeInsets.all(20),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                  MainAxisSize.min,
-                                                  children: [
-                                                    Html(
-                                                      data: CommonMethods
-                                                          .decodeHtmlEntities(
-                                                        provider
-                                                            .errorMessage!,
-                                                        stripTags: false,
-                                                      ),
+                                          if (success && context.mounted) {
+                                            context.go(
+                                              AppRoutes.dashboard,
+                                            );
+                                          } else if (provider.errorMessage !=
+                                              null) {
+                                            if (provider.errorStatus == 500 &&
+                                                context.mounted) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10,
                                                     ),
-                                                    SizedBox(height: 20.h),
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: ElevatedButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                              context,
-                                                            ),
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                          AppTheme
-                                                              .primaryButtonColor,
+                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets.all(20),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Html(
+                                                        data: CommonMethods
+                                                            .decodeHtmlEntities(
+                                                          provider
+                                                              .errorMessage!,
+                                                          stripTags: false,
                                                         ),
-                                                        child: const Text(
-                                                          "OK",
-                                                          style: TextStyle(
-                                                            color:
-                                                            Colors.white,
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: ElevatedButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                            context,
+                                                          ),
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                AppTheme
+                                                                    .primaryButtonColor,
+                                                          ),
+                                                          child: const Text(
+                                                            "OK",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                        );
-                                      } else if (context.mounted) {
-                                        ScaffoldMessenger.of(context)
-                                            .clearSnackBars();
+                                              );
+                                            } else if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
+                                                  .clearSnackBars();
 
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              provider.errorMessage!,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  },
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    provider.errorMessage!,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                    AppTheme.primaryButtonColor,
+                                        AppTheme.primaryButtonColor,
                                     minimumSize: Size(
                                       double.infinity,
                                       45.h,
@@ -411,9 +407,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               const SizedBox(height: 20),
 
-                              // =================================================
-                              // SIGN UP LINK
-                              // =================================================
+// =================================================
+// SIGN UP LINK
+// =================================================
                               if (provider.isSignupRequired)
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -434,7 +430,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: AppTheme.primaryButtonColor,
                                             fontWeight: FontWeight.bold,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
@@ -450,7 +446,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
 
-                              // Additional bottom space for scrolling
+// Additional bottom space for scrolling
                               const SizedBox(height: 20),
                             ],
                           ),
@@ -458,10 +454,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                    // =========================================================
-                    // FIXED BOTTOM SECTION
-                    // ACCESS OTHER STORES
-                    // =========================================================
+// =========================================================
+// FIXED BOTTOM SECTION
+// ACCESS OTHER STORES
+// =========================================================
                     Container(
                       width: double.infinity,
                       color: AppTheme.white,
@@ -524,9 +520,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
 
-                // =============================================================
-                // LOADING OVERLAY
-                // =============================================================
+// =============================================================
+// LOADING OVERLAY
+// =============================================================
                 if (provider.isLoading)
                   Positioned.fill(
                     child: Container(
@@ -538,12 +534,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              // Rotating Loader
+// Rotating Loader
                               CustomLoaderWidget(
                                 size: 100.w,
                               ),
 
-                              // Loading Text
+// Loading Text
                               Text(
                                 "Please Wait",
                                 textAlign: TextAlign.center,
