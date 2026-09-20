@@ -120,7 +120,6 @@ class CheckoutProvider extends ChangeNotifier {
   bool get isCartEmpty => _cartItems.isEmpty;
 
   // Financial Getters for Summary Widgets
-  // Financial Getters for Summary Widgets
   String get subTotal {
     double apiSubTotal = double.tryParse(_cartResult?.subTotal ?? "0") ?? 0;
     return apiSubTotal.toStringAsFixed(CommonMethods.decimalDigits);
@@ -331,9 +330,7 @@ class CheckoutProvider extends ChangeNotifier {
           if (_addressList[i].defaultAddress == "Yes") {
             _selectedAddressIndex = i + 1; // +1 because 0 is "Choose"
 
-            // Auto-fill Billing Form
-
-
+            // Auto-fill Shipping Form
             _fillShippingFormWithAddress(_addressList[i]);
 
             // Android Parity: Auto-initialize delivery location from default address if not set
@@ -447,10 +444,6 @@ class CheckoutProvider extends ChangeNotifier {
   Future<void> _loadPaymentMethods() async {
     final prefs = await SharedPreferences.getInstance();
     String methodsStr = prefs.getString(StorageKeys.paymentMethods) ?? "";
-
-    // Android Logic: replace("COD","Cash on Delivery").split(",")
-    // Note: Android does replace BEFORE split.
-    // Make sure we handle potential spaces or empty strings.
 
     if (methodsStr.isNotEmpty) {
       // Replace COD first
@@ -923,8 +916,8 @@ class CheckoutProvider extends ChangeNotifier {
             postcode: billPostCodeController.text.trim(),
           );
 
-          // Add Address if shipping to a different address is checked
-          if (_isNewAddressChecked) {
+          // Add Address if shipping to a different address is checked and it's a new custom address
+          if (_isNewAddressChecked && _selectedAddressIndex == 0) {
             await authRemoteDataSource.addAddress(
               accessToken: _accessToken,
               customerId: _customerId,
@@ -939,6 +932,18 @@ class CheckoutProvider extends ChangeNotifier {
               postcode: shipPostCodeController.text.trim(),
               defaultAddress: "No",
             );
+
+            // Refresh profile to update the saved address list locally
+            final response = await authRemoteDataSource.getProfile(_accessToken, _customerId);
+            _profileResponse = ProfileResponse.fromJson(response);
+            if (_profileResponse?.results != null && _profileResponse!.results!.isNotEmpty) {
+              _addressList = (_profileResponse!.results!.firstOrNull?.addressesList ?? [])
+                  .where((addr) =>
+                      addr.addressId != null &&
+                      addr.addressId.toString().trim().isNotEmpty &&
+                      addr.addressId.toString() != "0")
+                  .toList();
+            }
           }
           _currentStep = 2; // Payment
         } catch (e) {
