@@ -7,6 +7,7 @@ import '../../../../data/models/home_models.dart';
 import 'dashboard_banner_item_widget.dart';
 import 'section_header_widget.dart';
 import '../../products/widgets/product_details_bottom_sheet.dart';
+import 'not_available_dialog.dart';
 
 class PopularAdsSection extends StatefulWidget {
   const PopularAdsSection({super.key});
@@ -108,16 +109,41 @@ class _PopularAdsSectionState extends State<PopularAdsSection> {
                           
                           if (context.mounted &&
                               productListProvider.productDetailItem != null) {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => ProductDetailsBottomSheet(
-                                  product:
-                                      productListProvider.productDetailItem!),
-                            ).then((_) {
+                            final product = productListProvider.productDetailItem!;
+                            final bool isOutOfStock = product.qtyStatus == "Out Of Stock";
+                            final bool canAddToCart = product.supplierAvailable == "1" &&
+                                product.productAvailable == "1" &&
+                                !isOutOfStock;
+
+                            if (isOutOfStock) {
                               _isBottomSheetOpen = false;
-                            });
+                              return;
+                            }
+
+                            if (canAddToCart) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => ProductDetailsBottomSheet(
+                                    product: product),
+                              ).then((_) {
+                                _isBottomSheetOpen = false;
+                              });
+                            } else {
+                              _isBottomSheetOpen = false;
+                              final supplierName = product.supplierAvailable == "0"
+                                  ? (product.brandName ?? product.title ?? "")
+                                  : (product.name ?? product.title ?? "");
+                              
+                              showDialog(
+                                context: context,
+                                builder: (context) => NotAvailableDialog(
+                                  supplierName: supplierName,
+                                  description: product.notAvailableDaysMessage ?? "",
+                                ),
+                              );
+                            }
                           } else {
                             _isBottomSheetOpen = false;
                           }
