@@ -251,7 +251,7 @@ class _CartScreenState extends State<CartScreen> {
                                           style: TextStyle(fontSize: 13.sp, color: AppTheme.primaryColor),
                                           children: [
                                             TextSpan(
-                                              text: displayText,
+                                              text: CommonMethods.htmltag(displayText),
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 decoration: TextDecoration.underline,

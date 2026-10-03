@@ -44,12 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine Company Image URL logic from Android
-    // if(prefs.Company_image.toString().contains("http")) {
-    //   load direct
-    // } else {
-    //   load UrlApiKey.COMPANYMAIN_URL + prefs.Company_image
-    // }
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -95,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: AppTheme.lightBlue,
-                                  fontSize: 14,
+                                  fontSize: isTablet ? 16.sp : 14.sp,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
@@ -108,20 +103,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (imageUrl.isNotEmpty)
                                 CachedNetworkImage(
                                   imageUrl: imageUrl,
-                                  height: 120,
+                                  height: 120.h,
                                   fit: BoxFit.contain,
                                   placeholder: (context, url) =>
                                       const SizedBox(),
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
                                     AppAssets.logo,
-                                    height: 120,
+                                    height: 120.h,
                                   ),
                                 )
                               else
                                 Image.asset(
                                   AppAssets.logo,
-                                  height: 120,
+                                  height: 120.h,
                                 ),
 
                               const SizedBox(height: 20),
@@ -137,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     "Username *",
                                     style: TextStyle(
                                       color: AppTheme.primaryColor,
-                                      fontSize: 14,
+                                      fontSize: isTablet ? 16.sp : 14.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -156,35 +151,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hintText: provider.userNameHint,
                                   hintStyle: TextStyle(
                                     color: AppTheme.hintColor,
-                                    fontSize: 14,
+                                    fontSize: isTablet ? 16.sp : 14.sp,
                                   ),
                                   filled: true,
                                   fillColor: AppTheme.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 12,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: isTablet ? 18.h : 12.h,
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.borderColor,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.borderColor,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.primaryColor,
                                     ),
                                   ),
                                 ),
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: isTablet ? 16.sp : 14.sp,
                                   color: AppTheme.textColor,
                                 ),
                               ),
@@ -202,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     "Password *",
                                     style: TextStyle(
                                       color: AppTheme.primaryColor,
-                                      fontSize: 14,
+                                      fontSize: isTablet ? 16.sp : 14.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -222,28 +217,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hintText: "Enter Your Password",
                                   hintStyle: TextStyle(
                                     color: AppTheme.hintColor,
-                                    fontSize: 14,
+                                    fontSize: isTablet ? 16.sp : 14.sp,
                                   ),
                                   filled: true,
                                   fillColor: AppTheme.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 12,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: isTablet ? 18.h : 12.h,
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.borderColor,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.borderColor,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5.r),
                                     borderSide: BorderSide(
                                       color: AppTheme.primaryColor,
                                     ),
@@ -254,13 +249,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       color: AppTheme.hintColor,
+                                      size: isTablet ? 24.sp : 20.sp,
                                     ),
                                     onPressed:
                                         provider.togglePasswordVisibility,
                                   ),
                                 ),
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: isTablet ? 16.sp : 14.sp,
                                   color: AppTheme.textColor,
                                 ),
                               ),
@@ -284,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     "Forgot Password?",
                                     style: TextStyle(
                                       color: AppTheme.tealColor,
-                                      fontSize: 14,
+                                      fontSize: isTablet ? 16.sp : 14.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -298,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // =================================================
                               SizedBox(
                                 width: double.infinity,
-                                height: 45,
+                                height: isTablet ? 60.h : 45.h,
                                 child: ElevatedButton(
                                   onPressed: provider.isLoading
                                       ? null
@@ -323,11 +319,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                      10,
+                                                      10.r,
                                                     ),
                                                   ),
                                                   contentPadding:
-                                                      const EdgeInsets.all(20),
+                                                      EdgeInsets.all(20.w),
                                                   content: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
@@ -354,11 +350,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                 AppTheme
                                                                     .primaryButtonColor,
                                                           ),
-                                                          child: const Text(
+                                                          child: Text(
                                                             "OK",
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
+                                                              fontSize: isTablet ? 18.sp : 14.sp,
                                                             ),
                                                           ),
                                                         ),
@@ -387,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         AppTheme.primaryButtonColor,
                                     minimumSize: Size(
                                       double.infinity,
-                                      45.h,
+                                      isTablet ? 60.h : 45.h,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
@@ -395,11 +392,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     "Login",
                                     style: TextStyle(
                                       color: AppTheme.white,
-                                      fontSize: 14,
+                                      fontSize: isTablet ? 16.sp : 14.sp,
                                     ),
                                   ),
                                 ),
@@ -421,7 +418,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: TextStyle(
                                         color: AppTheme.blackColor,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                        fontSize: isTablet ? 18.sp : 14.sp,
                                       ),
                                       children: [
                                         TextSpan(
@@ -431,6 +428,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             fontWeight: FontWeight.bold,
                                             decoration:
                                                 TextDecoration.underline,
+                                            fontSize: isTablet ? 18.sp : 14.sp,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
@@ -461,16 +459,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       width: double.infinity,
                       color: AppTheme.white,
-                      padding: const EdgeInsets.only(
-                        left: 70,
-                        right: 70,
-                        top: 10,
-                        bottom: 30,
+                      padding: EdgeInsets.only(
+                        left: isTablet ? 120.w : 70.w,
+                        right: isTablet ? 120.w : 70.w,
+                        top: 10.h,
+                        bottom: 30.h,
                       ),
                       child: SafeArea(
                         top: false,
                         child: InkWell(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           onTap: () async {
                             await provider.clearSession();
 
@@ -482,20 +480,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: Container(
                             width: double.infinity,
-                            height: 50,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
+                            height: isTablet ? 65.h : 50.h,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
                             ),
                             decoration: BoxDecoration(
                               color: AppTheme.secondaryButtonColor,
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(6.r),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.list,
-                                  size: 24,
+                                  size: isTablet ? 32.sp : 24.sp,
                                   color: Colors.white,
                                 ),
                                 const SizedBox(width: 8),
@@ -506,7 +504,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 16.sp,
+                                      fontSize: isTablet ? 20.sp : 16.sp,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),

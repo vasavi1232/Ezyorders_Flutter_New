@@ -399,7 +399,7 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                                             color: AppTheme.primaryColor),
                                         children: [
                                           TextSpan(
-                                            text: displayText,
+                                            text: CommonMethods.htmltag(displayText),
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
