@@ -6,7 +6,7 @@ import '../providers/dashboard_provider.dart';
 class GstMessageWidget extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
-  GstMessageWidget({super.key, this.padding});
+  const GstMessageWidget({super.key, this.padding});
 
   @override
   Widget build(BuildContext context) {

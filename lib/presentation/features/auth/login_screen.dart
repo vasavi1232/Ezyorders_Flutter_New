@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:provider/provider.dart';
@@ -405,41 +404,45 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 20),
 
 // =================================================
-// SIGN UP LINK
+// SIGN UP BUTTON
 // =================================================
                               if (provider.isSignupRequired)
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: 20,
                                   ),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: "Don’t have an account? ",
-                                      style: TextStyle(
-                                        color: AppTheme.blackColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: isTablet ? 18.sp : 14.sp,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: "Sign Up",
-                                          style: TextStyle(
-                                            color: AppTheme.primaryButtonColor,
-                                            fontWeight: FontWeight.bold,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontSize: isTablet ? 18.sp : 14.sp,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              if (context.mounted) {
-                                                context.push(
-                                                  AppRoutes.signup,
-                                                );
-                                              }
-                                            },
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: isTablet ? 60.h : 45.h,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (context.mounted) {
+                                          context.push(
+                                            AppRoutes.signup,
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppTheme.signupButtonColor,
+                                        minimumSize: Size(
+                                          double.infinity,
+                                          isTablet ? 60.h : 45.h,
                                         ),
-                                      ],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.authButtonRadius,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Don’t have an account? Sign Up",
+                                        style: TextStyle(
+                                          color: AppTheme.white,
+                                          fontSize: isTablet ? 16.sp : 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

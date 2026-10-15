@@ -22,6 +22,7 @@ class AppThemeService {
     final borderHex = prefs.getString(StorageKeys.companyBorderColor);
     final primaryButtonHex = prefs.getString(StorageKeys.companyPrimaryButtonColor);
     final secondaryButtonHex = prefs.getString(StorageKeys.companySecondaryButtonColor);
+    final signupButtonHex = prefs.getString(StorageKeys.companySignupButtonColor);
 
     AppTheme.dynamicTextColor =
         AppTheme.hexToColor(textHex, fallback: const Color(0xFF333333));
@@ -37,6 +38,8 @@ class AppThemeService {
         AppTheme.hexToColor(primaryButtonHex, fallback: AppTheme.tealColor);
     AppTheme.dynamicSecondaryButtonColor =
         AppTheme.hexToColor(secondaryButtonHex, fallback: const Color(0xFF1D2671));
+    AppTheme.dynamicSignupButtonColor =
+        AppTheme.hexToColor(signupButtonHex, fallback: AppTheme.primaryButtonColor);
 
     // Signal listeners to rebuild with new colors
     AppTheme.themeNotifier.value++;
@@ -81,6 +84,11 @@ class AppThemeService {
       await prefs.setString(StorageKeys.companySecondaryButtonColor, company.secondaryButtonColor!);
     } else {
       await prefs.remove(StorageKeys.companySecondaryButtonColor);
+    }
+    if (company.signupButtonColor != null && company.signupButtonColor!.isNotEmpty) {
+      await prefs.setString(StorageKeys.companySignupButtonColor, company.signupButtonColor!);
+    } else {
+      await prefs.remove(StorageKeys.companySignupButtonColor);
     }
 
     await loadTheme();

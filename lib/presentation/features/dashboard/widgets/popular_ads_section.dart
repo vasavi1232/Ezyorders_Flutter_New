@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../providers/dashboard_provider.dart';
 import '../../../providers/product_list_provider.dart';
-import '../../../../data/models/home_models.dart';
 import 'dashboard_banner_item_widget.dart';
 import 'section_header_widget.dart';
 import '../../products/widgets/product_details_bottom_sheet.dart';

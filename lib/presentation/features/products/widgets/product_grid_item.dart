@@ -419,7 +419,7 @@ class _ProductGridItemState extends State<ProductGridItem> {
     if (widget.item.soldPriceLabel != null &&
         widget.item.soldPriceLabel!.trim().isNotEmpty) {
       return Text(
-        "${CommonMethods.htmltag(widget.item.soldPriceLabel)}",
+        CommonMethods.htmltag(widget.item.soldPriceLabel),
         style: TextStyle(
             color: AppTheme.darkerGrayColor,
             fontSize: 11.sp,

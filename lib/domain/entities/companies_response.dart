@@ -51,6 +51,7 @@ class CompanyResult {
   final String? borderColor;
   final String? primaryButtonColor;
   final String? secondaryButtonColor;
+  final String? signupButtonColor;
   final String? showPortalIn;
 
   CompanyResult({
@@ -75,6 +76,7 @@ class CompanyResult {
     this.borderColor,
     this.primaryButtonColor,
     this.secondaryButtonColor,
+    this.signupButtonColor,
     this.showPortalIn,
   });
 
@@ -106,6 +108,7 @@ class CompanyResult {
       borderColor: json['border_color']?.toString(),
       primaryButtonColor: json['primary_button_color']?.toString(),
       secondaryButtonColor: json['secondary_button_color']?.toString(),
+      signupButtonColor: json['signup_button_color']?.toString(),
       showPortalIn: json['show_portal_in']?.toString(),
     );
   }

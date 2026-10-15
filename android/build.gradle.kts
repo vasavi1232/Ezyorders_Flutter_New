@@ -17,8 +17,6 @@ subprojects {
 }
 
 // Force Java 17 and Kotlin JVM target 17 for subprojects (plugins).
-// We skip the ":app" project here because it configures itself and 
-// is often already finalized when this block attempts to run.
 subprojects {
     if (project.path != ":app") {
         tasks.withType<JavaCompile>().configureEach {
@@ -27,8 +25,8 @@ subprojects {
         }
 
         tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-            kotlinOptions {
-                jvmTarget = "17"
+            compilerOptions {
+                jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
             }
         }
     }

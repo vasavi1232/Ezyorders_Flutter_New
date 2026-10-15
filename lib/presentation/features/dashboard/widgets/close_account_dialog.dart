@@ -14,7 +14,7 @@ import '../../../providers/dashboard_provider.dart';
 class CloseAccountDialog extends StatefulWidget {
   final String htmlMessage;
 
-  const CloseAccountDialog({Key? key, required this.htmlMessage}) : super(key: key);
+  const CloseAccountDialog({super.key, required this.htmlMessage});
 
   @override
   _CloseAccountDialogState createState() => _CloseAccountDialogState();

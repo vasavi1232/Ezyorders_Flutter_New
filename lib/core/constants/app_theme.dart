@@ -55,6 +55,7 @@ class AppTheme {
   static Color dynamicBorderColor = const Color(0xFFBDBDBD); // border_color → borders
   static Color dynamicPrimaryButtonColor = _defaultTealColor;
   static Color dynamicSecondaryButtonColor = greybtn;
+  static Color dynamicSignupButtonColor = _defaultTealColor;
 
   // Convenience aliases used throughout widgets ─────────────────────────────────
   // These forward to the dynamic variants so any widget using these names
@@ -79,6 +80,9 @@ class AppTheme {
 
   /// New secondary button color from API
   static Color get secondaryButtonColor => dynamicSecondaryButtonColor;
+
+  /// New signup button color from API
+  static Color get signupButtonColor => dynamicSignupButtonColor;
 
   // ─── Theme Notifier ──────────────────────────────────────────────────────────
   // Increment this to trigger a MaterialApp rebuild after colors change.

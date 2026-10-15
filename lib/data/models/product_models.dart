@@ -344,6 +344,7 @@ class ProductDetailItem extends ProductItem {
   String? shipperBarcode;
   String? outerBarcode;
   String? primaryBarcode;
+  @override
   String? soldPriceLabel;
   String? hasSimilarProducts;
   int? similarProductsCount;
@@ -573,10 +574,10 @@ extension ProductDetailItemCopyWith on ProductDetailItem {
       shipperBarcode: shipperBarcode,
       outerBarcode: outerBarcode,
       primaryBarcode: primaryBarcode,
-      hasSimilarProducts: hasSimilarProducts ?? this.hasSimilarProducts,
-      similarProductsCount: similarProductsCount ?? this.similarProductsCount,
-      hasSameCategoryProducts: hasSameCategoryProducts ?? this.hasSameCategoryProducts,
-      sameCategoryProductsCount: sameCategoryProductsCount ?? this.sameCategoryProductsCount,
+      hasSimilarProducts: hasSimilarProducts ?? hasSimilarProducts,
+      similarProductsCount: similarProductsCount ?? similarProductsCount,
+      hasSameCategoryProducts: hasSameCategoryProducts ?? hasSameCategoryProducts,
+      sameCategoryProductsCount: sameCategoryProductsCount ?? sameCategoryProductsCount,
     );
   }
 }

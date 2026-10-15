@@ -351,7 +351,7 @@ class ProductItemWidget extends StatelessWidget {
     if (item.soldPriceLabel != null &&
         item.soldPriceLabel!.trim().isNotEmpty) {
       return Text(
-        "${CommonMethods.decodeHtmlEntities(item.soldPriceLabel!)}",
+        CommonMethods.decodeHtmlEntities(item.soldPriceLabel!),
         style: TextStyle(
             color: AppTheme.darkerGrayColor,
             fontSize: 12.sp,

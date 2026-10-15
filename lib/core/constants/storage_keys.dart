@@ -26,4 +26,5 @@ class StorageKeys {
   static const String companyBorderColor = 'COMPANY_BORDER_COLOR';
   static const String companyPrimaryButtonColor = 'COMPANY_PRIMARY_BUTTON_COLOR';
   static const String companySecondaryButtonColor = 'COMPANY_SECONDARY_BUTTON_COLOR';
+  static const String companySignupButtonColor = 'COMPANY_SIGNUP_BUTTON_COLOR';
 }

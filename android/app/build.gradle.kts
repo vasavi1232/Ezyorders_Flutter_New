@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.k3tech.ezyorders"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    buildToolsVersion = "35.0.0"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

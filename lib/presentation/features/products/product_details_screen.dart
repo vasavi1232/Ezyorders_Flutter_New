@@ -1439,7 +1439,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     if (product.soldPriceLabel != null &&
         product.soldPriceLabel!.trim().isNotEmpty) {
       return Text(
-        "${CommonMethods.htmltag(product.soldPriceLabel)}",
+        CommonMethods.htmltag(product.soldPriceLabel),
         style: TextStyle(
             color: AppTheme.darkerGrayColor,
             fontSize: 14.sp,
@@ -1524,7 +1524,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     // Regex to match the nutrient name followed by 2 values
     // Matches: "Energy 401.0kJ 2190.0kJ" or "Protein 0.9g 4.6g" or "Fat, Total 4.9g 26.8g"
     final cleanName = name.replaceAll(RegExp(r'[,.\-]'), r'.*?');
-    final pattern = "$cleanName\\s+([0-9.<>\- ]+?[a-zA-Z%]+|(?:\s*-\s*))\\s+([0-9.<>\- ]+?[a-zA-Z%]+|(?:\s*-\s*))";
+    final pattern = "$cleanName\\s+([0-9.<>- ]+?[a-zA-Z%]+|(?:s*-s*))\\s+([0-9.<>- ]+?[a-zA-Z%]+|(?:s*-s*))";
     final regex = RegExp(pattern, caseSensitive: false);
     final match = regex.firstMatch(rawText);
     if (match != null) {

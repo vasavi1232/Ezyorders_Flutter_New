@@ -157,8 +157,9 @@ class _StepCartWidgetState extends State<StepCartWidget> {
                               itemCount: brand.products?.length ?? 0,
                               itemBuilder: (context, pIndex) {
                                 final product = brand.products![pIndex];
-                                if (product == null)
+                                if (product == null) {
                                   return const SizedBox.shrink();
+                                }
 
                                 return CartItemRefinedWidget(
                                   item: product,

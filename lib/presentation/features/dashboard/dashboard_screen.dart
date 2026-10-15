@@ -21,14 +21,12 @@ import '../../widgets/gst_message_widget.dart';
 import 'widgets/flash_deals_section.dart';
 import 'widgets/home_blocks_section.dart';
 import 'widgets/logout_dialog.dart';
-import 'widgets/close_account_dialog.dart';
 import 'widgets/popular_ads_section.dart';
 import 'widgets/popular_categories_section.dart';
 import 'widgets/promotions_section.dart';
 import 'widgets/section_header_widget.dart';
 import 'widgets/standard_product_sections.dart';
 import 'widgets/suppliers_section.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../products/widgets/product_details_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 

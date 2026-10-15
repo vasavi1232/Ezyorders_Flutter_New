@@ -373,7 +373,7 @@ class _ProductDetailsBottomSheetState extends State<ProductDetailsBottomSheet> {
           Padding(
             padding: EdgeInsets.only(top: 2.h),
             child: Text(
-              "${CommonMethods.htmltag(widget.product.soldPriceLabel)}",
+              CommonMethods.htmltag(widget.product.soldPriceLabel),
               style: TextStyle(
                   color: AppTheme.darkerGrayColor,
                   fontSize: 12.sp,
