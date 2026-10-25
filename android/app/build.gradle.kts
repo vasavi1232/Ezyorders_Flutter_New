@@ -16,6 +16,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.k3tech.ezyorders"
     compileSdk = 36
+    ndkVersion = flutter.ndkVersion
     buildToolsVersion = "35.0.0"
 
     compileOptions {
@@ -40,8 +41,8 @@ android {
         applicationId = "com.k3tech.ezyorders"
         minSdk = flutter.minSdkVersion 
         targetSdk = 36
-        versionCode = 10011
-        versionName = "1.1.1"
+        versionCode = 10013
+        versionName = "1.0.5"
     }
 
     buildTypes {
@@ -54,6 +55,10 @@ android {
 
             isMinifyEnabled = true
             isShrinkResources = true
+
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
