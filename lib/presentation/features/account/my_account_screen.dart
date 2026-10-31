@@ -189,11 +189,11 @@ class MyAccountScreen extends StatelessWidget {
                           "Change Password", () {
                         context.push(AppRoutes.changePassword);
                       }),
-                      _buildMenuItem(context, 'assets/images/addressesicon.png',
-                          "Address List", () {
-                        // TODO: Navigate to Address Book
-                        context.push(AppRoutes.myAddresses);
-                      }),
+                      if (user?.allowMultipleAddresses != "No")
+                        _buildMenuItem(context, 'assets/images/addressesicon.png',
+                            "Address List", () {
+                          context.push(AppRoutes.myAddresses);
+                        }),
                       _buildMenuItem(
                           context, 'assets/images/my_logout.png', "Logout", () {
                         _showLogoutDialog(context, provider);

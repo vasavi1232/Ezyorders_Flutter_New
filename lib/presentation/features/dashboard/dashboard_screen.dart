@@ -252,6 +252,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           actions: [
             Consumer<DashboardProvider>(
               builder: (context, provider, child) {
+                final profile = provider.profileResponse?.results?.firstOrNull;
+                if (profile?.allowNotifications == "No") return const SizedBox.shrink();
+
                 final unreadCount = provider.unreadNotificationCount;
                 final hasUnread = unreadCount > 0;
 
@@ -516,28 +519,58 @@ class _DashboardScreenState extends State<DashboardScreen>
                     context.read<DashboardProvider>().clearPromotions();
                     context.push(AppRoutes.promotions);
                   }),
-                  _buildDrawerItem(AppAssets.notifyIcon, "Notifications", () {
-                    context.pop();
-                    context.read<ProductListProvider>().clearFilters();
-                    context.push(AppRoutes.notifications);
-                  }),
-                  _buildDrawerItem(AppAssets.faqIcon, "FAQ", () {
-                    context.pop();
-                    context.push(AppRoutes.faq);
-                  }),
-                  _buildDrawerItem(AppAssets.helpIcon, "Help & Support", () {
-                    context.pop();
-                    context.read<ProductListProvider>().clearFilters();
-                    context.push(AppRoutes.helpSupport);
-                  }),
-                  _buildDrawerItem(AppAssets.feedbackIcon, "Send Feedback", () {
-                    context.pop();
-                    context.push(AppRoutes.sendFeedback);
-                  }),
-                  _buildDrawerItem(AppAssets.aboutIcon, "About Us", () {
-                    context.pop();
-                    context.push(AppRoutes.aboutUs);
-                  }),
+                  Consumer<DashboardProvider>(
+                    builder: (context, provider, _) {
+                      final profile = provider.profileResponse?.results?.firstOrNull;
+                      if (profile?.allowNotifications == "No") return const SizedBox.shrink();
+                      return _buildDrawerItem(AppAssets.notifyIcon, "Notifications", () {
+                        context.pop();
+                        context.read<ProductListProvider>().clearFilters();
+                        context.push(AppRoutes.notifications);
+                      });
+                    },
+                  ),
+                  Consumer<DashboardProvider>(
+                    builder: (context, provider, _) {
+                      final profile = provider.profileResponse?.results?.firstOrNull;
+                      if (profile?.allowFaq == "No") return const SizedBox.shrink();
+                      return _buildDrawerItem(AppAssets.faqIcon, "FAQ", () {
+                        context.pop();
+                        context.push(AppRoutes.faq);
+                      });
+                    },
+                  ),
+                  Consumer<DashboardProvider>(
+                    builder: (context, provider, _) {
+                      final profile = provider.profileResponse?.results?.firstOrNull;
+                      if (profile?.allowHelpAndSupport == "No") return const SizedBox.shrink();
+                      return _buildDrawerItem(AppAssets.helpIcon, "Help & Support", () {
+                        context.pop();
+                        context.read<ProductListProvider>().clearFilters();
+                        context.push(AppRoutes.helpSupport);
+                      });
+                    },
+                  ),
+                  Consumer<DashboardProvider>(
+                    builder: (context, provider, _) {
+                      final profile = provider.profileResponse?.results?.firstOrNull;
+                      if (profile?.allowSendFeedback == "No") return const SizedBox.shrink();
+                      return _buildDrawerItem(AppAssets.feedbackIcon, "Send Feedback", () {
+                        context.pop();
+                        context.push(AppRoutes.sendFeedback);
+                      });
+                    },
+                  ),
+                  Consumer<DashboardProvider>(
+                    builder: (context, provider, _) {
+                      final profile = provider.profileResponse?.results?.firstOrNull;
+                      if (profile?.allowAboutUs == "No") return const SizedBox.shrink();
+                      return _buildDrawerItem(AppAssets.aboutIcon, "About Us", () {
+                        context.pop();
+                        context.push(AppRoutes.aboutUs);
+                      });
+                    },
+                  ),
                 ],
               ),
             ),

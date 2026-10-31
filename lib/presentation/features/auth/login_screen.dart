@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/companies_provider.dart';
 import '../../../core/constants/app_theme.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/url_api_key.dart';
@@ -31,6 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
     // Load Company Data (Name, Logo, Configs)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthProvider>().loadCompanyData();
+      final companiesProvider = context.read<CompaniesProvider>();
+      if (companiesProvider.companies.isEmpty) {
+        companiesProvider.fetchCompanies();
+      }
     });
   }
 
@@ -44,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+    final companiesProvider = context.watch<CompaniesProvider>();
+    final bool showAccessOtherStores = companiesProvider.companies.length > 1;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -457,9 +464,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
 // =========================================================
 // FIXED BOTTOM SECTION
-// ACCESS OTHER STORES
+// ACCESS OTHER STORES (Only shown when multiple companies exist)
 // =========================================================
-                    Container(
+                    if (showAccessOtherStores)
+                      Container(
                       width: double.infinity,
                       color: AppTheme.white,
                       padding: EdgeInsets.only(

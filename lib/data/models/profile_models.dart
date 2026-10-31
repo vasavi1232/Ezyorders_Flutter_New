@@ -123,6 +123,12 @@ class ProfileResult {
   String? priceExcludesGstMessage;
   String? showGstInCart;
   String? productImageDimensions;
+  String? allowNotifications;
+  String? allowFaq;
+  String? allowHelpAndSupport;
+  String? allowSendFeedback;
+  String? allowAboutUs;
+  String? allowMultipleAddresses;
   List<AddressItem>? addressesList;
 
   ProfileResult({
@@ -214,6 +220,12 @@ class ProfileResult {
     this.priceExcludesGstMessage,
     this.showGstInCart,
     this.productImageDimensions,
+    this.allowNotifications,
+    this.allowFaq,
+    this.allowHelpAndSupport,
+    this.allowSendFeedback,
+    this.allowAboutUs,
+    this.allowMultipleAddresses,
     this.addressesList,
   });
 
@@ -314,6 +326,12 @@ class ProfileResult {
       priceExcludesGstMessage: json['price_excludes_gst_message']?.toString(),
       showGstInCart: json['show_gst_in_cart']?.toString(),
       productImageDimensions: json['product_image_dimensions']?.toString(),
+      allowNotifications: json['allow_notifications']?.toString(),
+      allowFaq: json['allow_faq']?.toString(),
+      allowHelpAndSupport: json['allow_help_and_support']?.toString(),
+      allowSendFeedback: json['allow_send_feedback']?.toString(),
+      allowAboutUs: json['allow_about_us']?.toString(),
+      allowMultipleAddresses: json['allow_multiple_addresses']?.toString(),
       addressesList: json['addresses_list'] != null
           ? (json['addresses_list'] as List)
           .map((i) => AddressItem.fromJson(i))
